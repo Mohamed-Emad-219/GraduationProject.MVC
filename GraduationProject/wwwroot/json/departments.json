@@ -45,11 +45,6 @@
     "HeadId": 12
   },
   {
-    "Name": "Biochemistry",
-    "CollegeId": 3,
-    "HeadId": 13
-  },
-  {
     "Name": "General",
     "CollegeId": 2,
     "HeadId": null

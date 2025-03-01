@@ -39,11 +39,6 @@ namespace GP.DAL.Context
 
 
 
-
-
-
-
-
             // College and dean (facultymembers) 1-1
             modelBuilder.Entity<College>()
                 .HasOne(d => d.Dean)
@@ -264,10 +259,67 @@ namespace GP.DAL.Context
                 .HasForeignKey<Application>(a => a.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            
+            // One-to-One: GPUser → InstructorProfile
+            modelBuilder.Entity<GPUser>()
+                .HasOne(u => u.FacultyMember)
+                .WithOne(i => i.User)
+                .HasForeignKey<FacultyMember>(i => i.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-One: GPUser → StudentProfile
+            modelBuilder.Entity<GPUser>()
+                .HasOne(u => u.Student)
+                .WithOne(s => s.User)
+                .HasForeignKey<Student>(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Ensure unique UserId in Students
+            modelBuilder.Entity<Student>()
+                .HasIndex(s => s.UserId)
+                .IsUnique();
+
+
+            // One-to-One: GPUser → AdvisorProfile
+            modelBuilder.Entity<GPUser>()
+                .HasOne(u => u.Advisor)
+                .WithOne(a => a.User)
+                .HasForeignKey<Advisor>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-One: GPUser → FinancialAffairs
+            modelBuilder.Entity<GPUser>()
+                .HasOne(u => u.FinancialAffairs)
+                .WithOne(a => a.User)
+                .HasForeignKey<FinancialAffairs>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-One: GPUser → StudentAffairs
+            modelBuilder.Entity<GPUser>()
+                .HasOne(u => u.StudentAffairs)
+                .WithOne(a => a.User)
+                .HasForeignKey<StudentAffairs>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-One: GPUser → AdminProfile
+            modelBuilder.Entity<GPUser>()
+                .HasOne(u => u.Admin)
+                .WithOne(a => a.User)
+                .HasForeignKey<Admin>(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Define User-Role relationship
+            modelBuilder.Entity<IdentityUserRole<string>>()
+                .HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            modelBuilder.Entity<GPUser>()
+                .HasMany<IdentityUserRole<string>>(u => u.UserRoles)
+                .WithOne()
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
         }
         #region Models
         public DbSet<Advisor> Advisors { get; set; }
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<Application> Applications { get; set; }
         public DbSet<College> Colleges { get; set; }
         public DbSet<Course> Courses { get; set; }

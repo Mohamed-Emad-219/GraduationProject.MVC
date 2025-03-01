@@ -34,8 +34,6 @@ namespace GraduationProject.Controllers.Auth
             {
                 var user = new GPUser
                 {
-                    FName = model.FName,
-                    LName = model.LName,
                     UserName = model.Email.Split('@')[0],
                     Email = model.Email,
                     

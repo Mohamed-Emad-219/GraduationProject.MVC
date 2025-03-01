@@ -65,26 +65,28 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<AppDbContext>();
     var env = services.GetRequiredService<IHostEnvironment>();
-    DbInitializer.SeedAdvisor(dbContext, env);
-    DbInitializer.SeedFacultyWithoutDept(dbContext, env);
+    var userManager = services.GetRequiredService<UserManager<GPUser>>();
+    //await DbInitializer.SeedRoles(services);
+    //await DbInitializer.CreateAdvisors(userManager, services, env);
+    //await DbInitializer.SeedFacultyWithoutDept(userManager, dbContext, env);
     DbInitializer.SeedCollege(dbContext, env);
     DbInitializer.SeedDapertment(dbContext, env);
     DbInitializer.SeedFacultyWithDept(dbContext, env);
     DbInitializer.SeedCourses(dbContext, env);
     DbInitializer.SeedCoursesPre(dbContext, env);
     DbInitializer.SeedPlace(dbContext, env);
-    DbInitializer.SeedFollowUp(dbContext, env);
-    DbInitializer.SeedStudentAffairs(dbContext, env);
-    DbInitializer.SeedFinancialAffairs(dbContext, env);
-    DbInitializer.SeedStudents(dbContext, env);
-    DbInitializer.SeedReceipts(dbContext, env);
-    DbInitializer.SeedApplications(dbContext, env);
-    DbInitializer.SeedEnrollments(dbContext, env);
-    DbInitializer.SeedInstructorAssistants(dbContext, env);
-    DbInitializer.SeedInstructorSchedules(dbContext, env);
-    DbInitializer.SeedStudentSchedules(dbContext, env);
-    DbInitializer.SeedFollowUpSchedules(dbContext, env);
-    await DbInitializer.SeedRoles(services);
+    //await DbInitializer.SeedFollowUp(userManager, dbContext, env);
+    //DbInitializer.SeedStudentAffairs(dbContext, env);
+    //DbInitializer.SeedFinancialAffairs(dbContext, env);
+    //DbInitializer.SeedStudents(dbContext, env);
+    //DbInitializer.SeedReceipts(dbContext, env);
+    //DbInitializer.SeedApplications(dbContext, env);
+    //DbInitializer.SeedEnrollments(dbContext, env);
+    //DbInitializer.SeedInstructorAssistants(dbContext, env);
+    //DbInitializer.SeedInstructorSchedules(dbContext, env);
+    //DbInitializer.SeedStudentSchedules(dbContext, env);
+    //DbInitializer.SeedFollowUpSchedules(dbContext, env);
+
     //await DbInitializer.SeedUsers(services);
 
 }

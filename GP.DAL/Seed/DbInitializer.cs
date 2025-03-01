@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Numerics;
 using System.Text;
 using System.Text.Json;
@@ -21,21 +23,88 @@ namespace GP.DAL.Seed
 {
     public class DbInitializer
     {
-        
-        public static void SeedAdvisor(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedRoles(IServiceProvider serviceProvider)
         {
-            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "advisor.json");
-            if (!context.Advisors.Any()) // Prevent duplicate seeding
-            {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Advisor>>(jsonData);
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roles = { "User",
+                "Advisor",
+                "Admin",
+                "Student",
+                "FinancialAffairs",
+                "ManagerOfFinancialAffairs",
+                "StudentAffairs",
+                "ManagerOfStudentAffairs",
+                "Instructor",
+                "Assistant",
+                "Head",
+                "Dean",
+                "FollowUp" };
 
-                if (rooms != null)
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    context.Advisors.AddRange(rooms);
-                    context.SaveChanges();
+                    await roleManager.CreateAsync(new IdentityRole(role));
                 }
             }
+        }
+        public static async Task CreateAdvisors(UserManager<GPUser> userManager, IServiceProvider serviceProvider, IHostEnvironment env)
+        {
+            var dbContext = serviceProvider.GetRequiredService<AppDbContext>();
+
+            // Get the absolute path to the JSON file in wwwroot
+            string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "advisor.json");
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
+                return;
+            }
+
+            // Read JSON file
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize JSON to List<AdvisorProfile>
+            var advisors = JsonConvert.DeserializeObject<List<Advisor>>(jsonData);
+            //Console.WriteLine(advisors);
+
+            foreach (var advisor in advisors)
+            {
+                string email = $"{advisor.FirstName.ToLower()}.{advisor.LastName.ToLower()}@g.com";
+                //Console.WriteLine(email);
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+                    
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, "Advisor");
+
+                        // Insert Advisor
+                        advisor.UserId = user.Id;
+                        dbContext.Advisors.Add(advisor);
+                    }
+                    else
+                    {
+                        Console.WriteLine("User creation failed for: " + email);
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                        }
+                    }
+                }else
+                {
+                        Console.WriteLine($"User with username {email} already exists.");
+                        continue;
+                }
+            }
+            await dbContext.SaveChangesAsync();
         }
         public static void SeedCollege(AppDbContext context, IHostEnvironment env)
         {
@@ -43,7 +112,7 @@ namespace GP.DAL.Seed
             if (!context.Colleges.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<College>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<College>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -52,31 +121,119 @@ namespace GP.DAL.Seed
                 }
             }
         }
-        public static void SeedFacultyWithoutDept(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedFacultyWithoutDept(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "facultymemberswithoutdept.json");
-            if (!context.FacultyMembers.Any()) // Prevent duplicate seeding
-            {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
+            string jsonData = await File.ReadAllTextAsync(filePath);
 
-                if (rooms != null)
+            // Deserialize JSON to List<AdvisorProfile>
+            var fs = JsonConvert.DeserializeObject<List<FacultyMember>>(jsonData);
+            //Console.WriteLine(advisors);
+
+            foreach (var f in fs)
+            {
+                string email = $"{f.FirstName.ToLower()}.{f.LastName.ToLower()}@g.com";
+                //Console.WriteLine(email);
+                if (await userManager.FindByEmailAsync(email) == null)
                 {
-                    context.FacultyMembers.AddRange(rooms);
-                    context.SaveChanges();
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        if(f.WorkingHours == 3)
+                            await userManager.AddToRoleAsync(user, "Dean");
+                        if (f.WorkingHours == 6)
+                            await userManager.AddToRoleAsync(user, "Head");
+
+                        // Insert Advisor
+                        f.UserId = user.Id;
+                        context.FacultyMembers.Add(f);
+                    }
+                    else
+                    {
+                        Console.WriteLine("User creation failed for: " + email);
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"User with username {email} already exists.");
+                    continue;
                 }
             }
+            await context.SaveChangesAsync();
         }
+        //public static async Task SeedFacultyWithDept(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
+        //{
+        //    var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "facultymemberswithdep.json");
+        //    string jsonData = await File.ReadAllTextAsync(filePath);
+
+        //    // Deserialize JSON to List<AdvisorProfile>
+        //    var fs = JsonConvert.DeserializeObject<List<FacultyMember>>(jsonData);
+        //    //Console.WriteLine(advisors);
+
+        //    foreach (var f in fs)
+        //    {
+        //        string email = $"{f.FirstName.ToLower()}.{f.LastName.ToLower()}@g.com";
+        //        //Console.WriteLine(email);
+        //        if (await userManager.FindByEmailAsync(email) == null)
+        //        {
+        //            var user = new GPUser
+        //            {
+        //                UserName = email,
+        //                Email = email,
+        //                EmailConfirmed = true
+        //            };
+
+        //            var result = await userManager.CreateAsync(user, "qweQWE123!!");
+        //            if (result.Succeeded)
+        //            {
+        //                if (f.WorkingHours == 3)
+        //                    await userManager.AddToRoleAsync(user, "Dean");
+        //                if (f.WorkingHours == 6)
+        //                    await userManager.AddToRoleAsync(user, "Head");
+
+        //                // Insert Advisor
+        //                f.UserId = user.Id;
+        //                context.FacultyMembers.Add(f);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("User creation failed for: " + email);
+        //                foreach (var error in result.Errors)
+        //                {
+        //                    Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine($"User with username {email} already exists.");
+        //            continue;
+        //        }
+        //    }
+        //    await context.SaveChangesAsync();
+        //}
         public static void SeedFacultyWithDept(AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "facultymemberswithdep.json");
-            if (!context.FacultyMembers.Any()) // Prevent duplicate seeding
+            if (context.FacultyMembers.Count()<13) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
 
                 if (rooms != null)
                 {
+
                     context.FacultyMembers.UpdateRange(rooms);
                     context.SaveChanges();
                 }
@@ -88,7 +245,7 @@ namespace GP.DAL.Seed
             if (!context.Departments.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Department>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Department>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -103,7 +260,7 @@ namespace GP.DAL.Seed
             if (!context.Courses.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Course>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Course>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -118,7 +275,7 @@ namespace GP.DAL.Seed
             if (!context.CoursePrerequisites.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<CoursePrerequisite>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<CoursePrerequisite>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -133,7 +290,7 @@ namespace GP.DAL.Seed
             if (!context.Places.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Place>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Place>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -142,20 +299,61 @@ namespace GP.DAL.Seed
                 }
             }
         }
-        public static void SeedFollowUp(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedFollowUp(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
-            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "followups.json");
-            if (!context.FollowUps.Any()) // Prevent duplicate seeding
-            {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<FollowUp>>(jsonData);
+            string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "followups.json");
 
-                if (rooms != null)
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
+                return;
+            }
+
+            // Read JSON file
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize JSON to List<AdvisorProfile>
+            var fs = JsonConvert.DeserializeObject<List<FollowUp>>(jsonData);
+            //Console.WriteLine(advisors);
+
+            foreach (var advisor in fs)
+            {
+                string email = $"{advisor.FirstName.ToLower()}.{advisor.LastName.ToLower()}@g.com";
+                //Console.WriteLine(email);
+                if (await userManager.FindByEmailAsync(email) == null)
                 {
-                    context.FollowUps.AddRange(rooms);
-                    context.SaveChanges();
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, "FollowUp");
+
+                        // Insert Advisor
+                        advisor.UserId = user.Id;
+                        context.FollowUps.Add(advisor);
+                    }
+                    else
+                    {
+                        Console.WriteLine("User creation failed for: " + email);
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"User with username {email} already exists.");
+                    continue;
                 }
             }
+            await context.SaveChangesAsync();
         }
         public static void SeedStudentAffairs(AppDbContext context, IHostEnvironment env)
         {
@@ -163,7 +361,7 @@ namespace GP.DAL.Seed
             if (!context.StudentAffairs.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<StudentAffairs>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<StudentAffairs>>(jsonData);
 
                 var managers = rooms.Where(r => r.ManagerId == null).ToList();
                 var employees = rooms.Where(r => r.ManagerId != null).ToList();
@@ -188,7 +386,7 @@ namespace GP.DAL.Seed
             if (!context.FinancialAffairs.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<FinancialAffairs>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FinancialAffairs>>(jsonData);
 
                 var managers = rooms.Where(r => r.ManagerId == null).ToList();
                 var employees = rooms.Where(r => r.ManagerId != null).ToList();
@@ -215,7 +413,7 @@ namespace GP.DAL.Seed
             {
                 var jsonData = File.ReadAllText(filePath);
 
-                var studentsDto = JsonSerializer.Deserialize<List<StudentDTO>>(jsonData, new JsonSerializerOptions
+                var studentsDto = System.Text.Json.JsonSerializer.Deserialize<List<StudentDTO>>(jsonData, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
@@ -252,7 +450,7 @@ namespace GP.DAL.Seed
             if (!context.Receipts.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Receipt>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Receipt>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -267,7 +465,7 @@ namespace GP.DAL.Seed
             if (!context.Applications.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Models.Application>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Models.Application>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -282,7 +480,7 @@ namespace GP.DAL.Seed
             if (!context.Enrollments.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<Enrollment>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Enrollment>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -297,7 +495,7 @@ namespace GP.DAL.Seed
             if (context.FacultyMembers.Count()<24) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
                     context.FacultyMembers.AddRange(rooms);
                     context.SaveChanges();
             }
@@ -308,7 +506,7 @@ namespace GP.DAL.Seed
             if (!context.InstructorSchedules.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<InstructorSchedule>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<InstructorSchedule>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -323,7 +521,7 @@ namespace GP.DAL.Seed
             if (!context.StudentSchedules.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<StudentSchedule>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<StudentSchedule>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -338,7 +536,7 @@ namespace GP.DAL.Seed
             if (!context.FollowUpSchedules.Any()) // Prevent duplicate seeding
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = JsonSerializer.Deserialize<List<FollowUpSchedule>>(jsonData);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FollowUpSchedule>>(jsonData);
 
                 if (rooms != null)
                 {
@@ -347,97 +545,7 @@ namespace GP.DAL.Seed
                 }
             }
         }
-        public static async Task SeedRoles(IServiceProvider serviceProvider)
-        {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = { "User",
-                "Advisor",
-                "Admin",
-                "Student",
-                "FinancialAffairs",
-                "ManagerOfFinancialAffairs",
-                "StudentAffairs",
-                "ManagerOfStudentAffairs",
-                "Instructor",
-                "Assistant",
-                "Head",
-                "Dean",
-                "FollowUp" };
-
-            foreach (var role in roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-        }
-        public static async Task SeedUsers(IServiceProvider serviceProvider)
-        {
-            var _userManager = serviceProvider.GetRequiredService<UserManager<GPUser>>();
-
-            var usersWithRoles = new Dictionary<string, string>
-    {
-        { "adm@g.com", "Admin" },
-        { "adv@g.com", "Advisor" },
-        { "std@g.com", "Student" },
-        { "finan@g.com", "FinancialAffairs" }, // Fixed Typo
-        { "mfinan@g.com", "ManagerOfFinancialAffairs" }, // Fixed Typo
-        { "mstdaff@g.com", "ManagerOfStudentAffairs" }, // Fixed Typo
-        { "stdaff@g.com", "StudentAffairs" },
-        { "inst@g.com", "Instructor" },
-        { "assis@g.com", "Assistant" },
-        { "head@g.com", "Head" },
-        { "dean@g.com", "Dean" },
-        { "follow@g.com", "FollowUp" }
-    };
-
-            foreach (var userWithRole in usersWithRoles)
-            {
-                string email = userWithRole.Key;
-                string role = userWithRole.Value;
-
-                var user = await _userManager.FindByEmailAsync(email);
-
-                if (user == null)
-                {
-                    user = new GPUser { UserName = email, Email = email, EmailConfirmed = true };
-                    var result = await _userManager.CreateAsync(user, "qweQWE123!!");
-
-                    if (!result.Succeeded)
-                    {
-                        Console.WriteLine($"Failed to create user {email}");
-                        foreach (var error in result.Errors)
-                        {
-                            Console.WriteLine($"Error: {error.Description}");
-                        }
-                        continue; // Skip to the next user if creation fails
-                    }
-                }
-
-                // Ensure the role exists before assigning
-                var _roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                if (!await _roleManager.RoleExistsAsync(role))
-                {
-                    Console.WriteLine($"Role '{role}' does not exist. Skipping user {email}.");
-                    continue; // Skip role assignment if role does not exist
-                }
-                // Assign role if user isn't already in it
-                if (!await _userManager.IsInRoleAsync(user, role))
-                {
-                    var roleResult = await _userManager.AddToRoleAsync(user, role);
-
-                    if (!roleResult.Succeeded)
-                    {
-                        Console.WriteLine($"Failed to assign role {role} to {email}");
-                        foreach (var error in roleResult.Errors)
-                        {
-                            Console.WriteLine($"Error: {error.Description}");
-                        }
-                    }
-                }
-            }
-        }
+        
 
     }
 }

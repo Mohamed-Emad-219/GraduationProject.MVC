@@ -11,6 +11,10 @@ namespace GP.DAL.Models
     public class StudentAffairs
     {
         public int Id { get; set; }
+
+        public string UserId { get; set; }
+        public GPUser User { get; set; }
+
         [StringLength(16, MinimumLength = 16, ErrorMessage = "SSN must be exactly 16 digits.")]
         [RegularExpression(@"^\d{16}$", ErrorMessage = "SSN must contain only numbers.")]
         public string SSN { get; set; }

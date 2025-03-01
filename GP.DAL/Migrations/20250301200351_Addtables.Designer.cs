@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GP.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250228164719_GPUserNull")]
-    partial class GPUserNull
+    [Migration("20250301200351_Addtables")]
+    partial class Addtables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,55 @@ namespace GP.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("GP.DAL.Models.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MobilePhone")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("SSN")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Admins");
+                });
 
             modelBuilder.Entity("GP.DAL.Models.Advisor", b =>
                 {
@@ -64,9 +113,16 @@ namespace GP.DAL.Migrations
                     b.Property<double>("Salary")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SSN")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Advisors");
@@ -266,6 +322,10 @@ namespace GP.DAL.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("WorkingHours")
                         .HasColumnType("int");
 
@@ -274,6 +334,9 @@ namespace GP.DAL.Migrations
                     b.HasIndex("DeptId");
 
                     b.HasIndex("SSN")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("FacultyMembers");
@@ -322,11 +385,18 @@ namespace GP.DAL.Migrations
                     b.Property<double>("Salary")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("SSN")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("FinancialAffairs");
@@ -372,10 +442,16 @@ namespace GP.DAL.Migrations
                     b.Property<double>("Salary")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SSN")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("FollowUps");
                 });
@@ -460,12 +536,6 @@ namespace GP.DAL.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -691,6 +761,10 @@ namespace GP.DAL.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AdvisorId");
@@ -698,6 +772,9 @@ namespace GP.DAL.Migrations
                     b.HasIndex("DeptId");
 
                     b.HasIndex("SSN")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Students");
@@ -746,11 +823,18 @@ namespace GP.DAL.Migrations
                     b.Property<double>("Salary")
                         .HasColumnType("float");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ManagerId");
 
                     b.HasIndex("SSN")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("StudentAffairs");
@@ -912,11 +996,13 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
 
                     b.ToTable("UserRoles");
                 });
@@ -936,6 +1022,28 @@ namespace GP.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("GP.DAL.Models.Admin", b =>
+                {
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithOne("Admin")
+                        .HasForeignKey("GP.DAL.Models.Admin", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GP.DAL.Models.Advisor", b =>
+                {
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithOne("Advisor")
+                        .HasForeignKey("GP.DAL.Models.Advisor", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.Application", b =>
@@ -1040,7 +1148,15 @@ namespace GP.DAL.Migrations
                         .HasForeignKey("DeptId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithOne("FacultyMember")
+                        .HasForeignKey("GP.DAL.Models.FacultyMember", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.FinancialAffairs", b =>
@@ -1050,7 +1166,26 @@ namespace GP.DAL.Migrations
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithOne("FinancialAffairs")
+                        .HasForeignKey("GP.DAL.Models.FinancialAffairs", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Manager");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GP.DAL.Models.FollowUp", b =>
+                {
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.FollowUpSchedule", b =>
@@ -1174,9 +1309,17 @@ namespace GP.DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithOne("Student")
+                        .HasForeignKey("GP.DAL.Models.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Advisor");
 
                     b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.StudentAffairs", b =>
@@ -1186,7 +1329,15 @@ namespace GP.DAL.Migrations
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("GP.DAL.Models.GPUser", "User")
+                        .WithOne("StudentAffairs")
+                        .HasForeignKey("GP.DAL.Models.StudentAffairs", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Manager");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.StudentSchedule", b =>
@@ -1238,6 +1389,15 @@ namespace GP.DAL.Migrations
                     b.Navigation("Instructor");
 
                     b.Navigation("Place");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("GP.DAL.Models.GPUser", null)
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GP.DAL.Models.Advisor", b =>
@@ -1299,6 +1459,29 @@ namespace GP.DAL.Migrations
             modelBuilder.Entity("GP.DAL.Models.FollowUp", b =>
                 {
                     b.Navigation("FollowUpSchedules");
+                });
+
+            modelBuilder.Entity("GP.DAL.Models.GPUser", b =>
+                {
+                    b.Navigation("Admin")
+                        .IsRequired();
+
+                    b.Navigation("Advisor")
+                        .IsRequired();
+
+                    b.Navigation("FacultyMember")
+                        .IsRequired();
+
+                    b.Navigation("FinancialAffairs")
+                        .IsRequired();
+
+                    b.Navigation("Student")
+                        .IsRequired();
+
+                    b.Navigation("StudentAffairs")
+                        .IsRequired();
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.Place", b =>
