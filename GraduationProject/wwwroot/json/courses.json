@@ -5,7 +5,7 @@
         "CreditHour": 3,
         "NoOfSec": 2,
         "NoOfLec": 2,
-      "DeptId": 11,
+      "DeptId": 10,
       "Level" : 1
     },
   {
@@ -14,16 +14,16 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   },
   {
-    "Code": "BS114",
+    "Code": "BS104",
     "Name": "Technical Report Writing",
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   },
   {
@@ -32,7 +32,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   },
   {
@@ -41,7 +41,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   },
   {
@@ -50,7 +50,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   },
   {
@@ -59,7 +59,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   },
   {
@@ -68,7 +68,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 11,
+    "DeptId": 10,
     "Level": 1
   }
 ]
