@@ -226,17 +226,37 @@ namespace GP.DAL.Seed
         public static void SeedFacultyWithDept(AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "facultymemberswithdep.json");
-            if (context.FacultyMembers.Count()<13) // Prevent duplicate seeding
+
+            if (File.Exists(filePath))
             {
                 var jsonData = File.ReadAllText(filePath);
-                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
+                var facultyMembers = System.Text.Json.JsonSerializer.Deserialize<List<FacultyMember>>(jsonData,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (rooms != null)
+                if (facultyMembers != null && facultyMembers.Any())
                 {
+                    foreach (var member in facultyMembers)
+                    {
+                        var existingMember = context.FacultyMembers.FirstOrDefault(fm => fm.Id == member.Id);
 
-                    context.FacultyMembers.UpdateRange(rooms);
+                        if (existingMember != null)
+                        {
+                            // Update existing record
+                            existingMember.DeptId = member.DeptId;
+                        }
+                        else
+                        {
+                            // Add new faculty member
+                            context.FacultyMembers.Add(member);
+                        }
+                    }
+
                     context.SaveChanges();
                 }
+            }
+            else
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
             }
         }
         public static void SeedDapertment(AppDbContext context, IHostEnvironment env)
@@ -355,94 +375,285 @@ namespace GP.DAL.Seed
             }
             await context.SaveChangesAsync();
         }
-        public static void SeedStudentAffairs(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedStudentAffairs(UserManager<GPUser> userManager,AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "studentaffairs.json");
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
+                return;
+            }
             if (!context.StudentAffairs.Any()) // Prevent duplicate seeding
             {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<StudentAffairs>>(jsonData);
 
-                var managers = rooms.Where(r => r.ManagerId == null).ToList();
-                var employees = rooms.Where(r => r.ManagerId != null).ToList();
+                // Read JSON file
+                string jsonData = await File.ReadAllTextAsync(filePath);
 
-                context.StudentAffairs.AddRange(managers);
-                context.SaveChanges(); // Ensure managers get their IDs
-
-                foreach (var employee in employees)
+                // Deserialize JSON to List<AdvisorProfile>
+                var sfs = JsonConvert.DeserializeObject<List<StudentAffairs>>(jsonData);
+                //Console.WriteLine(advisors);
+                var managers = sfs.Where(r => r.ManagerId == null).ToList();
+                var employees = sfs.Where(r => r.ManagerId != null).ToList();
+                foreach (var s in managers)
                 {
-                    var manager = context.StudentAffairs.FirstOrDefault(m => m.Id == employee.ManagerId);
-                    if (manager != null)
-                        employee.ManagerId = manager.Id;
-                }
+                    string email = $"{s.FirstName.ToLower()}.{s.LastName.ToLower()}@g.com";
+                    //Console.WriteLine(email);
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var user = new GPUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            EmailConfirmed = true
+                        };
 
-                context.StudentAffairs.AddRange(employees);
-                context.SaveChanges();
+                        var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                        if (result.Succeeded)
+                        {
+                            
+                            await userManager.AddToRoleAsync(user, "ManagerOfStudentAffairs");
+
+                            // Insert Advisor
+                            s.UserId = user.Id;
+                            context.StudentAffairs.Add(s);
+                        }
+                        else
+                        {
+                            Console.WriteLine("User creation failed for: " + email);
+                            foreach (var error in result.Errors)
+                            {
+                                Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User with username {email} already exists.");
+                        continue;
+                    }
+                }
+                foreach (var s in employees)
+                {
+                    string email = $"{s.FirstName.ToLower()}.{s.LastName.ToLower()}@g.com";
+                    //Console.WriteLine(email);
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var user = new GPUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            EmailConfirmed = true
+                        };
+
+                        var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                        if (result.Succeeded)
+                        {
+
+                            await userManager.AddToRoleAsync(user, "StudentAffairs");
+
+                            // Insert Advisor
+                            s.UserId = user.Id;
+                            context.StudentAffairs.Add(s);
+                        }
+                        else
+                        {
+                            Console.WriteLine("User creation failed for: " + email);
+                            foreach (var error in result.Errors)
+                            {
+                                Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User with username {email} already exists.");
+                        continue;
+                    }
+                }
+                await context.SaveChangesAsync();
+                //await Task.Delay(1000);
+
             }
         }
-        public static void SeedFinancialAffairs(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedFinancialAffairs(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "financialaffairs.json");
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
+                return;
+            }
             if (!context.FinancialAffairs.Any()) // Prevent duplicate seeding
             {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FinancialAffairs>>(jsonData);
 
-                var managers = rooms.Where(r => r.ManagerId == null).ToList();
-                var employees = rooms.Where(r => r.ManagerId != null).ToList();
+                // Read JSON file
+                string jsonData = await File.ReadAllTextAsync(filePath);
 
-                context.FinancialAffairs.AddRange(managers);
-                context.SaveChanges(); // Ensure managers get their IDs
-
-                foreach (var employee in employees)
+                // Deserialize JSON to List<AdvisorProfile>
+                var sfs = JsonConvert.DeserializeObject<List<FinancialAffairs>>(jsonData);
+                //Console.WriteLine(advisors);
+                var managers = sfs.Where(r => r.ManagerId == null).ToList();
+                var employees = sfs.Where(r => r.ManagerId != null).ToList();
+                foreach (var s in managers)
                 {
-                    var manager = context.FinancialAffairs.FirstOrDefault(m => m.Id == employee.ManagerId);
-                    if (manager != null)
-                        employee.ManagerId = manager.Id;
-                }
+                    string email = $"{s.FirstName.ToLower()}.{s.LastName.ToLower()}@g.com";
+                    //Console.WriteLine(email);
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var user = new GPUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            EmailConfirmed = true
+                        };
 
-                context.FinancialAffairs.AddRange(employees);
-                context.SaveChanges();
+                        var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                        if (result.Succeeded)
+                        {
+
+                            await userManager.AddToRoleAsync(user, "ManagerOfFinancialAffairs");
+
+                            // Insert Advisor
+                            s.UserId = user.Id;
+                            context.FinancialAffairs.Add(s);
+                        }
+                        else
+                        {
+                            Console.WriteLine("User creation failed for: " + email);
+                            foreach (var error in result.Errors)
+                            {
+                                Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User with username {email} already exists.");
+                        continue;
+                    }
+                }
+                foreach (var s in employees)
+                {
+                    string email = $"{s.FirstName.ToLower()}.{s.LastName.ToLower()}@g.com";
+                    //Console.WriteLine(email);
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var user = new GPUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            EmailConfirmed = true
+                        };
+
+                        var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                        if (result.Succeeded)
+                        {
+
+                            await userManager.AddToRoleAsync(user, "FinancialAffairs");
+
+                            // Insert Advisor
+                            s.UserId = user.Id;
+                            context.FinancialAffairs.Add(s);
+                        }
+                        else
+                        {
+                            Console.WriteLine("User creation failed for: " + email);
+                            foreach (var error in result.Errors)
+                            {
+                                Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"User with username {email} already exists.");
+                        continue;
+                    }
+                }
+                await context.SaveChangesAsync();
+                //await Task.Delay(1000);
+
             }
         }
-        public static void SeedStudents(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedStudents(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
-            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "students.json");
+            string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "students.json");
 
-            if (!context.Students.Any()) // Prevent duplicate seeding
+            if (!File.Exists(filePath))
             {
-                var jsonData = File.ReadAllText(filePath);
-
-                var studentsDto = System.Text.Json.JsonSerializer.Deserialize<List<StudentDTO>>(jsonData, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-
-                // Convert DTOs to actual Student entities
-                var students = studentsDto.Select(dto => new Student
-                {
-                    //Id = dto.Id,
-                    FirstName = dto.FirstName,
-                    MiddleName = dto.MiddleName,
-                    LastName = dto.LastName,
-                    BirthDate = DateOnly.FromDateTime(dto.BirthDate), // Convert DateTime to DateOnly
-                    Address = dto.Address,
-                    AdvisorId = dto.AdvisorId,
-                    DeptId = dto.DeptId,
-                    Level = dto.Level,
-                    HighSchoolGrade = dto.HighSchoolGrade,
-                    Gender = dto.Gender,
-                    MobilePhone = dto.MobilePhone,
-                    HomePhone = dto.HomePhone,
-                    SSN = dto.SSN,
-                    RegisterYear = dto.RegisterYear
-                    
-                }).ToList();
-
-                context.ChangeTracker.Clear();
-                context.Students.AddRange(students);
-                context.SaveChanges();
+                Console.WriteLine("❌ Error: JSON file not found at " + filePath);
+                return;
             }
+
+            // Read JSON file asynchronously
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize JSON to List<StudentDTO>
+            var studentsDto = JsonConvert.DeserializeObject<List<StudentDTO>>(jsonData);
+
+            if (studentsDto == null || studentsDto.Count == 0)
+            {
+                Console.WriteLine("⚠ No students found in JSON file.");
+                return;
+            }
+
+            foreach (var dto in studentsDto)
+            {
+                string email = $"{dto.FirstName.ToLower()}.{dto.LastName.ToLower()}@g.com";
+
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, "Student");
+
+                        // Insert Student
+                        var student = new Student
+                        {
+                            FirstName = dto.FirstName,
+                            MiddleName = dto.MiddleName,
+                            LastName = dto.LastName,
+                            BirthDate = DateOnly.FromDateTime(dto.BirthDate),
+                            Address = dto.Address,
+                            AdvisorId = dto.AdvisorId,
+                            DeptId = dto.DeptId,
+                            Level = dto.Level,
+                            HighSchoolGrade = dto.HighSchoolGrade,
+                            Gender = dto.Gender,
+                            MobilePhone = dto.MobilePhone,
+                            HomePhone = dto.HomePhone,
+                            SSN = dto.SSN,
+                            RegisterYear = dto.RegisterYear,
+                            UserId = user.Id // Associate student with user
+                        };
+
+                        context.Students.Add(student);
+                    }
+                    else
+                    {
+                        Console.WriteLine("⚠ User creation failed for: " + email);
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"ℹ User with username {email} already exists.");
+                    continue;
+                }
+            }
+
+            await context.SaveChangesAsync();
         }
         public static void SeedReceipts(AppDbContext context, IHostEnvironment env)
         {
@@ -489,16 +700,56 @@ namespace GP.DAL.Seed
                 }
             }
         }
-        public static void SeedInstructorAssistants(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedInstructorAssistants(UserManager<GPUser> userManager,AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "inst-assis.json");
-            if (context.FacultyMembers.Count()<24) // Prevent duplicate seeding
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize JSON to List<AdvisorProfile>
+            var fs = JsonConvert.DeserializeObject<List<FacultyMember>>(jsonData);
+            //Console.WriteLine(advisors);
+
+            foreach (var f in fs)
             {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
-                    context.FacultyMembers.AddRange(rooms);
-                    context.SaveChanges();
+                string email = $"{f.FirstName.ToLower()}.{f.LastName.ToLower()}@g.com";
+                //Console.WriteLine(email);
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        if (f.WorkingHours == 28)
+                            await userManager.AddToRoleAsync(user, "Assistant");
+                        if (f.WorkingHours == 6)
+                            await userManager.AddToRoleAsync(user, "Instructor");
+
+                        // Insert Advisor
+                        f.UserId = user.Id;
+                        context.FacultyMembers.Add(f);
+                    }
+                    else
+                    {
+                        Console.WriteLine("User creation failed for: " + email);
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"User with username {email} already exists.");
+                    continue;
+                }
             }
+            await context.SaveChangesAsync();
         }
         public static void SeedInstructorSchedules(AppDbContext context, IHostEnvironment env)
         {

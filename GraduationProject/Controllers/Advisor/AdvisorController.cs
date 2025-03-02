@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GraduationProject.Controllers.Advisor
 {
-    //[Authorize(Roles = "Advisor")]
+    [Authorize(Roles = "Advisor")]
 
     public class AdvisorController : Controller
     {
