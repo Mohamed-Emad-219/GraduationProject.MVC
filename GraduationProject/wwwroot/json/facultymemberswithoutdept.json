@@ -106,14 +106,5 @@
         "MobilePhone": "01012345678",
         "Address": "Cairo, Nasr City",
         "WorkingHours": 6
-    },
-    {
-        "SSN": "1101322233333444",
-        "FirstName": "Nesreen",
-        "MiddleName": "Nabil",
-        "LastName": "Omar",
-        "MobilePhone": "01012345678",
-        "Address": "Cairo, Nasr City",
-        "WorkingHours": 6
     }
 ]

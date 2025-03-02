@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http.Json;
 using System.Numerics;
 using System.Text;
@@ -47,6 +48,8 @@ namespace GP.DAL.Seed
                     await roleManager.CreateAsync(new IdentityRole(role));
                 }
             }
+            await Task.Delay(5000);
+            
         }
         public static async Task CreateAdvisors(UserManager<GPUser> userManager, IServiceProvider serviceProvider, IHostEnvironment env)
         {
@@ -105,6 +108,7 @@ namespace GP.DAL.Seed
                 }
             }
             await dbContext.SaveChangesAsync();
+            await Task.Delay(5000);
         }
         public static void SeedCollege(AppDbContext context, IHostEnvironment env)
         {
@@ -171,6 +175,8 @@ namespace GP.DAL.Seed
                 }
             }
             await context.SaveChangesAsync();
+            context.ChangeTracker.Clear();
+            await Task.Delay(5000);
         }
         //public static async Task SeedFacultyWithDept(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         //{
@@ -223,7 +229,7 @@ namespace GP.DAL.Seed
         //    }
         //    await context.SaveChangesAsync();
         //}
-        public static void SeedFacultyWithDept(AppDbContext context, IHostEnvironment env)
+        public static async Task SeedFacultyWithDept(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "facultymemberswithdep.json");
 
@@ -246,12 +252,37 @@ namespace GP.DAL.Seed
                         }
                         else
                         {
+                            member.FirstName = "Mohamed";
+                            member.MiddleName = "Mohamed";
+                            member.LastName = "Ali";
+                            string email = $"{member.FirstName.ToLower()}.{member.LastName.ToLower()}@g.com";
                             // Add new faculty member
-                            context.FacultyMembers.Add(member);
+                            var user = new GPUser
+                            {
+                                UserName = email,
+                                Email = email,
+                                EmailConfirmed = true
+                            };
+
+                            var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                            if (result.Succeeded)
+                            {
+                                member.WorkingHours = 6;
+                               await userManager.AddToRoleAsync(user, "Head");
+                                member.Address = "Unknown";
+                                member.SSN = "5423698214587692";
+                                member.MobilePhone = "02365142982";
+                                // Insert Advisor
+                                member.UserId = user.Id;
+                                member.Id = 0;
+                                member.DeptId = 10;
+                                context.FacultyMembers.Add(member);
+                            }
                         }
                     }
 
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
+                    await Task.Delay(5000);
                 }
             }
             else
@@ -374,6 +405,7 @@ namespace GP.DAL.Seed
                 }
             }
             await context.SaveChangesAsync();
+            await Task.Delay(5000);
         }
         public static async Task SeedStudentAffairs(UserManager<GPUser> userManager,AppDbContext context, IHostEnvironment env)
         {
@@ -471,7 +503,7 @@ namespace GP.DAL.Seed
                     }
                 }
                 await context.SaveChangesAsync();
-                //await Task.Delay(1000);
+                await Task.Delay(5000);
 
             }
         }
@@ -571,7 +603,7 @@ namespace GP.DAL.Seed
                     }
                 }
                 await context.SaveChangesAsync();
-                //await Task.Delay(1000);
+                await Task.Delay(5000);
 
             }
         }
@@ -654,6 +686,7 @@ namespace GP.DAL.Seed
             }
 
             await context.SaveChangesAsync();
+            await Task.Delay(5000);
         }
         public static void SeedReceipts(AppDbContext context, IHostEnvironment env)
         {
@@ -750,6 +783,7 @@ namespace GP.DAL.Seed
                 }
             }
             await context.SaveChangesAsync();
+            await Task.Delay(5000);
         }
         public static void SeedInstructorSchedules(AppDbContext context, IHostEnvironment env)
         {
