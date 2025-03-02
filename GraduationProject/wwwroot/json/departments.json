@@ -20,29 +20,24 @@
     "HeadId": 7
   },
   {
-    "Name": "Mechanical Engineering",
+    "Name": "Physics and Mathematical Engineering",
     "CollegeId": 1,
     "HeadId": 8
   },
   {
-    "Name": "Physics and Mathematical Engineering",
+    "Name": "Architectural Engineering",
     "CollegeId": 1,
     "HeadId": 9
   },
   {
-    "Name": "Architectural Engineering",
-    "CollegeId": 1,
-    "HeadId": 10
-  },
-  {
     "Name": "Pharmacognosy",
     "CollegeId": 3,
-    "HeadId": 11
+    "HeadId": 10
   },
   {
     "Name": "Pharmaceutical Chemistry",
     "CollegeId": 3,
-    "HeadId": 12
+    "HeadId": 11
   },
   {
     "Name": "General",

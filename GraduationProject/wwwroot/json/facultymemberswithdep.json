@@ -42,13 +42,5 @@
   {
     "Id": 11,
     "DeptId": 8
-  },
-  {
-    "Id": 12,
-    "DeptId": 9
-  },
-  {
-    "Id": 13,
-    "DeptId": null
   }
 ]

@@ -63,15 +63,6 @@
         "WorkingHours": 6
     },
     {
-        "SSN": "2222373344345555",
-        "FirstName": "Mohammed",
-        "MiddleName": "Mahmoud",
-        "LastName": "El Fawal",
-        "MobilePhone": "01556789012",
-        "Address": "Mansoura, Aga",
-        "WorkingHours": 6
-    },
-    {
         "SSN": "2222373344343555",
         "FirstName": "Mona",
         "MiddleName": "Samir",

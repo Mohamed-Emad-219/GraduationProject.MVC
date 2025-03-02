@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject UserManager<GPUser> UserManager
 @inject SignInManager<GPUser> SignInManager
 <!DOCTYPE html>
 <html lang="en">
@@ -31,15 +30,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="StudentAffairs" asp-action="NewApplication">Apply</a>
-                        </li>
-                        @if (SignInManager.IsSignedIn(User))
+                        @if (!SignInManager.IsSignedIn(User))
                         {
-                            var currentUser = await UserManager.GetUserAsync(User);
-                            var roles = await UserManager.GetRolesAsync(currentUser);
-
-                            if (roles.Contains("Admin"))
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="StudentAffairs" asp-action="NewApplication">Apply</a>
+                            </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                             {
                                 <li class="nav-item"> 
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a> 
@@ -48,7 +45,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ShowRequests">Requests</a> 
                                 </li>
                             }
-                            if (roles.Contains("Advisor"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Advisor"))
                             {
                                 <li class="nav-item"> 
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="InstructorInfoPage">Instructor Schedule</a> 
@@ -60,37 +57,37 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="Dashboard">Dashboard</a> 
                                 </li>
                             }
-                            if (roles.Contains("Student"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Student"))
                             {
                                 <li class="nav-item"> 
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="StudentSchedule">Student Schedule</a> 
                                 </li>
                             }
-                            if (roles.Contains("Instructor"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Instructor")) //done
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="InstructorSchedule">Instructor Schedule</a>
                                 </li>
                             }
-                            if (roles.Contains("Assistant"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Assistant")) //done
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="AssistantSchedule">Assistant Schedule</a>
                                 </li>
                             }
-                            if (roles.Contains("ManagerOfFinancialAffairs"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("ManagerOfFinancialAffairs"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="FinancialAffairs" asp-action="ManagerStats">Statistics</a>
                                 </li>
                             }
-                            if (roles.Contains("ManagerOfStudentAffairs"))
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("ManagerOfStudentAffairs"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="StudentAffairs" asp-action="ManagerStats">Statistics</a>
                                 </li>
                             }
-                        }
+                        
                     </ul>
                     <ul class="nav-icons navbar-nav mb-2 mb-lg-0">
                         @if (SignInManager.IsSignedIn(User))

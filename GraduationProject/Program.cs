@@ -3,6 +3,7 @@ using GP.BLL.Repositories;
 using GP.DAL.Context;
 using GP.DAL.Models;
 using GP.DAL.Seed;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,8 @@ builder.Services.AddIdentity<GPUser, IdentityRole>(
                   //config.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
               }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
 
 builder.Services.ConfigureApplicationCookie(
                config =>
@@ -46,6 +49,7 @@ builder.Services.AddScoped<ICourseRepository,CourseRepository>();
 builder.Services.AddScoped<IFacultyMemberRepsitory,FacultyMemberRepsitory>();
 builder.Services.AddScoped<ICollegeRepository, CollegeRepository>();
 builder.Services.AddScoped<IStudentScheduleRepository, StudentScheduleRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IPlaceRepository, PlaceRepository>();
 
 var app = builder.Build();
@@ -66,26 +70,26 @@ using (var scope = app.Services.CreateScope())
     var dbContext = services.GetRequiredService<AppDbContext>();
     var env = services.GetRequiredService<IHostEnvironment>();
     var userManager = services.GetRequiredService<UserManager<GPUser>>();
-    await DbInitializer.SeedRoles(services);
-    await DbInitializer.CreateAdvisors(userManager, services, env);
-    await DbInitializer.SeedFacultyWithoutDept(userManager, dbContext, env);
-    DbInitializer.SeedCollege(dbContext, env);
-    DbInitializer.SeedDapertment(dbContext, env);
-    await DbInitializer.SeedFacultyWithDept(userManager, dbContext, env);
-    DbInitializer.SeedCourses(dbContext, env);
-    DbInitializer.SeedCoursesPre(dbContext, env);
-    DbInitializer.SeedPlace(dbContext, env);
-    await DbInitializer.SeedFollowUp(userManager, dbContext, env);
-    await DbInitializer.SeedStudentAffairs(userManager, dbContext, env);
-    await DbInitializer.SeedFinancialAffairs(userManager, dbContext, env);
-    await DbInitializer.SeedStudents(userManager, dbContext, env);
-    DbInitializer.SeedReceipts(dbContext, env);
-    DbInitializer.SeedApplications(dbContext, env);
-    DbInitializer.SeedEnrollments(dbContext, env);
-    await DbInitializer.SeedInstructorAssistants(userManager, dbContext, env);
-    DbInitializer.SeedInstructorSchedules(dbContext, env);
-    DbInitializer.SeedStudentSchedules(dbContext, env);
-    DbInitializer.SeedFollowUpSchedules(dbContext, env);
+    //    await DbInitializer.SeedRoles(services);
+    //    await DbInitializer.CreateAdvisors(userManager, services, env);
+    //    await DbInitializer.SeedFacultyWithoutDept(userManager, dbContext, env);
+    //    DbInitializer.SeedCollege(dbContext, env);
+    //    DbInitializer.SeedDapertment(dbContext, env);
+    //    await DbInitializer.SeedFacultyWithDept(userManager, dbContext, env);
+    //    DbInitializer.SeedCourses(dbContext, env);
+    //    DbInitializer.SeedCoursesPre(dbContext, env);
+    //    DbInitializer.SeedPlace(dbContext, env);
+    //    await DbInitializer.SeedFollowUp(userManager, dbContext, env);
+    //    await DbInitializer.SeedStudentAffairs(userManager, dbContext, env);
+    //    await DbInitializer.SeedFinancialAffairs(userManager, dbContext, env);
+    //    await DbInitializer.SeedStudents(userManager, dbContext, env);
+    //    DbInitializer.SeedReceipts(dbContext, env);
+    //    DbInitializer.SeedApplications(dbContext, env);
+    //    DbInitializer.SeedEnrollments(dbContext, env);
+    //    await DbInitializer.SeedInstructorAssistants(userManager, dbContext, env);
+    //    DbInitializer.SeedInstructorSchedules(dbContext, env);
+    //    DbInitializer.SeedStudentSchedules(dbContext, env);
+    //    DbInitializer.SeedFollowUpSchedules(dbContext, env);
 }
 #endregion
 app.UseHttpsRedirection();
@@ -93,6 +97,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

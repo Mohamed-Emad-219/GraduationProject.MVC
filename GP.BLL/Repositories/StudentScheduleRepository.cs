@@ -17,10 +17,10 @@ namespace GP.BLL.Repositories
         {
             context = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public IEnumerable<StudentSchedule> GetStudentScheduleByScheduleId(int ScheduleId)
+        public IEnumerable<StudentSchedule> GetStudentScheduleByGroup(int Group, int Level)
         {
             return context.StudentSchedules
-                .Where(s => s.ScheduleId == ScheduleId)
+                .Where(s => s.Group == Group && s.Level == Level)
                 .Include(s => s.Course)
                 .Include(s => s.Place)
                 .Include(s => s.Instructor)

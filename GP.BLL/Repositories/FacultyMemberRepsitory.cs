@@ -26,5 +26,9 @@ namespace GP.BLL.Repositories
         {
             return _dbContext.FacultyMembers.AsNoTracking().ToList();
         }
+        public FacultyMember GetFacultyByUserId(string UserId)
+        {
+            return _dbContext.FacultyMembers.FirstOrDefault(f => f.UserId == UserId);
+        }
     }
 }

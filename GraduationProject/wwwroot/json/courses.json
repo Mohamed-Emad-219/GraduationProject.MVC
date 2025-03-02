@@ -5,7 +5,7 @@
         "CreditHour": 3,
         "NoOfSec": 2,
         "NoOfLec": 2,
-      "DeptId": 10,
+      "DeptId": 9,
       "Level" : 1
     },
   {
@@ -14,7 +14,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   },
   {
@@ -23,7 +23,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   },
   {
@@ -32,7 +32,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   },
   {
@@ -41,7 +41,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   },
   {
@@ -50,7 +50,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   },
   {
@@ -59,7 +59,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   },
   {
@@ -68,7 +68,7 @@
     "CreditHour": 3,
     "NoOfSec": 2,
     "NoOfLec": 2,
-    "DeptId": 10,
+    "DeptId": 9,
     "Level": 1
   }
 ]

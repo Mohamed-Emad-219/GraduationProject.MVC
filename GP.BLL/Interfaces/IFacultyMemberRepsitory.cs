@@ -11,5 +11,6 @@ namespace GP.BLL.Interfaces
     {
         IEnumerable<FacultyMember> GetHeads();
         IEnumerable<FacultyMember> GetAll();
+        FacultyMember GetFacultyByUserId(string UserId);
     }
 }

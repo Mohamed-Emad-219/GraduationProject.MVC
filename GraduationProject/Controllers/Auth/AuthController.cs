@@ -91,7 +91,7 @@ namespace GraduationProject.Controllers.Auth
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction("Index", "Home");
         }
         public IActionResult ForgetPassword()
         {
