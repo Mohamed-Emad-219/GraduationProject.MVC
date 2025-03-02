@@ -12,7 +12,6 @@ GraduationProject/appsettings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-GraduationProject/appsettings.json
 
 # Mono auto generated files
 mono_crash.*
