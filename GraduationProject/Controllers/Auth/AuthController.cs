@@ -1,4 +1,5 @@
-﻿using GP.DAL.Context;
+﻿using GP.BLL.Interfaces;
+using GP.DAL.Context;
 using GP.DAL.Models;
 using GraduationProject.Controllers.Home;
 using GraduationProject.ViewModels;
@@ -13,14 +14,24 @@ namespace GraduationProject.Controllers.Auth
         private readonly UserManager<GPUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<GPUser> _signInManager;
-
-       public AuthController(UserManager<GPUser> userManager,SignInManager<GPUser> signInManager, RoleManager<IdentityRole> roleManager
-                                 )  // Add EmailSettings to constructor
+        private readonly IStudentRepository studentRepository;
+        private readonly IFacultyMemberRepsitory facultyMemberRepsitory;
+        private readonly IAdvisorRepository advisorRepository;
+        private readonly IFinancialAffairsRepository financialAffairsRepository;
+        private readonly IStudentAffairsRepository studentAffairsRepository;
+        private readonly IAdminRepository adminRepository;
+       public AuthController(IAdminRepository _adminRepository, IStudentAffairsRepository _studentAffairsRepository, IFinancialAffairsRepository _financialAffairsRepository, IAdvisorRepository _advisorRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IStudentRepository _studentRepository, UserManager<GPUser> userManager,SignInManager<GPUser> signInManager, RoleManager<IdentityRole> roleManager
+                                 )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-           
+            studentRepository = _studentRepository;
+            facultyMemberRepsitory = _facultyMemberRepsitory;
+            advisorRepository = _advisorRepository;
+            financialAffairsRepository = _financialAffairsRepository;
+            studentAffairsRepository = _studentAffairsRepository;
+            adminRepository = _adminRepository;
         }
         [HttpGet]
         public IActionResult Register()
@@ -109,9 +120,39 @@ namespace GraduationProject.Controllers.Auth
         {
             return View("Login");
         }
-        public IActionResult ShowProfile()
+        public async Task<IActionResult> ShowProfile()
         {
-            return View("Profile");
+            var user = await _userManager.GetUserAsync(User);
+            var f = facultyMemberRepsitory.GetFacultyByUserId(user.Id);
+            var s = studentRepository.GetStudentByUserId(user.Id);
+            var ff = financialAffairsRepository.GetFinancialAffairsByUserId(user.Id);
+            var ss = studentAffairsRepository.GetStudentAffairsByUserId(user.Id);
+            var adv = advisorRepository.GetAdvisorByUserId(user.Id);
+            var adm = adminRepository.GetAdminByUserId(user.Id);
+            ViewData["Email"] = user.Email;
+            if (f != null)
+            {
+                return View("Profile", f);
+            }else if(s != null)
+            {
+                return View("Profile", s);
+            }else if(ff != null){
+                return View("Profile", ff);
+            }
+            else if (ss != null)
+            {
+                return View("Profile", ss);
+            }
+            else if (adv != null)
+            {
+                return View("Profile", adv);
+
+            }
+            else if (adm != null)
+            {
+                return View("Profile", adm);
+            }
+            return RedirectToAction("Index", "Home");
         }
         public IActionResult EditProfile()
         {

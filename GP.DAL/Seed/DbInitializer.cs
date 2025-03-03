@@ -110,6 +110,65 @@ namespace GP.DAL.Seed
             await dbContext.SaveChangesAsync();
             await Task.Delay(5000);
         }
+        public static async Task CreateAdmins(UserManager<GPUser> userManager, IServiceProvider serviceProvider, IHostEnvironment env)
+        {
+            var dbContext = serviceProvider.GetRequiredService<AppDbContext>();
+
+            // Get the absolute path to the JSON file in wwwroot
+            string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "admins.json");
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
+                return;
+            }
+
+            // Read JSON file
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize JSON to List<AdvisorProfile>
+            var admins = JsonConvert.DeserializeObject<List<Admin>>(jsonData);
+            //Console.WriteLine(advisors);
+
+            foreach (var adm in admins)
+            {
+                string email = $"{adm.FirstName.ToLower()}.{adm.LastName.ToLower()}@g.com";
+                //Console.WriteLine(email);
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, "Admin");
+
+                        adm.UserId = user.Id;
+                        dbContext.Admins.Add(adm);
+                    }
+                    else
+                    {
+                        Console.WriteLine("User creation failed for: " + email);
+                        foreach (var error in result.Errors)
+                        {
+                            Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"User with username {email} already exists.");
+                    continue;
+                }
+            }
+            await dbContext.SaveChangesAsync();
+            await Task.Delay(5000);
+        }
         public static void SeedCollege(AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "college.json");
@@ -699,6 +758,36 @@ namespace GP.DAL.Seed
                 if (rooms != null)
                 {
                     context.Receipts.AddRange(rooms);
+                    context.SaveChanges();
+                }
+            }
+        }
+        public static void SeedTerms(AppDbContext context, IHostEnvironment env)
+        {
+            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "terms.json");
+            if (!context.Terms.Any()) // Prevent duplicate seeding
+            {
+                var jsonData = File.ReadAllText(filePath);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<Term>>(jsonData);
+
+                if (rooms != null)
+                {
+                    context.Terms.AddRange(rooms);
+                    context.SaveChanges();
+                }
+            }
+        }
+        public static void SeedCoursesTerms(AppDbContext context, IHostEnvironment env)
+        {
+            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "coursesterms.json");
+            if (!context.CoursesTerms.Any()) // Prevent duplicate seeding
+            {
+                var jsonData = File.ReadAllText(filePath);
+                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<CoursesTerm>>(jsonData);
+
+                if (rooms != null)
+                {
+                    context.CoursesTerms.AddRange(rooms);
                     context.SaveChanges();
                 }
             }

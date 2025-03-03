@@ -1,0 +1,38 @@
+[
+  {
+    "SSN": "1234567890123456",
+    "FirstName": "John",
+    "MiddleName": "Michael",
+    "LastName": "Doe",
+    "MobilePhone": "01234567890",
+    "Address": "123 Main St, Cityville",
+    "Gender": 0
+  },
+  {
+    "SSN": "2345678901234567",
+    "FirstName": "Alice",
+    "MiddleName": "Marie",
+    "LastName": "Smith",
+    "MobilePhone": "09876543211",
+    "Address": "456 Oak St, Townsville",
+    "Gender": 1
+  },
+  {
+    "SSN": "3456789012345678",
+    "FirstName": "Robert",
+    "MiddleName": "James",
+    "LastName": "Brown",
+    "MobilePhone": "01122334455",
+    "Address": "789 Pine St, Villagetown",
+    "Gender": 0
+  },
+  {
+    "SSN": "4567890123456789",
+    "FirstName": "Sophia",
+    "MiddleName": "Anne",
+    "LastName": "Davis",
+    "MobilePhone": "07766554433",
+    "Address": "101 Maple St, Metropolis",
+    "Gender": 1
+  }
+]

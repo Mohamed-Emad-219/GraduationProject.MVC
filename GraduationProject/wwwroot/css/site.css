@@ -235,3 +235,34 @@ td {
     border: 1px solid #ddd;
     margin-bottom: 10px;
 }
+
+.profile .profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    padding: 20px;
+}
+
+.profile .profile-img {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+    .profile .profile-img img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: #ccc;
+    }
+
+.profile .profile-info {
+    flex: 1;
+}
+
+.profile .info-box {
+    background-color: #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}

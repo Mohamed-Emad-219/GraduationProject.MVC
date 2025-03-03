@@ -10,5 +10,7 @@ namespace GP.BLL.Interfaces
     public interface IStudentRepository
     {
         Student GetStudentByUserId(string UserId);
+        Student GetStudentById(int Id);
+        IEnumerable<Student> GetStudentsByLevel(int level);
     }
 }

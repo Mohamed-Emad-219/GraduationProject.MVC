@@ -6,142 +6,40 @@
         <div class="container py-4">
             <div class="search w-75 mx-auto mb-4">
                 <p class="fs-4">Student ID:</p>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" name="std-id" id="std-id" type="search" placeholder="Student Id" aria-label="Search">
+            <form id="searchForm" class="d-flex" role="search">
+                <input class="form-control me-2" name="Id" id="std-id" type="search" placeholder="Student Id" aria-label="Search">
                     <button class="btn btn-outline-success" id="search-id" type="button">Search</button>
                 </form>
             </div>
-            <div class="card w-75 m-auto d-none" id="student-info">
-                <div class="card-header text-white bg-primary p-4">
-                    <h3>Student's Fees</h3>
-                </div>
-                <div class="card-body">
-                    <div class="row" id="info-fees">
-                    </div>
-                    <div class="mt-3">
-                        <a asp-controller="FinancialAffairs" asp-action="Receipt" id="confirm-to-receipt" class="btn btn-primary">Confirm</a>
-                    </div>
-                </div>
-            </div>
+        <div id="searchResults"></div>
         </div>
     </section>
-    <script>
 
     @section Scripts {
-        <script>
-        document
-          .getElementById("search-id")
-          .addEventListener("click", async function (event) {
-            event.preventDefault();
-            var id = document.getElementById("std-id").value;
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script>
+            $(document).ready(function () {
+            $("#search-id").click(function (event) {
+                event.preventDefault(); // Prevents form reload
 
-            var students = [
-              {
-                id: 97544,
-                name: "Ayman Moamed",
-                level: 4,
-                reg_year: 2021,
-                fees: 18000,
-                courses: [
-                  "Digital Signal Processing",
-                  "Software Engineering 2",
-                  "Project",
-                  "Microsystems",
-                  "Assembly Language",
-                ],
-                semester: "Fall 2024",
-                college: "Computers & Artificial Intelligence",
-                date: new Date().toISOString().split('T')[0],
-                datetime: getFormattedDateTime()
-              },
-              {
-                id: 97546,
-                name: "Mohamed Hassan",
-                level: 2,
-                reg_year: 2022,
-                fees: 20000,
-                courses: [
-                  "Database Systems 1",
-                  "Computer Archeticture",
-                  "Multimedia",
-                  "Software Engineering 1",
-                  "Operating Systems",
-                  "Computer Networks 1",
-                ],
-                semester: "Fall 2024",
-                college: "Computers & Artificial Intelligence",
-                date: new Date().toISOString().split('T')[0],
-                datetime: getFormattedDateTime()
-              },
-              {
-                id: 97547,
-                name: "Ali Ahmed",
-                level: 1,
-                reg_year: 2024,
-                fees: 25000,
-                courses: [
-                  "Introduction to Programming",
-                  "Introduction to Computer Science",
-                  "English 1",
-                  "Linear Algebra",
-                  "Mathematical Analysis 1",
-                  "Enterpreneur ship",
-                ],
-                semester: "Fall 2024",
-                college: "Computers & Artificial Intelligence",
-                date: new Date().toISOString().split('T')[0],
-                datetime: getFormattedDateTime()
-              },
-            ];
+                var Id = $("#std-id").val();
+                if (!Id) {
+                    alert("Please enter a Student ID");
+                    return;
+                }
 
-            var info = document.getElementById("student-info");
-            info.classList.remove("d-none");
-            var std = students.find((std) => std.id == id);
-            if (!std) {
-              info.classList.add("d-none");
-              alert("Student not found");
-              return;
-            } else {
-              sessionStorage.setItem("studentFees", JSON.stringify(std));
-              var studentinfo = document.getElementById("info-fees");
-              let s = "";
-              s += `<div class="col-md-6">
-                                    <p><strong>Student ID: </strong><span id="std-id">${std.id}</span></p>
-                                    <p><strong>Student Name: </strong><span id="std-name">${std.name}</span></p>
-                                    <p><strong>Level: </strong><span id="std-level">${std.level}</span></p>
-                                    <p><strong>Registered Year: </strong><span id="std-year">${std.reg_year}</span></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h4>New Courses: ${std.semester}</h4>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Subject</th>
-                                                <th>Time</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>`;
-              std.courses.forEach((course) => {
-                s += `<tr><td>${course}</td><td>3 hours</td></tr>`;
-              });
-              s += ` </tbody>
-                                    </table>
-                                    <p><strong>Total Hours:</strong> 18 </p>
-                                    <p><strong>Payments:</strong>${std.fees}</p></div>`;
-              studentinfo.innerHTML = s;
-            }
-          });
-          function getFormattedDateTime() {
-          const date = new Date();
-
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-          const day = String(date.getDate()).padStart(2, '0');
-          const hours = String(date.getHours()).padStart(2, '0');
-          const minutes = String(date.getMinutes()).padStart(2, '0');
-
-          // Combine date and time
-          return `${year}-${month}-${day} ${hours}:${minutes}`;
-        }
-</script>
+                $.ajax({
+                    url: "/FinancialAffairs/Search",
+                    type: "get", // Or "POST" depending on your API
+                    data: { id: Id },
+                    success: function (response) {
+                        $("#searchResults").html(response); // Load partial view here
+                    },
+                    error: function () {
+                        $("#searchResults").html("<p class='text-center fs-4 fw-bold text-danger'>Student not found.</p>");
+                    }
+                });
+            });
+        });
+    </script>
     }

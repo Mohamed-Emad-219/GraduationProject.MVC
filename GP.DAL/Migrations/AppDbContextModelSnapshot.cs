@@ -226,6 +226,24 @@ namespace GP.DAL.Migrations
                     b.ToTable("CoursePrerequisites");
                 });
 
+            modelBuilder.Entity("GP.DAL.Models.CoursesTerm", b =>
+                {
+                    b.Property<int>("TermId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CourseCode")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.HasKey("TermId", "CourseCode");
+
+                    b.HasIndex("CourseCode");
+
+                    b.ToTable("CoursesTerms");
+                });
+
             modelBuilder.Entity("GP.DAL.Models.Department", b =>
                 {
                     b.Property<int>("Id")
@@ -263,22 +281,18 @@ namespace GP.DAL.Migrations
                     b.Property<string>("CourseCode")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AcademicYear")
-                        .HasColumnType("int");
-
                     b.Property<string>("Grade")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Semester")
+                    b.Property<int>("TermId")
                         .HasColumnType("int");
 
                     b.HasKey("StudentId", "CourseCode");
 
                     b.HasIndex("CourseCode");
+
+                    b.HasIndex("TermId");
 
                     b.ToTable("Enrollments");
                 });
@@ -915,6 +929,31 @@ namespace GP.DAL.Migrations
                     b.ToTable("StudentSchedules");
                 });
 
+            modelBuilder.Entity("GP.DAL.Models.Term", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AcademicYear")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<int>("List")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Semester")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Terms");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1105,6 +1144,25 @@ namespace GP.DAL.Migrations
                     b.Navigation("Prerequisite");
                 });
 
+            modelBuilder.Entity("GP.DAL.Models.CoursesTerm", b =>
+                {
+                    b.HasOne("GP.DAL.Models.Course", "Course")
+                        .WithMany("CoursesTerms")
+                        .HasForeignKey("CourseCode")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GP.DAL.Models.Term", "Term")
+                        .WithMany("CoursesTerms")
+                        .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Term");
+                });
+
             modelBuilder.Entity("GP.DAL.Models.Department", b =>
                 {
                     b.HasOne("GP.DAL.Models.College", "College")
@@ -1137,9 +1195,17 @@ namespace GP.DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("GP.DAL.Models.Term", "Term")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+
+                    b.Navigation("Term");
                 });
 
             modelBuilder.Entity("GP.DAL.Models.FacultyMember", b =>
@@ -1419,6 +1485,8 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Models.Course", b =>
                 {
+                    b.Navigation("CoursesTerms");
+
                     b.Navigation("Enrollments");
 
                     b.Navigation("FollowUpSchedules");
@@ -1511,6 +1579,13 @@ namespace GP.DAL.Migrations
                     b.Navigation("Receipts");
 
                     b.Navigation("Subordinates");
+                });
+
+            modelBuilder.Entity("GP.DAL.Models.Term", b =>
+                {
+                    b.Navigation("CoursesTerms");
+
+                    b.Navigation("Enrollments");
                 });
 #pragma warning restore 612, 618
         }

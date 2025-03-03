@@ -23,6 +23,7 @@ namespace GP.DAL.Models
         public ICollection<FollowUpSchedule>? FollowUpSchedules { get; set; }
         public ICollection<InstructorSchedule>? InstructorSchedules { get; set; }
         public ICollection<Enrollment>? Enrollments { get; set; }
+        public ICollection<CoursesTerm>? CoursesTerms { get; set; }
         public ICollection<CoursePrerequisite>? Prerequisites { get; set; }
         public ICollection<CoursePrerequisite>? RequiredFor { get; set; }
     }

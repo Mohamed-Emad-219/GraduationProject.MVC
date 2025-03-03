@@ -14,12 +14,10 @@ namespace GP.DAL.Context
 {
     public class AppDbContext : IdentityDbContext<GPUser>
     {
-
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -140,6 +138,12 @@ namespace GP.DAL.Context
                 .WithMany(fm => fm.InstructorSchedules)
                 .HasForeignKey(s => s.InstructorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Enrollment>()
+                .HasOne(s => s.Term)
+                .WithMany(fm => fm.Enrollments)
+                .HasForeignKey(s => s.TermId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-Many relationship between Assistant and Schedule
             modelBuilder.Entity<InstructorSchedule>()
@@ -316,6 +320,23 @@ namespace GP.DAL.Context
                 .WithOne()
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
+
+            modelBuilder.Entity<CoursesTerm>()
+                    .HasKey(e => new { e.TermId, e.CourseCode });
+
+            // Configure relationship between Term and CoursesTerm
+            modelBuilder.Entity<CoursesTerm>()
+                .HasOne(e => e.Term)
+                .WithMany(s => s.CoursesTerms)
+                .HasForeignKey(e => e.TermId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure relationship between Course and CoursesTerm
+            modelBuilder.Entity<CoursesTerm>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.CoursesTerms)
+                .HasForeignKey(e => e.CourseCode)
+                .OnDelete(DeleteBehavior.Restrict);
         }
         #region Models
         public DbSet<Advisor> Advisors { get; set; }
@@ -323,6 +344,8 @@ namespace GP.DAL.Context
         public DbSet<Application> Applications { get; set; }
         public DbSet<College> Colleges { get; set; }
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Term> Terms { get; set; }
+        public DbSet<CoursesTerm> CoursesTerms { get; set; }
         public DbSet<CoursePrerequisite> CoursePrerequisites { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
@@ -337,6 +360,6 @@ namespace GP.DAL.Context
         public DbSet<StudentAffairs> StudentAffairs { get; set; }
         public DbSet<StudentSchedule> StudentSchedules { get; set; } 
         #endregion
-        //public DbSet<GPUser> GPUsers { get; set; }
+
     }
 }

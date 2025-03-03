@@ -14,8 +14,7 @@ namespace GP.DAL.Models
         public string CourseCode { get; set; }
         public Course Course { get; set; }
         public string Grade { get; set; }
-        public int AcademicYear { get; set; }
-        public int Level { get; set; }
-        public SemesterType Semester { get; set; }
+        public int TermId { get; set; }
+        public Term Term { get; set; }
     }
 }
