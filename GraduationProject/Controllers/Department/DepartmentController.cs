@@ -19,6 +19,7 @@ namespace GraduationProject.Controllers.Department
             _facultyMemberRepsitory = facultyMemberRepsitory;
             _collegeRepository = collegeRepository;
         }
+        [HttpPost]
         public IActionResult Add(GP.DAL.Models.Department dep)
         {
             if (!ModelState.IsValid)

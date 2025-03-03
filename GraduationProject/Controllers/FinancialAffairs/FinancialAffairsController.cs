@@ -90,7 +90,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
             return View();
         }
         [Authorize(Roles = "FinancialAffairs")]
-        public IActionResult AddReceipt()
+        public IActionResult AddReceipt(Receipt Receipt)
         {
 
             return View("PaymentDetails");

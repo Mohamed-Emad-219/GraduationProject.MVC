@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GP.DAL.Models
 {
-    public class Admin
+    public class Admin 
     {
         public int Id { get; set; }
 

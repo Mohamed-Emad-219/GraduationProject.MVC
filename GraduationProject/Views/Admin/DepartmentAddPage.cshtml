@@ -20,9 +20,10 @@
             <label class="form-label" for="CollegeId">College</label>
             <select class="form-control" name="CollegeId" id="CollegeId">
                 <option value="0" selected>Choose..</option>
+                @if(colleges is not null ){
                 @foreach(var col in colleges) {
                     <option value="@col.Id">@col.Name</option>
-                }
+                }}
             </select>
             <span asp-validation-for="CollegeId" class="text-danger"></span>
         </div>
@@ -30,10 +31,11 @@
             <label class="form-label" for="HeadId">Head Department</label>
             <select class="form-control" name="HeadId" id="HeadId">
                 <option value="0" selected>Choose..</option>
+                @if(heads is not null){
                 @foreach (var head in heads)
                 {
                     <option value="@head.Id">@head.FirstName @head.MiddleName @head.LastName</option>
-                }
+                }}
             </select>
             <span asp-validation-for="HeadId" class="text-danger"></span>
         </div>
