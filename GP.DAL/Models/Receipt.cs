@@ -15,13 +15,16 @@ namespace GP.DAL.Models
         public int AcademicYear { get; set; }
         [DataType(DataType.Currency)]
         public double AmountDue {  get; set; }
+        public string AmountFor { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime PaymentDate { get; set; }
         public int CollegeId { get; set; }
-        public int FinancialAffairsId { get; set; }
-        public int StudentAffairsId { get; set; }
-        public College College { get; set; }
-        public FinancialAffairs FinancialAffairs { get; set; }
-        public StudentAffairs StudentAffairs { get; set; }
+        public int StudentId { get; set; }
+        public Student? Student { get; set; }
+        public int? FinancialAffairsId { get; set; }
+        public int? StudentAffairsId { get; set; }
+        public College? College { get; set; }
+        public FinancialAffairs? FinancialAffairs { get; set; }
+        public StudentAffairs? StudentAffairs { get; set; }
     }
 }

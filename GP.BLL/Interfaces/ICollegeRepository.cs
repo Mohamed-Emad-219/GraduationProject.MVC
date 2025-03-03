@@ -14,5 +14,7 @@ namespace GP.BLL.Interfaces
         int AddCollege(College college);
         int UpdateCollege(College college);
         Task<int> DeleteCollegeAsync(int Id);
+        string GetCollageNameByStudentId(int id);
+        int GetCollageIdByStudentId(int id);
     }
 }

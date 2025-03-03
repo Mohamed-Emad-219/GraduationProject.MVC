@@ -200,6 +200,12 @@ namespace GP.DAL.Context
                 .HasForeignKey(s => s.AdvisorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Receipt>()
+                .HasOne(s => s.Student)
+                .WithMany(s => s.Receipts)
+                .HasForeignKey(s => s.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // advisor to schedules 1-m
             modelBuilder.Entity<StudentSchedule>()
                 .HasOne(s => s.Advisor)

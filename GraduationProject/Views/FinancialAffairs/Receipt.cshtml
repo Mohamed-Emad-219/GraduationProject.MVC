@@ -1,5 +1,14 @@
 ﻿@{
-	ViewData["Title"] = "Receipt Details";
+    ViewData["Title"] = "Receipt Details";
+    var collegename = ViewData["CollegeName"];
+    var collegeid = ViewData["CollegeID"];
+    var name = ViewData["Name"];
+    var studentid = ViewData["StudentId"];
+    var level = ViewData["Level"];
+    var reg = ViewData["Reg"];
+    var semester = ViewData["Semester"];
+    var academic = ViewData["AcademicYear"];
+    var amount = ViewData["Amount"];
 }
 
 <section class="financial-affairs receipt">
@@ -7,13 +16,15 @@
         <h2 class="text-center mb-4">Tuition Receipt</h2>
 
         <form asp-action="AddReceipt" asp-controller="FinancialAffairs" class="receipt-form m-auto">
-            <div class="d-flex justify-content-between px-5 fs-5" style="direction: rtl;">
+            <div class="d-flex justify-content-between px-5 fs-5">
                 <div>
                     <label for="">Registration</label>
-                    <span id="semester"></span>
+                    <input type="text" style="width: 5rem;" class="form-control bg-transparent border-0"
+                           id="semester" value="@semester" name="Semester" readonly>
                 </div>
                 <div>
-                    <span id="date3"></span>
+                    <input type="number" style="width: 5rem;" class="form-control bg-transparent border-0"
+                           id="date3" value="@academic" name="AcademicYear" readonly>
                 </div>
             </div>
             <div class="bg-light p-2">
@@ -24,7 +35,7 @@
                             Receipt
                             No
                         </label>
-                        <input type="text" class="form-control bg-transparent border-0" id="receiptNo" readonly>
+                        <input type="text" class="form-control bg-transparent border-0" name="Id" id="receiptNo" readonly>
                     </div>
                     <div class="d-flex gap-1 w-80 justify-content-start align-items-center">
                         <label for="college-name" class="p-1 w-35"
@@ -32,48 +43,50 @@
                             College
                             Name
                         </label>
-                        <input type="text" class="form-control bg-transparent border-0" id="college-name" readonly>
+                        <input type="hidden" name="CollegeId" value="@collegeid" />
+                        <input type="text" value="@collegename" class="form-control bg-transparent border-0" id="college-name" readonly>
                     </div>
                 </div>
                 <div>
                     <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                         <label for="fees" class="p-1">Amount /</label>
-                        <input type="text" style="width: 5rem;" class="form-control bg-transparent border-0"
-                               id="fees" readonly>
+                        <input type="text" name="AmountDue" style="width: 5rem;" class="form-control bg-transparent border-0"
+                               id="fees" value="@amount" readonly>
                         <input type="text" class="bb-1 form-control w-50 bg-transparent " id="fees-text">
                     </div>
                     <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                         <label for="fees-text" class="p-1">It's Value /</label>
-                        <input type="text" class="bb-1 form-control w-50 bg-transparent " id="fees-text">
+                        <input type="text" name="AmountFor" class="bb-1 form-control w-50 bg-transparent " id="fees-text">
                     </div>
                     <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <label for="date1" class="p-1 w-35">Due Date /</label>
-                            <input type="text" class="form-control bg-transparent border-0" id="date1" readonly>
+                            <input type="text" class="form-control bg-transparent border-0" name="DueDate" id="date1" readonly>
                         </div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <label for="date2" class="p-1 w-35">Payment Date /</label>
-                            <input type="text" class="form-control bg-transparent border-0" id="date2" readonly>
+                            <input type="text" class="form-control bg-transparent border-0" name="PaymentDate" id="date2" readonly>
                         </div>
                     </div>
                     <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <label for="name" class="p-1 w-35">Student Name /</label>
-                            <input type="text" class="form-control bg-transparent border-0" id="name" readonly>
+                            <input type="hidden" name="StudentID" value="@studentid" />
+                            <input type="text" value="@name" class="form-control bg-transparent border-0" id="name" readonly>
                         </div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <label for="reg-year" class="p-1 w-35">Class /</label>
-                            <input type="text" class="form-control bg-transparent border-0" id="reg-year" readonly>
+                            <input type="text" value="@reg" class="form-control bg-transparent border-0" id="reg-year" readonly>
                         </div>
                     </div>
                     <div class="d-flex gap-1 w-100 justify-content-start align-items-center mb-5">
                         <div class="d-flex gap-1 w-50 justify-content-start align-items-center">
                             <label for="finanName" class="p-1 w-35">Emplyee Name /</label>
-                            <input type="text" class="bb-1 form-control w-50 bg-transparent " id="finanName">
+                            <input type="text" name="FinancialAffairsName" class="bb-1 form-control w-50 bg-transparent " id="finanName">
                         </div>
                         <div class="d-flex gap-1 w-sm-40 justify-content-start align-items-center" style="width:25%">
                             <label for="level" class="p-1 w-35">Level</label>
-                            <input type="number" class="text-center form-control w-25 border-0" id="level" readonly>
+                            <input type="number" value="@level" class="text-center form-control w-25 border-0" id="level" readonly>
                         </div>
                     </div>
                     <div class="d-flex gap-5 w-100 justify-content-center text-center align-items-center mb-5">
@@ -83,7 +96,7 @@
                         </div>
                         <div>
                             <label for="stdsignature">Student Affairs Signature</label>
-                            <input type="text" class="w-100 bb-1 form-control bg-transparent " id="stdsignature">
+                            <input type="text" readonly class="w-100 bb-1 form-control bg-transparent " id="stdsignature">
                         </div>
                     </div>
                 </div>
@@ -112,8 +125,6 @@
 
 @section Scripts {
 	<script>
-          var std = JSON.parse(sessionStorage.getItem("studentFees"));
-          console.log(std)
           function generateReceiptNumber() {
             // Get the current date in YYYYMMDD format
             const date = new Date();
@@ -130,19 +141,12 @@
 
             return receiptNumber;
           }
-
+          date = new Date().toISOString().split('T')[0];
           // Example usage
           const receipt = generateReceiptNumber();
           document.getElementById("receiptNo").value = receipt;
-          document.getElementById("college-name").value = std.college;
-          document.getElementById("fees").value = std.fees;
-          document.getElementById("date1").value = std.date;
-          document.getElementById("date2").value = std.date;
-          document.getElementById("date3").innerHTML = std.datetime;
-          document.getElementById("name").value = std.name;
-          document.getElementById("reg-year").value = std.reg_year;
-          document.getElementById("level").value = std.level;
-          document.getElementById("semester").innerHTML = std.semester;
+          document.getElementById("date1").value = date;
+          document.getElementById("date2").value = date;
 
 	</script>
 }

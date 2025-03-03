@@ -14,12 +14,14 @@ namespace GraduationProject.Controllers.FinancialAffairs
         private readonly ITermCourseRepository termCourseRepository;
         private readonly ITermRepository termRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
-        public FinancialAffairsController(IEnrollmentRepository _enrollmentRepository, ITermRepository _termRepository, ITermCourseRepository _termCourseRepository, IStudentRepository studentRepository)
+        private readonly ICollegeRepository collegeRepository;
+        public FinancialAffairsController(ICollegeRepository _collegeRepository, IEnrollmentRepository _enrollmentRepository, ITermRepository _termRepository, ITermCourseRepository _termCourseRepository, IStudentRepository studentRepository)
         {
             _studentRepository = studentRepository;
             termRepository = _termRepository;
             termCourseRepository = _termCourseRepository;
             enrollmentRepository = _enrollmentRepository;
+            collegeRepository = _collegeRepository;
         }
         [Authorize(Roles = "FinancialAffairs")]
         public IActionResult PaymentDetails()
@@ -74,13 +76,23 @@ namespace GraduationProject.Controllers.FinancialAffairs
             
         }
         [Authorize(Roles = "FinancialAffairs")]
-        public IActionResult Receipt()
+        public IActionResult Receipt(int StudentId, string StudentName, int Level, int RegisteredYear, string Semester, int AcademicYear, int Amount)
         {
+            ViewData["CollegeName"] = collegeRepository.GetCollageNameByStudentId(StudentId);
+            ViewData["CollegeID"] = collegeRepository.GetCollageIdByStudentId(StudentId);
+            ViewData["Name"] = StudentName;
+            ViewData["Level"] = Level;
+            ViewData["Reg"] = RegisteredYear;
+            ViewData["Semester"] = Semester;
+            ViewData["StudentId"] = StudentId;
+            ViewData["AcademicYear"] = AcademicYear;
+            ViewData["Amount"] = Amount;
             return View();
         }
         [Authorize(Roles = "FinancialAffairs")]
         public IActionResult AddReceipt()
         {
+
             return View("PaymentDetails");
         }
         [Authorize(Roles = "FinancialAffairs")]

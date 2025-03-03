@@ -38,6 +38,7 @@ namespace GP.DAL.Models
         public int DeptId { get; set; }
         public Department Department { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
+        public ICollection<Receipt> Receipts { get; set; }
         public int AdvisorId { get; set; }
         public Advisor Advisor { get; set; }
         public Application Application { get; set; }
