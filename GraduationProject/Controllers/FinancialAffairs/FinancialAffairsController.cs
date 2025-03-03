@@ -68,7 +68,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
             ViewData["Student"] = student;
             ViewData["Term"] = nextTerm;
             ViewData["Courses"] = courses;
-            ViewBag.TotalPrice = totalPrice;
+            ViewData["TotalPrice"] = totalPrice;
 
             return PartialView("_StudentDetails");
             
