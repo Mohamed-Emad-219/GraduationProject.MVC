@@ -74,5 +74,13 @@ namespace GraduationProject.Controllers.Advisor
         {
             return View();
         }
+        public IActionResult Requests()
+        {
+            return View();
+        }
+        public IActionResult PetitionRequestDetails()
+        {
+            return View();
+        }
     }
 }

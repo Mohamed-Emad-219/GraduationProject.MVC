@@ -110,6 +110,10 @@ namespace GraduationProject.Controllers.FinancialAffairs
         {
             return View();
         }
+        public IActionResult AddPetitonRequest()
+        {
+            return RedirectToAction("Index", "Home");
+        }
 
     }
 }
