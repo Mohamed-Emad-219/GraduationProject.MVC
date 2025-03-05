@@ -20,9 +20,6 @@ namespace GP.BLL.Repositories
         {
             return context.FinancialAffairs.FirstOrDefault(f => f.UserId == UserId);
         }
-        //public FinancialAffairs GetManagerByUserId(string UserId)
-        //{
-        //    return context.FinancialAffairs.FirstOrDefault(f => f.UserId == UserId && f.ManagerId != null);
-        //}
+        
     }
 }

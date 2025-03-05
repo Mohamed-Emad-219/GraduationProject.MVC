@@ -43,6 +43,7 @@ builder.Services.ConfigureApplicationCookie(
                });
 
 //builder.Services.AddDbContext<AppDbContext>();
+#region Register
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
 builder.Services.AddScoped<IInstructorScheduleRepositroy,InstructorScheduleRepositroy>();
 builder.Services.AddScoped<ICourseRepository,CourseRepository>();
@@ -58,7 +59,10 @@ builder.Services.AddScoped<IAdminRepository, AdminRepository>();
 builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 builder.Services.AddScoped<ITermCourseRepository, TermCourseRepository>();
 builder.Services.AddScoped<ITermRepository, TermRepository>();
+builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
 
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

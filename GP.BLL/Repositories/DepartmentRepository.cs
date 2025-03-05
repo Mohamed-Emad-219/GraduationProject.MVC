@@ -47,6 +47,10 @@ namespace GP.BLL.Repositories
             return result;
         }
 
+        public Department GetDepartmentByName(string Name)
+        {
+            return _dbContext.Departments.FirstOrDefault(d => d.Name == Name);
+        }
         public int UpdateDepartment(Department department)
         {
             _dbContext.Departments.Update(department);

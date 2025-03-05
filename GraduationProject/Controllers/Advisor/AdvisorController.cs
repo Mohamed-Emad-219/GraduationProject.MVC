@@ -82,5 +82,13 @@ namespace GraduationProject.Controllers.Advisor
         {
             return View();
         }
+        public IActionResult ResultPetition()
+        {
+            return View();
+        }
+        public IActionResult AddResultPetition()
+        {
+            return View();
+        }
     }
 }

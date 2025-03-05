@@ -31,6 +31,26 @@ namespace GP.BLL.Repositories
                        .Where(s => s.Level == level)
                        .ToList();
         }
-
+        public int AddStudent(Student student)
+        {
+            student.RegisterYear = DateTime.Now.Year;
+            context.Add(student);
+            return context.SaveChanges();
+        }
+        public int AddApplicationIdToStudent(int stdId, int applId)
+        {
+            var std = GetStudentById(stdId);
+            std.ApplicationId = applId;
+            return context.SaveChanges();
+        }
+        public Student GetStudentByApplicationId(int id)
+        {
+            return context.Students.Include(s => s.College).FirstOrDefault(s => s.ApplicationId == id);
+        }
+        public void UpdateStudent(Student student)
+        {
+            context.Students.Update(student);
+            context.SaveChanges();
+        }
     }
 }

@@ -13,14 +13,14 @@ namespace GP.DAL.Models
     {
         public int Id { get; set; }
 
-        public string UserId { get; set; }
-        public GPUser User { get; set; }
+        public string? UserId { get; set; }
+        public GPUser? User { get; set; }
 
-        public int Group { get; set; }
+        public int? Group { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
-        public int RegisterYear {  get; set; }
+        public int? RegisterYear {  get; set; }
         [StringLength(16, MinimumLength = 16, ErrorMessage = "SSN must be exactly 16 digits.")]
         [RegularExpression(@"^\d{16}$", ErrorMessage = "SSN must contain only numbers.")]
         public string SSN { get; set; }
@@ -32,17 +32,27 @@ namespace GP.DAL.Models
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Home phone must contain only numbers.")]
         public string HomePhone { get; set; }
         public Gender Gender { get; set; }
-        public int Level { get; set; }
+        public int? Level { get; set; }
         public DateOnly BirthDate { get; set; }
+
+        [NotMapped]
+        public DateTime BirthDateTime
+        {
+            get => BirthDate.ToDateTime(TimeOnly.MinValue);
+            set => BirthDate = DateOnly.FromDateTime(value);
+        }
         public double HighSchoolGrade { get; set; }
-        public int DeptId { get; set; }
-        public Department Department { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
-        public ICollection<Receipt> Receipts { get; set; }
-        public int AdvisorId { get; set; }
-        public Advisor Advisor { get; set; }
-        public Application Application { get; set; }
-        public ICollection<StudentSchedule> StudentSchedules { get; set; }
+        public int? CollegeId { get; set; }
+        public College? College { get; set; }
+        public int? DeptId { get; set; }
+        public Department? Department { get; set; }
+        public ICollection<Enrollment>? Enrollments { get; set; }
+        public ICollection<Receipt>? Receipts { get; set; }
+        public int? AdvisorId { get; set; }
+        public Advisor? Advisor { get; set; }
+        public int? ApplicationId { get; set; }
+        public Application? Application { get; set; }
+        public ICollection<StudentSchedule>? StudentSchedules { get; set; }
     }
     public enum Gender { Male, Female }
 }

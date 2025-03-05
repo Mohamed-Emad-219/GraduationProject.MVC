@@ -10,7 +10,6 @@ namespace GP.BLL.Interfaces
     public interface IFinancialAffairsRepository
     {
         FinancialAffairs GetFinancialAffairsByUserId(string UserId);
-        //FinancialAffairs GetManagerByUserId(string UserId);
 
     }
 }

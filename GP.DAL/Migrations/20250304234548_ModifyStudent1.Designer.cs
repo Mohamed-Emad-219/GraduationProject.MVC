@@ -4,6 +4,7 @@ using GP.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GP.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250304234548_ModifyStudent1")]
+    partial class ModifyStudent1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,6 +143,7 @@ namespace GP.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("StudentAffairsId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("StudentId")
@@ -688,10 +691,6 @@ namespace GP.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AmountText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CollegeId")
                         .HasColumnType("int");
 
@@ -703,10 +702,6 @@ namespace GP.DAL.Migrations
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ReceiptId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Semester")
                         .HasColumnType("int");
@@ -1116,7 +1111,8 @@ namespace GP.DAL.Migrations
                     b.HasOne("GP.DAL.Models.StudentAffairs", "StudentAffairs")
                         .WithMany("Applications")
                         .HasForeignKey("StudentAffairsId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("GP.DAL.Models.Student", "Student")
                         .WithOne("Application")

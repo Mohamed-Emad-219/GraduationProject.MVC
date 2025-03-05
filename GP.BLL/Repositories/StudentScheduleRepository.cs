@@ -17,7 +17,7 @@ namespace GP.BLL.Repositories
         {
             context = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public IEnumerable<StudentSchedule> GetStudentScheduleByGroup(int Group, int Level)
+        public IEnumerable<StudentSchedule> GetStudentScheduleByGroup(int? Group, int? Level)
         {
             return context.StudentSchedules
                 .Where(s => s.Group == Group && s.Level == Level)

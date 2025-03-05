@@ -31,8 +31,8 @@
                         <td>@course.CreditHour</td>
                         <td>@course.Department.Name</td>
                         <td>
-                            @* <a asp-action="CourseEditPage" asp-controller="Admin" asp-route="@course.Code" class="btn btn-small btn-success">Edit</a> *@
-                            @* <a asp-action="Delete" asp-controller="Course" asp-route-id="@course.Code" class="btn btn-small btn-danger">Delete</a> *@
+                            <a>Edit</a> 
+                            <a asp-action="Delete" asp-controller="Course" asp-route-id="@course.Code" class="btn btn-small btn-danger">Delete</a> 
                         </td>
                     </tr>
                 }

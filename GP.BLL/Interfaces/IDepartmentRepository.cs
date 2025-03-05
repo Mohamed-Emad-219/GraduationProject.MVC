@@ -11,6 +11,7 @@ namespace GP.BLL.Interfaces
     {
         IEnumerable<Department>GetDepartments();
         Task<Department> GetDepartmentById(int Id);
+        Department GetDepartmentByName(string Name);
         int AddDepartment(Department department);
         int UpdateDepartment(Department department);
         Task<int> DeleteDepartmentAsync(int Id);

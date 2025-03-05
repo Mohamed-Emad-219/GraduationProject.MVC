@@ -12,10 +12,10 @@ namespace GP.DAL.Models
         public int  Id  { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public Status Status { get; set; }
-        public int StudentAffairsId  { get; set; }
-        public StudentAffairs StudentAffairs { get; set; }
+        public int? StudentAffairsId  { get; set; }
+        public StudentAffairs? StudentAffairs { get; set; }
         public int StudentId { get; set; }
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
 
     }
     public enum Status

@@ -11,6 +11,10 @@ namespace GP.BLL.Interfaces
     {
         Student GetStudentByUserId(string UserId);
         Student GetStudentById(int Id);
+        Student GetStudentByApplicationId(int id);
         IEnumerable<Student> GetStudentsByLevel(int level);
+        int AddStudent(Student student);
+        int AddApplicationIdToStudent(int stdId, int applId);
+        void UpdateStudent(Student student);
     }
 }

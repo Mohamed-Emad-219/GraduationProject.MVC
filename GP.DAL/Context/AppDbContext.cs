@@ -49,6 +49,14 @@ namespace GP.DAL.Context
                 .WithOne(c => c.College)
                 .HasForeignKey(c => c.CollegeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            //college and student 1-m
+            modelBuilder.Entity<College>()
+                .HasMany(c => c.Students)
+                .WithOne(c => c.College)
+                .HasForeignKey(c => c.CollegeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             //college and receipts 1-m
             modelBuilder.Entity<College>()
                 .HasMany(c => c.Receipts)
@@ -198,6 +206,13 @@ namespace GP.DAL.Context
                 .HasOne(s => s.Advisor)
                 .WithMany(s => s.Students)
                 .HasForeignKey(s => s.AdvisorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // application and student 1-m
+            modelBuilder.Entity<Application>()
+                .HasOne(d => d.Student)
+                .WithOne()
+                .HasForeignKey<Student>(d => d.ApplicationId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Receipt>()

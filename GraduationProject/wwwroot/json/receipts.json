@@ -1,102 +1,122 @@
 [
-    {
-        "Semester": 1,
-        "AcademicYear": 2023,
-        "AmountDue": 25000.00,
-        "DueDate": "2023-09-05T00:00:00",
-        "PaymentDate": "2023-09-05T00:00:00",
-        "CollegeId": 1,
-        "FinancialAffairsId": 1,
-        "StudentAffairsId": 2
-    },
-    {
-        "Semester": 2,
-        "AcademicYear": 2023,
-        "AmountDue": 30000.00,
-        "DueDate": "2024-02-15T00:00:00",
-        "PaymentDate": "2024-02-15T00:00:00",
-        "CollegeId": 2,
-        "FinancialAffairsId": 2,
-        "StudentAffairsId": 3
-    },
-    {
-        "Semester": 0,
-        "AcademicYear": 2022,
-        "AmountDue": 18000.00,
-        "DueDate": "2022-09-07T00:00:00",
-        "PaymentDate": "2022-09-07T00:00:00",
-        "CollegeId": 1,
-        "FinancialAffairsId": 1,
-        "StudentAffairsId": 1
-    },
-    {
-        "Semester": 2,
-        "AcademicYear": 2022,
-        "AmountDue": 20000.00,
-        "DueDate": "2023-02-20T00:00:00",
-        "PaymentDate": "2023-02-20T00:00:00",
-        "CollegeId": 3,
-        "FinancialAffairsId": 1,
-        "StudentAffairsId": 3
-    },
-    {
-        "Semester": 0,
-        "AcademicYear": 2021,
-        "AmountDue": 40000.00,
-        "DueDate": "2021-09-09T00:00:00",
-        "PaymentDate": "2021-09-09T00:00:00",
-        "CollegeId": 2,
-        "FinancialAffairsId": 3,
-        "StudentAffairsId": 3
-    },
-    {
-        "Semester": 1,
-        "AcademicYear": 2021,
-        "AmountDue": 25000.00,
-        "DueDate": "2022-02-10T00:00:00",
-        "PaymentDate": "2022-02-10T00:00:00",
-        "CollegeId": 3,
-        "FinancialAffairsId": 1,
-        "StudentAffairsId": 2
-    },
-    {
-        "Semester": 2,
-        "AcademicYear": 2020,
-        "AmountDue": 45000.00,
-        "DueDate": "2020-09-11T00:00:00",
-        "PaymentDate": "2020-09-11T00:00:00",
-        "CollegeId": 1,
-        "FinancialAffairsId": 2,
-        "StudentAffairsId": 3
-    },
-    {
-        "Semester": 2,
-        "AcademicYear": 2020,
-        "AmountDue": 44000.00,
-        "DueDate": "2021-02-12T00:00:00",
-        "PaymentDate": "2021-02-12T00:00:00",
-        "CollegeId": 2,
-        "FinancialAffairsId": 1,
-        "StudentAffairsId": 1
-    },
-    {
-        "Semester": 1,
-        "AcademicYear": 2019,
-        "AmountDue": 43000.00,
-        "DueDate": "2019-09-13T00:00:00",
-        "PaymentDate": "2019-09-13T00:00:00",
-        "CollegeId": 3,
-        "FinancialAffairsId": 2,
-        "StudentAffairsId": 2
-    },
-    {
-        "Semester": 0,
-        "AcademicYear": 2019,
-        "AmountDue": 42000.00,
-        "DueDate": "2020-02-15T00:00:00",
-        "PaymentDate": "2020-02-15T00:00:00",
-        "CollegeId": 1,
-        "FinancialAffairsId": 1,
-        "StudentAffairsId": 3
-    }
+  {
+    "Semester": 1,
+    "AcademicYear": 2023,
+    "AmountDue": 25000.00,
+    "AmountFor": "Tuition Fees",
+    "DueDate": "2023-09-05T00:00:00",
+    "PaymentDate": "2023-09-05T00:00:00",
+    "CollegeId": 1,
+    "FinancialAffairsId": 1,
+    "StudentAffairsId": 2,
+    "StudentId": 1
+  },
+  {
+    "Semester": 2,
+    "AcademicYear": 2023,
+    "AmountDue": 30000.00,
+    "DueDate": "2024-02-15T00:00:00",
+    "PaymentDate": "2024-02-15T00:00:00",
+    "CollegeId": 2,
+    "FinancialAffairsId": 2,
+    "StudentAffairsId": 3,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 1
+  },
+  {
+    "Semester": 0,
+    "AcademicYear": 2022,
+    "AmountDue": 18000.00,
+    "DueDate": "2022-09-07T00:00:00",
+    "PaymentDate": "2022-09-07T00:00:00",
+    "CollegeId": 1,
+    "FinancialAffairsId": 1,
+    "StudentAffairsId": 1,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 2
+  },
+  {
+    "Semester": 2,
+    "AcademicYear": 2022,
+    "AmountDue": 20000.00,
+    "DueDate": "2023-02-20T00:00:00",
+    "PaymentDate": "2023-02-20T00:00:00",
+    "CollegeId": 3,
+    "FinancialAffairsId": 1,
+    "StudentAffairsId": 3,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 3
+  },
+  {
+    "Semester": 0,
+    "AcademicYear": 2021,
+    "AmountDue": 40000.00,
+    "DueDate": "2021-09-09T00:00:00",
+    "PaymentDate": "2021-09-09T00:00:00",
+    "CollegeId": 2,
+    "FinancialAffairsId": 3,
+    "StudentAffairsId": 3,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 4
+  },
+  {
+    "Semester": 1,
+    "AcademicYear": 2021,
+    "AmountDue": 25000.00,
+    "DueDate": "2022-02-10T00:00:00",
+    "PaymentDate": "2022-02-10T00:00:00",
+    "CollegeId": 3,
+    "FinancialAffairsId": 1,
+    "StudentAffairsId": 2,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 3
+  },
+  {
+    "Semester": 2,
+    "AcademicYear": 2020,
+    "AmountDue": 45000.00,
+    "DueDate": "2020-09-11T00:00:00",
+    "PaymentDate": "2020-09-11T00:00:00",
+    "CollegeId": 1,
+    "FinancialAffairsId": 2,
+    "StudentAffairsId": 3,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 2
+  },
+  {
+    "Semester": 2,
+    "AcademicYear": 2020,
+    "AmountDue": 44000.00,
+    "DueDate": "2021-02-12T00:00:00",
+    "PaymentDate": "2021-02-12T00:00:00",
+    "CollegeId": 2,
+    "FinancialAffairsId": 1,
+    "StudentAffairsId": 1,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 2
+  },
+  {
+    "Semester": 1,
+    "AcademicYear": 2019,
+    "AmountDue": 43000.00,
+    "DueDate": "2019-09-13T00:00:00",
+    "PaymentDate": "2019-09-13T00:00:00",
+    "CollegeId": 3,
+    "FinancialAffairsId": 2,
+    "StudentAffairsId": 2,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 5
+  },
+  {
+    "Semester": 0,
+    "AcademicYear": 2019,
+    "AmountDue": 42000.00,
+    "DueDate": "2020-02-15T00:00:00",
+    "PaymentDate": "2020-02-15T00:00:00",
+    "CollegeId": 1,
+    "FinancialAffairsId": 1,
+    "StudentAffairsId": 3,
+    "AmountFor": "Tuition Fees",
+    "StudentId": 6
+  }
 ]

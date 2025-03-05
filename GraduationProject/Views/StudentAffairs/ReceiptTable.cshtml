@@ -1,5 +1,6 @@
 ﻿@{
-	ViewData["Title"] = "Receipts";
+    ViewData["Title"] = "Receipts";
+    var receipts = ViewData["Receipts"] as IEnumerable<Receipt>;
 }
 
 <section class="receipts">
@@ -13,9 +14,25 @@
                         <th>Student ID</th>
                         <th>Name</th>
                         <th>Payment</th>
-                        <th>Status</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @if(receipts is not null) {
+                        @foreach(var receipt in receipts) {
+                            <tr>
+                                <td>@receipt.ReceiptId</td>
+                                <td>@receipt.StudentId</td>
+                                <td>@receipt.Student.FirstName @receipt.Student.MiddleName @receipt.Student.LastName</td>
+                                <td>@receipt.AmountDue</td>
+                                <td>
+                                    <a asp-action="ReceiptInfo" asp-controller="StudentAffairs" asp-route-id="@receipt.Id" class="btn btn-small btn-primary">Open</a>
+                                    <button onclick="window.print()" class="btn btn-small btn-secondary">Print</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
             </table>
         </div>
     </div>

@@ -9,6 +9,6 @@ namespace GP.BLL.Interfaces
 {
     public interface IStudentScheduleRepository
     {
-        IEnumerable<StudentSchedule> GetStudentScheduleByGroup(int Group, int Level);
+        IEnumerable<StudentSchedule> GetStudentScheduleByGroup(int? Group, int? Level);
     }
 }

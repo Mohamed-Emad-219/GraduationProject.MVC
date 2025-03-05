@@ -1,26 +1,42 @@
 ﻿@{
-	ViewData["Title"] = "Applications";
+    ViewData["Title"] = "Applications";
+    var apps = ViewData["Applications"] as IEnumerable<Application>;
 }
 <section class="applications ">
     <div class="container py-5">
         <h1 class="fs-3 mb-4 text-center">Applications</h1>
-        <div class="w-75 m-auto">
-            <table class="table table-hover table-striped" id="applications">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>#</th>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>College</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        @if (apps is null)
+        {
+            <p class="text-danger text-center fs-4">No Applications!</p>
+        }
+        else
+        {
+            <div class="w-75 m-auto">
+                <table class="table table-hover table-striped" id="applications">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>College</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var app in apps) {
+                            <tr>
+                                <td>@app.Id</td>
+                                <td>@app.CreatedAt</td>
+                                <td>@app.Student.FirstName @app.Student.MiddleName @app.Student.LastName</td>
+                                <td>@app.Student.College.Name</td>
+                                <td>@app.Status</td>
+                                <td><a asp-action="ApplicationInfo" asp-controller="StudentAffairs" asp-route-id="@app.Id" class="btn btn-small btn-primary">Open</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </section>
-
-
-@section Scripts {
-    <script src="~/js/studentaffairs.js"></script>
-}

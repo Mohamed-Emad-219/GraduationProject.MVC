@@ -94,14 +94,22 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="StudentAffairs" asp-action="ManagerStats">Statistics</a>
                             </li>
                         }
-
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("StudentAffairs"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="StudentAffairs" asp-action="ApplicationTable">Applications</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="StudentAffairs" asp-action="ReceiptTable">Receipts</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="nav-icons navbar-nav mb-2 mb-lg-0">
                         @if (SignInManager.IsSignedIn(User)) //done
                         {
 
                             <li class="nav-item align-content-center">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else

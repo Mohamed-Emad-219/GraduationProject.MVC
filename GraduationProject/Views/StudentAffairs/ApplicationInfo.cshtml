@@ -1,5 +1,7 @@
 ﻿@{
-	ViewData["Title"] = "Application Info";
+    ViewData["Title"] = "Application Info";
+    var app = ViewData["App"] as Application;
+    var student = ViewData["Student"] as Student;
 }
 
 <div class="container d-flex justify-content-start py-5">
@@ -8,62 +10,62 @@
         <div class="card p-3 shadow">
             <div class="mb-2">
                 <label class="form-label">First Name:</label>
-                <span id="FirstName"></span>
+                <span id="FirstName">@student.FirstName</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Middle Name:</label>
-                <span id="MiddleName"></span>
+                <span id="MiddleName">@student.MiddleName</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Last Name:</label>
-                <span id="LastName"></span>
+                <span id="LastName">@student.LastName</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">SSN:</label>
-                <span id="SSN"></span>
+                <span id="SSN">@student.SSN</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Mobile Phone:</label>
-                <span id="MobilePhone"></span>
+                <span id="MobilePhone">@student.MobilePhone</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Home Phone:</label>
-                <span id="HomePhone"></span>
+                <span id="HomePhone">@student.HomePhone</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">High School Grade:</label>
-                <span id="HighSchoolGrade"></span>
+                <span id="HighSchoolGrade">@student.HighSchoolGrade</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Address:</label>
-                <span id="Address"></span>
+                <span id="Address">@student.Address</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Choosen College:</label>
-                <span id="College"></span>
+                <span id="College">@student.College.Name</span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Date of Birth:</label>
-                <span id="Birth"></span>
+                <span id="Birth">@student.BirthDate</span>
             </div>
 
             <div>
                 <label class="form-label">Gender:</label>
-                <span id="Gender"></span>
+                <span id="Gender">@student.Gender</span>
             </div>
 
             <div class="d-flex justify-content-around align-items-center">
-                <button class="btn btn-success" onclick="alert('Send Successfuly')">Waiting List</button>
-                <button class="btn btn-danger" onclick="alert('Send Successfuly')">Reject</button>
+                <a class="btn btn-success" asp-controller="StudentAffairs" asp-action="ApproveApplication" asp-route-id="@app.Id">Approve</a>
+                <a class="btn btn-danger" asp-controller="StudentAffairs" asp-action="RejectApplication" asp-route-id="@app.Id">Reject</a>
             </div>
         </div>
     </div>

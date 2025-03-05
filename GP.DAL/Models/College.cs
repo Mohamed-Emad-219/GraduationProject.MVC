@@ -17,6 +17,7 @@ namespace GP.DAL.Models
 
         // One-to-Many relationship for Department
         public ICollection<Department>? Departments { get; set; }
+        public ICollection<Student>? Students { get; set; }
         public ICollection<Receipt>? Receipts { get; set; }
 
     }
