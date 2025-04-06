@@ -1,4 +1,5 @@
 ﻿using GP.BLL.Interfaces;
+using GP.BLL.ViewModels;
 using GP.DAL.Context;
 using GP.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -103,5 +104,56 @@ namespace GP.BLL.Repositories
             var passingGrades = new HashSet<string> { "A", "A+","A-","B+", "B","B-","C+", "C","C-" ,"D+", "D" };
             return passingGrades.Contains(grade.ToUpper());
         }
+
+        public int GetCompletedHoursForStudent(int studentId)
+        {
+            return _context.Enrollments
+            .Where(e => e.StudentId == studentId)
+            .Sum(e => e.Course.CreditHour);
+        }
+        public IEnumerable<Enrollment> GetCompletedCoursesForStudent(int studentId)
+        {
+            return _context.Enrollments
+           .Where(e => e.StudentId == studentId)
+           .Include(e => e.Course)
+           .Include(e => e.Term)
+           .ToList();
+        }
+        public EnrollmentReportVM GetEnrollmentReport(string courseCode, SemesterType semester, int year)
+        {
+            var term = _termRepository.GetTermBySemesterYear(semester, year);
+            
+
+            var enrollments = term.Enrollments
+                                  .Where(e => e.Course.Code == courseCode)
+                                  .ToList();
+
+            var totalEnrolled = enrollments.Count;
+            var totalCapacity = enrollments.Count;  // Assuming total seats = enrolled + waitlist
+            var percentageFilled = totalCapacity > 0 ? (totalEnrolled * 100) / totalCapacity : 0;
+
+            var e =  new EnrollmentReportVM
+            {
+                CourseCode = courseCode,
+                CourseTitle = enrollments.FirstOrDefault()?.Course.Name ?? "N/A",
+                Instructor = enrollments.FirstOrDefault()?.Course.InstructorSchedules
+                .Select(i => $"{i.Instructor.FirstName} {i.Instructor.MiddleName} {i.Instructor.LastName}")
+                .FirstOrDefault() ?? "N/A",
+                Credits = enrollments.FirstOrDefault()?.Course.CreditHour ?? 0,
+                Enrollments = enrollments.Select(e => new EnrollmentViewModel
+                {
+                    StudentId = e.StudentId,
+                    StudentName = $"{e.Student.FirstName} {e.Student.MiddleName} {e.Student.LastName}",
+                    Major = e.Student.Department.Name,
+                    Level = e.Student.Level
+                }).ToList(),
+                TotalEnrolled = totalEnrolled,
+                TotalCapacity = totalCapacity,
+                PercentageSeatsFilled = percentageFilled
+            };
+            return e;
+        }
+
+
     }
 }

@@ -7,7 +7,7 @@
 @if (receiptf != null && user != null && receiptstd != null)
 {
 <section class="financial-affairs receipt">
-        <div class="container py-4">
+        <div class="container py-4" id=" searchResults">
             <h2 class="text-center mb-4">Tuition Receipt</h2>
             <form method="post" asp-action="UpdateReceipt" asp-controller="StudentAffairs" class="receipt-form m-auto p-3 bg-light">
                 <input type="hidden" name="Id" value="@receiptf.Id" />
@@ -99,7 +99,8 @@
                 </div>
                 <div class="d-flex gap-5 justify-content-around align-items-center mt-5">
                     <button class="btn w-25 btn-lg btn-primary" type="submit">Confirm</button>
-                    <button class="btn w-25 btn-lg btn-primary" onclick="window.print()" type="button">Print</button>
+                    <button class="btn w-25 btn-lg btn-primary" onclick="printContainer()" type="button">Print</button>
+                    
                 </div>
             </form>
         </div>
@@ -107,3 +108,7 @@
     }else {
         <p class="text-danger text-center fs-4">Wrong</p>
     }
+
+@section Scripts {
+    <script src="~/js/print.js"></script>
+}

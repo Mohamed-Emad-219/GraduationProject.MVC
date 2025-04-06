@@ -93,12 +93,6 @@ namespace GP.DAL.Context
                 .WithOne(c => c.Department)
                 .HasForeignKey(c => c.DeptId)
                 .OnDelete(DeleteBehavior.Restrict);
-            // followup and followupschedules 1-m
-            modelBuilder.Entity<FollowUp>()
-                .HasMany(f=>f.FollowUpSchedules)
-                .WithOne(c => c.FollowUp)
-                .HasForeignKey(c => c.FollowUpId)
-                .OnDelete(DeleteBehavior.Restrict);
             // student affairs and receipts 1-m
             modelBuilder.Entity<StudentAffairs>()
                 .HasMany(c => c.Receipts)
@@ -129,11 +123,7 @@ namespace GP.DAL.Context
                 .WithMany(c => c.StudentSchedules)
                 .HasForeignKey(s => s.CourseCode)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<FollowUpSchedule>()
-                .HasOne(s => s.Course)
-                .WithMany(c => c.FollowUpSchedules)
-                .HasForeignKey(s => s.CourseCode)
-                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<InstructorSchedule>()
                 .HasOne(s => s.Course)
                 .WithMany(c => c.InstructorSchedules)
@@ -166,11 +156,7 @@ namespace GP.DAL.Context
                 .WithMany(p => p.StudentSchedules)
                 .HasForeignKey(s => s.PlaceId)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<FollowUpSchedule>()
-                .HasOne(s => s.Place)
-                .WithMany(p => p.FollowUpSchedules)
-                .HasForeignKey(s => s.PlaceId)
-                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<InstructorSchedule>()
                 .HasOne(s => s.Place)
                 .WithMany(p => p.InstructorSchedules)
@@ -242,6 +228,9 @@ namespace GP.DAL.Context
                 .Property(e => e.BirthDate)
                 .HasConversion(dateConverter)
                 .HasColumnType("date");
+
+
+
 
             modelBuilder.Entity<Advisor>()
                 .HasIndex(e => e.SSN)
@@ -358,6 +347,31 @@ namespace GP.DAL.Context
                 .WithMany(c => c.CoursesTerms)
                 .HasForeignKey(e => e.CourseCode)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ResultPetition>()
+            .HasOne(rp => rp.PetitionCourse)  // Define the relationship with PetitionCourse
+            .WithMany()  // This assumes no navigation property back to ResultPetition on PetitionCourse
+            .HasForeignKey(rp => rp.PetitionCourseId)  // Specify the foreign key
+            .OnDelete(DeleteBehavior.NoAction);  // Change cascading delete to NoAction
+
+            modelBuilder.Entity<ResultPetition>()
+                .HasOne(rp => rp.Advisor)  // Define the relationship with Advisor
+                .WithMany()  // This assumes no navigation property back to ResultPetition on Advisor
+                .HasForeignKey(rp => rp.AdvisorId)  // Specify the foreign key
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FollowUpEntry>()
+                .HasOne(f => f.Schedule)
+                .WithMany(s => s.FollowUps)
+                .HasForeignKey(f => f.ScheduleId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FollowUpEntry>()
+                .HasOne(f => f.FollowUp)
+                .WithMany(fu => fu.Entries)
+                .HasForeignKey(f => f.FollowUpId)
+                .OnDelete(DeleteBehavior.NoAction);
+
         }
         #region Models
         public DbSet<Advisor> Advisors { get; set; }
@@ -373,13 +387,19 @@ namespace GP.DAL.Context
         public DbSet<FacultyMember> FacultyMembers { get; set; }
         public DbSet<FinancialAffairs> FinancialAffairs { get; set; }
         public DbSet<FollowUp> FollowUps { get; set; }
-        public DbSet<FollowUpSchedule> FollowUpSchedules { get; set; }
+        public DbSet<FollowUpEntry> FollowUpEntries { get; set; }
         public DbSet<InstructorSchedule> InstructorSchedules { get; set; }
         public DbSet<Place> Places { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentAffairs> StudentAffairs { get; set; }
         public DbSet<StudentSchedule> StudentSchedules { get; set; } 
+
+        public DbSet<PetitionRequest> PetitionRequests { get; set; }
+        public DbSet<PetitionCourse> PetitionCourses { get; set; }
+
+        public DbSet<ResultPetition> ResultPetitions { get; set; }
+
         #endregion
 
     }

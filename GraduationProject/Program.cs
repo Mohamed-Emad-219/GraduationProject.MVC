@@ -61,6 +61,10 @@ builder.Services.AddScoped<ITermCourseRepository, TermCourseRepository>();
 builder.Services.AddScoped<ITermRepository, TermRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
+builder.Services.AddScoped<IPetitionRequestRepository, PetitionRequestRepository>();
+builder.Services.AddScoped<IPetitionCourseRepository, PetitionCourseRepository>();
+builder.Services.AddScoped<IResultPetitionRepository, ResultPetitionRepository>();
+builder.Services.AddScoped<IFollowUpRepository, FollowUpRepository>();
 
 #endregion
 var app = builder.Build();
@@ -103,7 +107,6 @@ using (var scope = app.Services.CreateScope())
     //    await DbInitializer.SeedInstructorAssistants(userManager, dbContext, env);
     //    DbInitializer.SeedInstructorSchedules(dbContext, env);
     //    DbInitializer.SeedStudentSchedules(dbContext, env);
-    //    DbInitializer.SeedFollowUpSchedules(dbContext, env);
 }
 #endregion
 app.UseHttpsRedirection();

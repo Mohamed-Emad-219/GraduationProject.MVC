@@ -35,5 +35,12 @@ namespace GraduationProject.Controllers.Course
             _courseRepository.DeleteCourseAsync(code);
             return RedirectToAction("Dashboard", "Admin");
         }
+
+        [HttpGet]
+        public JsonResult GetCourses()
+        {
+            var courses = _courseRepository.GetAllCourses();
+            return Json(courses);
+        }
     }
 }

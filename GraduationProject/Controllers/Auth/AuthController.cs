@@ -123,7 +123,7 @@ namespace GraduationProject.Controllers.Auth
         public async Task<IActionResult> ShowProfile()
         {
             var user = await _userManager.GetUserAsync(User);
-            var f = facultyMemberRepsitory.GetFacultyByUserId(user.Id);
+            var f = facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
             var s = studentRepository.GetStudentByUserId(user.Id);
             var ff = financialAffairsRepository.GetFinancialAffairsByUserId(user.Id);
             var ss = studentAffairsRepository.GetStudentAffairsByUserId(user.Id);

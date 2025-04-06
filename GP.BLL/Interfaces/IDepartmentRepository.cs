@@ -10,11 +10,11 @@ namespace GP.BLL.Interfaces
     public interface IDepartmentRepository
     {
         IEnumerable<Department>GetDepartments();
-        Task<Department> GetDepartmentById(int Id);
+        Department GetDepartmentById(int Id);
         Department GetDepartmentByName(string Name);
         int AddDepartment(Department department);
         int UpdateDepartment(Department department);
-        Task<int> DeleteDepartmentAsync(int Id);
-
+        int DeleteDepartmentAsync(int Id);
+        Task<List<Department>> GetDepartmentsByCollegeIdAsync(int Id);
     }
 }

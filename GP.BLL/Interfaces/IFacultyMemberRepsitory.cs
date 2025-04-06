@@ -10,7 +10,9 @@ namespace GP.BLL.Interfaces
     public interface IFacultyMemberRepsitory
     {
         IEnumerable<FacultyMember> GetHeads();
+        IEnumerable<FacultyMember> GetDeans();
+        FacultyMember GetDeanByCollegeId(int CollegeId);
         IEnumerable<FacultyMember> GetAll();
-        FacultyMember GetFacultyByUserId(string UserId);
+        Task<FacultyMember> GetFacultyByUserIdAsync(string UserId);
     }
 }

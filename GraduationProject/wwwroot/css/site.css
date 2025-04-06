@@ -303,3 +303,16 @@ td {
     justify-content: center;
     gap: 20px;
 }
+
+.petiton-request .dropdown-menu {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none; /* Hidden by default */
+    position: absolute;
+    z-index: 1000;
+}
+
+.petiton-request .show {
+    display: block !important; /* Show dropdown when results are available */
+}

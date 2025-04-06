@@ -22,13 +22,23 @@ namespace GP.BLL.Repositories
         {
             return _dbContext.Departments.Where(d => d.HeadId.HasValue).Select(d => d.Head).ToList();
         }
+        public IEnumerable<FacultyMember> GetDeans()
+        {
+            return _dbContext.Colleges.Where(d => d.DeanId.HasValue).Select(d => d.Dean).ToList();
+        }
         public IEnumerable<FacultyMember> GetAll()
         {
             return _dbContext.FacultyMembers.AsNoTracking().ToList();
         }
-        public FacultyMember GetFacultyByUserId(string UserId)
+        public async Task<FacultyMember> GetFacultyByUserIdAsync(string UserId)
         {
-            return _dbContext.FacultyMembers.FirstOrDefault(f => f.UserId == UserId);
+            return await _dbContext.FacultyMembers
+                           .FirstOrDefaultAsync(f => f.UserId == UserId);
         }
+        public FacultyMember GetDeanByCollegeId(int CollegeId)
+        {
+            return _dbContext.Colleges.Where(f => f.DeanId.HasValue && f.Id == CollegeId).Select(c => c.Dean).FirstOrDefault();
+        }
+        
     }
 }

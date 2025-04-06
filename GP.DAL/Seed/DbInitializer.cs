@@ -904,21 +904,6 @@ namespace GP.DAL.Seed
                 }
             }
         }
-        public static void SeedFollowUpSchedules(AppDbContext context, IHostEnvironment env)
-        {
-            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "followupschedule.json");
-            if (!context.FollowUpSchedules.Any()) // Prevent duplicate seeding
-            {
-                var jsonData = File.ReadAllText(filePath);
-                var rooms = System.Text.Json.JsonSerializer.Deserialize<List<FollowUpSchedule>>(jsonData);
-
-                if (rooms != null)
-                {
-                    context.FollowUpSchedules.AddRange(rooms);
-                    context.SaveChanges();
-                }
-            }
-        }
         
 
     }

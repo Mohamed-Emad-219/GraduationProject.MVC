@@ -24,6 +24,12 @@ namespace GP.BLL.Repositories
             var result = _dbContext.Courses.Include(c => c.Department).AsNoTracking().ToList();
             return result;
         }
+
+        public List<string> GetAllCourses()
+        {
+            return _dbContext.Courses.Select(c => c.Name).ToList();
+        }
+
         public IEnumerable<CourseDTO> GetCoursesNameCode()
         {
             return _dbContext.Courses
@@ -50,6 +56,13 @@ namespace GP.BLL.Repositories
             var course = await GetCourseById(Code);
             _dbContext.Remove(course);
             return _dbContext.SaveChanges();
+        }
+        public string GetCourseCodeByName(string name)
+        {
+            return _dbContext.Courses
+                     .Where(c => c.Name == name)
+                     .Select(c => c.Code)
+                     .FirstOrDefault();
         }
     }
 }

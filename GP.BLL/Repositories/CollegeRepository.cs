@@ -23,9 +23,9 @@ namespace GP.BLL.Repositories
             var result = _dbContext.Colleges.AsNoTracking().ToList();
             return result;
         }
-        public async Task<College> GetCollegeById(int Id)
+        public College GetCollegeById(int Id)
         {
-            var college = await _dbContext.Colleges.FindAsync(Id);//// find op search in cache if found return it else search in database
+            var college = _dbContext.Colleges.Find(Id);//// find op search in cache if found return it else search in database
             return college;
         }
         public string GetCollageNameByStudentId(int id)
@@ -52,10 +52,23 @@ namespace GP.BLL.Repositories
             _dbContext.Colleges.Update(college);
             return _dbContext.SaveChanges();
         }
-        public async Task<int> DeleteCollegeAsync(int Id) { 
-            var college = await GetCollegeById(Id);
+        public int DeleteCollegeAsync(int Id) { 
+            var college = GetCollegeById(Id);
             _dbContext.Remove(college);
             return _dbContext.SaveChanges();
+        }
+        public College GetCollegeByDeanId(int Id)
+        {
+            var college = _dbContext.Colleges
+                                  .FirstOrDefault(c => c.DeanId == Id);
+            return college;
+        }
+        public int GetCollegeIdByDeanId(int Id)
+        {
+            var college = _dbContext.Colleges
+                                  .FirstOrDefault(c => c.DeanId == Id);
+
+            return college.Id;
         }
     }
 }

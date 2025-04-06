@@ -1,3 +1,39 @@
 ﻿@{
-
+    ViewData["Title"] = "Petition Requests";
+    var requests = ViewData["PetitionRequests"] as IEnumerable<PetitionRequest>;
 }
+<section class="applications ">
+    <div class="container py-5">
+        <h1 class="fs-3 mb-4 text-center">Petition Requests</h1>
+        @if (requests is null)
+        {
+            <p class="text-danger text-center fs-4">No Petition Requests!</p>
+        }
+        else
+        {
+            <div class="w-75 m-auto">
+                <table class="table table-hover table-striped" id="requests">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>#</th>
+                            <th>College</th>
+                            <th>Result</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var req in requests)
+                        {
+                            <tr>
+                                <td>@req.Id</td>
+                                <td>@req.College.Name</td>
+                                <td>@req.Status</td>
+                                <td><a asp-action="PetitionRequestDetails" asp-controller="Advisor" asp-route-id="@req.Id" class="btn btn-small btn-primary">Open</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>

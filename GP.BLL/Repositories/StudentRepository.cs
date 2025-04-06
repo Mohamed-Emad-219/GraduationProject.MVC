@@ -23,7 +23,7 @@ namespace GP.BLL.Repositories
         }
         public Student GetStudentById(int Id)
         {
-            return context.Students.FirstOrDefault(f => f.Id == Id);
+            return context.Students.Include(s=>s.Department).Include(s=>s.Advisor).FirstOrDefault(f => f.Id == Id);
         }
         public IEnumerable<Student> GetStudentsByLevel(int level)
         {

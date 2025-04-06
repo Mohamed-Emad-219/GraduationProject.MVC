@@ -1,4 +1,5 @@
-﻿using GP.DAL.Models;
+﻿using GP.BLL.ViewModels;
+using GP.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,8 @@ namespace GP.BLL.Interfaces
         void EnrollPassedStudentsToNextTerm(int level);
         bool HasStudentPassedCourse(int studentId, string courseCode);
         Term GetLastTermForStudent(int studentId);
+        int GetCompletedHoursForStudent(int studentId);
+        IEnumerable<Enrollment> GetCompletedCoursesForStudent(int studentId);
+        EnrollmentReportVM GetEnrollmentReport(string courseCode, SemesterType semester, int year);
     }
 }

@@ -27,6 +27,6 @@ namespace GP.DAL.Models
         public string MobilePhone { get; set; }
         public string Address { get; set; }
         public Gender Gender { get; set; }
-        public ICollection<FollowUpSchedule> FollowUpSchedules { get; set; }
+        public ICollection<FollowUpEntry> Entries { get; set; } = new List<FollowUpEntry>();
     }
 }

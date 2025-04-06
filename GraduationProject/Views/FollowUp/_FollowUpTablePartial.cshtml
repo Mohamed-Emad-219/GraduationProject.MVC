@@ -1,0 +1,57 @@
+﻿@{
+    var user = ViewData["User"] as FollowUp;
+}
+@model IEnumerable<FollowUpEntry>
+
+<div class="table-responsive">
+    <form method="post" asp-action="SubmitFollowUp" asp-controller="FollowUp">
+        <table class="table table-bordered" style="min-width: 1100px;">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Course Title</th>
+                    <th>Instructor</th>
+                    <th>Place</th>
+                    <th>Time</th>
+                    @for (int i = 1; i <= 14; i++)
+                    {
+                        <th>@i</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var scheduleGroup in Model.GroupBy(f => f.ScheduleId))
+                {
+                    var schedule = scheduleGroup.FirstOrDefault()?.Schedule;  // Get the schedule related to this group
+                    if (schedule is not null && user is not null)
+                    {
+                        <input type="hidden" name="FollowUpId" value="@user.Id" />
+
+                        <tr>
+                            <td>@schedule.CourseCode</td>
+                            <td>@schedule.Course.Name</td>
+                            <td>@schedule.Instructor?.FirstName @schedule.Instructor?.MiddleName @schedule.Instructor?.LastName @schedule.Assistant?.FirstName @schedule.Assistant?.MiddleName @schedule.Assistant?.LastName</td>
+                            <td>@schedule.Place.Name</td>
+                            <td>@($"{schedule.TimeBegin:hh\\:mm} - {schedule.TimeEnd:hh\\:mm}")</td>
+
+                            @for (int i = 1; i <= 14; i++)
+                            {
+                                var entryForWeek = scheduleGroup.FirstOrDefault(f => f.WeekNumber == i);
+                                <td>
+                                    <input type="checkbox" name="attended[@schedule.Id][@i]" value="true" @(entryForWeek?.Attended == true ? "checked" : "") />
+                                </td>
+                            }
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-danger" colspan="6">No schedule data available</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary btn-small">Submit</button>
+    </form>
+</div>

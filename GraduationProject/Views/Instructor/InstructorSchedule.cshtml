@@ -1,10 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Instructor Schedule";
     var schedule = ViewData["Schedule"] as IEnumerable<InstructorSchedule>;
-}  
+}
 
-  <div class="container mt-4 doctor-schedule schedule-s">  
-      <div class="table-container">  
+<div class="container mt-4 doctor-schedule schedule-s" id="searchResults">
+    <div class="table-container">  
           <div class="header-section">  
               <div>  
                   <h5>Ministry of Higher Education</h5>  
@@ -44,16 +44,11 @@
                     
               </tbody>  
           </table>  
-
-          <div class="notes">  
-              <p>ملحوظة</p>  
-              <p>١- التحميل الموضح عاليه بالاضافة الالتزام بحضور محاضرات السادة محاضرى المقررات بالتنسيق معهم .</p>  
-              <p>٢- عدم تغيير أى من المواعيد السابقة سواء لرغبة شخصية او لرغبة الطلاب لتعارض ذلك مع جداول باقى زملائهم.</p>  
-          </div>  
-          <div class="signature">  
-              <p><strong>التوقيع:</strong> ______________</p>  
-              <p>أ.د / محمد طاهر المياح</p>  
-              <p>عميد كلية الحاسبات والذكاء الاصطناعي</p>  
-          </div>  
-      </div>  
+      </div>
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+    </div>
   </div>  
+@section Scripts {
+    <script src="~/js/print.js"></script>
+}

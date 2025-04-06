@@ -5,7 +5,7 @@
 }
 
 <section class="student">
-    <div class="container py-3">
+    <div class="container py-3" id="searchResults">
         <div class="heading-schedule d-flex justify-content-between align-items-center">
             <p class="p-0 fs-5 fw-bold semester">Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span> <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span></p>
             <img src="../images/Mti(Gray).png" alt="">
@@ -54,5 +54,12 @@
                 }
             }
         </div>
+        <div class="m-auto my-4 text-center ">
+            <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+        </div>
     </div>
 </section>
+
+@section Scripts {
+    <script src="~/js/print.js"></script>
+}

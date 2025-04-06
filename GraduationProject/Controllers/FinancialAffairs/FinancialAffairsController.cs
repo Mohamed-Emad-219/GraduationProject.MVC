@@ -3,9 +3,11 @@ using GP.BLL.Interfaces;
 using GP.BLL.Repositories;
 using GP.DAL.Context;
 using GP.DAL.Models;
+using GraduationProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GraduationProject.Controllers.FinancialAffairs
 { 
@@ -19,7 +21,12 @@ namespace GraduationProject.Controllers.FinancialAffairs
         private readonly IReceiptRepository receiptRepository;
         private readonly UserManager<GPUser> userManager;
         private readonly IFinancialAffairsRepository financialAffairsRepository;
-        public FinancialAffairsController(IFinancialAffairsRepository _financialAffairsRepository, UserManager<GPUser> _userManager, IReceiptRepository _receiptRepository, ICollegeRepository _collegeRepository, IEnrollmentRepository _enrollmentRepository, ITermRepository _termRepository, ITermCourseRepository _termCourseRepository, IStudentRepository studentRepository)
+        private readonly IFacultyMemberRepsitory facultyMemberRepsitory;
+        private readonly IDepartmentRepository departmentRepository;
+        private readonly IPetitionRequestRepository petitionRequestRepository;
+        private readonly IPetitionCourseRepository petitionCourseRepository;
+        private readonly ICourseRepository courseRepository;
+        public FinancialAffairsController(ICourseRepository _courseRepository, IPetitionCourseRepository _petitionCourseRepository, IPetitionRequestRepository _petitionRequestRepository, IDepartmentRepository _departmentRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IFinancialAffairsRepository _financialAffairsRepository, UserManager<GPUser> _userManager, IReceiptRepository _receiptRepository, ICollegeRepository _collegeRepository, IEnrollmentRepository _enrollmentRepository, ITermRepository _termRepository, ITermCourseRepository _termCourseRepository, IStudentRepository studentRepository)
         {
             _studentRepository = studentRepository;
             termRepository = _termRepository;
@@ -29,6 +36,11 @@ namespace GraduationProject.Controllers.FinancialAffairs
             receiptRepository = _receiptRepository;
             userManager = _userManager;
             financialAffairsRepository = _financialAffairsRepository;
+            facultyMemberRepsitory = _facultyMemberRepsitory;
+            departmentRepository = _departmentRepository;
+            petitionRequestRepository = _petitionRequestRepository;
+            petitionCourseRepository = _petitionCourseRepository;
+            courseRepository = _courseRepository;
         }
         [Authorize(Roles = "FinancialAffairs")]
         public IActionResult PaymentDetails()
@@ -131,13 +143,53 @@ namespace GraduationProject.Controllers.FinancialAffairs
         [Authorize(Roles = "FinancialAffairs")]
         public IActionResult PetitonRequest()
         {
+            ViewData["Deans"] = facultyMemberRepsitory.GetDeans();
+            ViewData["Colleges"] = collegeRepository.GetColleges();
+            ViewData["Department"] = departmentRepository.GetDepartments();
             return View();
         }
         [Authorize(Roles = "FinancialAffairs")]
-        public IActionResult AddPetitonRequest()
+        [HttpPost]
+        [Route("/FinancialAffairs/AddPetitionRequest")]
+        public IActionResult AddPetitionRequest(PetitionRequestVM model)
         {
-            return RedirectToAction("Index", "Home");
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, return the form with errors
+                return View(model);
+            }
+
+            // Create a new PetitionRequest entity (assuming a PetitionRequest table exists)
+            var petition = new PetitionRequest
+            {
+                DeanId = model.DeanId,
+                CollegeId = model.CollegeId,
+                DeptId = model.DeptId,
+                StudentName = model.StudentName,
+                RegistrationNumber = model.RegistrationNumber,
+                Semester = model.Semester,
+                Date = model.Date,
+                NumberOfCourses = model.NumberOfCourses,
+                AmountPaid = model.AmountPaid,
+                PaymentDate = model.PaymentDate
+            };
+
+            petitionRequestRepository.AddPetition(petition);
+
+            // Save Courses in a separate table (if needed)
+            foreach (var courseName in model.Courses)
+            {
+                var course = new PetitionCourse
+                {
+                    PetitionRequestId = petition.Id, // Link to petition
+                    CourseCode = courseRepository.GetCourseCodeByName(courseName)
+                };
+                petitionCourseRepository.AddPetitionCourse(course);
+            }
+
+            return RedirectToAction("Index", "Home"); // Redirect to a success page
         }
+
 
     }
 }

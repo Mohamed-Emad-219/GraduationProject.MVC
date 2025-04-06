@@ -24,21 +24,19 @@ namespace GP.BLL.Repositories
             return  _dbContext.SaveChanges();
         }
 
-        public async Task<int> DeleteDepartmentAsync(int Id)
+        public int DeleteDepartmentAsync(int Id)
         {
             
-            var dep = await GetDepartmentById(Id);
+            var dep = GetDepartmentById(Id);
             _dbContext.Remove(dep);
             return _dbContext.SaveChanges();
         }
 
-        public async Task<Department> GetDepartmentById(int id)
+        public Department GetDepartmentById(int Id)
         {
-            //var department = _dbContext.Departments.Where(D=>D.Id==id).FirstOrDefault();
-            //Best Performance
-            var department = await _dbContext.Departments.FindAsync(id);//// find op search in cache if found return it else search in database
-            return department;
-
+            var dep = _dbContext.Departments.Find(Id);//// find op search in cache if found return it else search in database
+            
+            return dep;
         }
 
         public IEnumerable<Department> GetDepartments()
@@ -55,6 +53,14 @@ namespace GP.BLL.Repositories
         {
             _dbContext.Departments.Update(department);
             return _dbContext.SaveChanges();
+        }
+        public async Task<List<Department>> GetDepartmentsByCollegeIdAsync(int Id)
+        {
+            var departments = await _dbContext.Departments
+                                            .Where(d => d.CollegeId == Id)
+                                            .ToListAsync();
+            await Task.Delay(1000);
+            return departments;
         }
     }
 }

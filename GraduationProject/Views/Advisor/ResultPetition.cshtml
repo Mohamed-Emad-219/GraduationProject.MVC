@@ -1,114 +1,165 @@
 ﻿@{
-	ViewData["Title"] = "Result";
+    ViewData["Title"] = "Result";
+    var request = ViewData["PetitionRequest"] as PetitionRequest;
+    var courses = ViewData["PetitionCourses"] as IEnumerable<PetitionCourse>;
+    var user = ViewData["User"] as Advisor;
 }
-<form id="form-result">
-    <div class="mb-3">
-        <label class="form-label">Student Name:</label>
-        <input type="text" class="form-control wide-input" placeholder="Enter Student Name">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Subject:</label>
-        <input type="text" class="form-control wide-input" placeholder="Enter Subject Name">
-    </div>
+<div class="container">
+<div class="back-button position-absolute">
+    <a class="text-primary m-3 d-block" asp-action="Requests" asp-controller="Advisor"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
+</div>
+</div>
+<div class="container result">
+    @if (courses is not null && request is not null)
+    {
+        @foreach (var course in courses)
+        {
+            <form asp-action="AddResultPetition" asp-controller="Advisor" id="form-result-@course.CourseCode">
+                <input type="hidden" name="PetitionId" value="@request.Id" />
+                <input type="hidden" name="PetitionCourseId" value="@course.Id" />
+                <input type="hidden" name="AdvisorId" value="@user.Id" />
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Student Name:</label>
+                    <span>@request.StudentName</span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Course:</label>
+                    <span>@course.Course.Name</span>
+                </div>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Error in Correction</th>
-                <th>Grade Application for Submitted Record</th>
-                <th>Year Work Assessment</th>
-                <th>Practical Exam Assessment</th>
-                <th>Final Exam Assessment</th>
-                <th>Total Grade</th>
-                <th>Final Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div class="radio-group">
-                        <label><input type="radio" name="error"> Yes</label>
-                        <label><input type="radio" name="error"> No</label>
-                    </div>
-                </td>
-                <td>
-                    <div class="radio-group">
-                        <label><input type="radio" name="application"> Applied</label>
-                        <label><input type="radio" name="application"> Not Applied</label>
-                    </div>
-                </td>
-                <td>
-                    <div class="radio-group">
-                        <label><input type="radio" name="year_work"> More than Acceptable</label>
-                        <label><input type="radio" name="year_work"> Acceptable</label>
-                        <label><input type="radio" name="year_work"> Weak</label>
-                        <label><input type="radio" name="year_work"> Very Weak</label>
-                    </div>
-                </td>
-                <td>
-                    <div class="radio-group">
-                        <label><input type="radio" name="practical_exam"> More than Acceptable</label>
-                        <label><input type="radio" name="practical_exam"> Acceptable</label>
-                        <label><input type="radio" name="practical_exam"> Weak</label>
-                        <label><input type="radio" name="practical_exam"> Very Weak</label>
-                    </div>
-                </td>
-                <td>
-                    <div class="radio-group">
-                        <label><input type="radio" name="final_exam"> More than Acceptable</label>
-                        <label><input type="radio" name="final_exam"> Acceptable</label>
-                        <label><input type="radio" name="final_exam"> Weak</label>
-                        <label><input type="radio" name="final_exam"> Very Weak</label>
-                    </div>
-                </td>
-                <td>
-                    <div class="radio-group">
-                        <label><input type="radio" name="total_grade"> Correct</label>
-                        <label><input type="radio" name="total_grade"> Incorrect</label>
-                    </div>
-                </td>
-                <td>
-                    <select class="form-control">
-                        <option value="A+">A+</option>
-                        <option value="A">A</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B">B</option>
-                        <option value="B-">B-</option>
-                        <option value="C+">C+</option>
-                        <option value="C">C</option>
-                        <option value="C-">C-</option>
-                        <option value="D+">D+</option>
-                        <option value="D">D</option>
-                        <option value="F">F</option>
-                    </select>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Error in Correction</th>
+                            <th>Grade Application for Submitted Record</th>
+                            <th>Year Work Assessment</th>
+                            <th>Practical Exam Assessment</th>
+                            <th>Final Exam Assessment</th>
+                            <th>Total Grade</th>
+                            <th>Final Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="ErrorInCorrection" value="true"> Yes</label>
+                                    <label><input type="radio" name="ErrorInCorrection" value="false"> No</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="ApplicationSubmitted" value="true"> Applied</label>
+                                    <label><input type="radio" name="ApplicationSubmitted" value="false"> Not Applied</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="YearWorkAssessment" value="More than Acceptable"> More than Acceptable</label>
+                                    <label><input type="radio" name="YearWorkAssessment" value="Acceptable"> Acceptable</label>
+                                    <label><input type="radio" name="YearWorkAssessment" value="Weak"> Weak</label>
+                                    <label><input type="radio" name="YearWorkAssessment" value="Very Weak"> Very Weak</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="PracticalExamAssessment" value="More than Acceptable"> More than Acceptable</label>
+                                    <label><input type="radio" name="PracticalExamAssessment" value="Acceptable"> Acceptable</label>
+                                    <label><input type="radio" name="PracticalExamAssessment" value="Weak"> Weak</label>
+                                    <label><input type="radio" name="PracticalExamAssessment" value="Very Weak"> Very Weak</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="FinalExamAssessment" value="More than Acceptable"> More than Acceptable</label>
+                                    <label><input type="radio" name="FinalExamAssessment" value="Acceptable"> Acceptable</label>
+                                    <label><input type="radio" name="FinalExamAssessment" value="Weak"> Weak</label>
+                                    <label><input type="radio" name="FinalExamAssessment" value="Very Weak"> Very Weak</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="TotalGrade" value="true"> Correct</label>
+                                    <label><input type="radio" name="TotalGrade" value="false"> Incorrect</label>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-control" name="FinalGrade">
+                                    <option value="A+">A+</option>
+                                    <option value="A">A</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B">B</option>
+                                    <option value="B-">B-</option>
+                                    <option value="C+">C+</option>
+                                    <option value="C">C</option>
+                                    <option value="C-">C-</option>
+                                    <option value="D+">D+</option>
+                                    <option value="D">D</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    <div class="mb-3">
-        <label class="form-label">Notes:</label>
-        <textarea class="form-control" rows="3"></textarea>
-    </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Notes:</label>
+                    <textarea class="form-control" rows="3" name="Notes"></textarea>
+                </div>
 
-    <div class="review-signature">
-        <div>
-            <label class="form-label">Reviewed by:</label>
-            <input type="text" class="form-control" placeholder="Enter Reviewer Name">
-        </div>
-        <div>
-            <label class="form-label">Signature:</label>
-            <input type="text" class="form-control" placeholder="Enter Signature">
-        </div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Recorded by:</label>
-        <input type="text" class="form-control wide-input" placeholder="Enter Recorder Name">
-    </div>
+                <div class="review-signature">
+                    <div>
+                        <label class="form-label fw-bold">Signature:</label>
+                        <input type="text" class="form-control" value="@user.FirstName @user.MiddleName @user.LastName">
+                    </div>
+                </div>
 
-    <div class="button-group mt-3">
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('form-result').reset()">Clear</button>
-    </div>
-</form>
+                <div class="button-group mt-3">
+                    <button class="btn btn-primary submit-btn" data-course-id="@course.CourseCode">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('form-result-@course.CourseCode').reset()">Clear</button>
+                </div>
+            </form>
+
+            <br />
+            <hr />
+            <br />
+
+
+        }
+    }else {
+        <p>No Courses!</p>
+    }
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $(".submit-btn").click(function (event) {
+                event.preventDefault();
+
+
+                let courseId = $(this).data("course-id");
+                let form = $("#form-result-" + courseId);
+                let formData = form.serialize();
+
+                $.ajax({
+                    url: form.attr("action"),
+                    type: "POST",
+                    data: formData,
+                    success: function (response) {
+                        // Display success message
+                        alert("Result added successfully.");
+
+                        // Reset form after submission
+                        form.trigger("reset");
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Something went wrong. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+}

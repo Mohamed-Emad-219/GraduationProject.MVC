@@ -3,7 +3,7 @@
     var schedule = ViewData["Schedule"] as IEnumerable<InstructorSchedule>;
 }
 
-<div class="container assistant-schedule schedule-s mt-4" style="max-width: 800px;
+<div class="container assistant-schedule schedule-s mt-4" id="searchResults" style="max-width: 800px;
     margin: auto;">
     <div class="header-section">
         <div>
@@ -53,25 +53,10 @@
             }
         </tbody>
     </table>
-
-    <div class="notes text-center">
-        <p><strong>:ملحوظة</strong></p>
-        <p>
-            <strong>
-                ١- التحميل الموضح عاليه بالاضافة الالتزام بحضور محاضرات السادة محاضري المقررات بالتنسيق
-                معهم
-            </strong>
-        </p>
-        <p>
-            <strong>
-                ٢- عدم تغيير اي من المواعيد السابقة سواء لرغبة شخصية او لرغبه الطلاب لتعارض ذلك مع جداول باقي
-                زملائهم
-            </strong>
-        </p>
-    </div>
-    <div class="signature">
-        <p><strong>التوقيع:</strong> ______________</p>
-        <p><strong>أ.د/محمد طاهر المياح</strong></p>
-        <p><strong>عميد كلية الحسابات والمعلومات</strong></p>
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
     </div>
 </div>
+@section Scripts {
+    <script src="~/js/print.js"></script>
+}

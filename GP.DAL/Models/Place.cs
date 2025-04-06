@@ -16,7 +16,6 @@ namespace GP.DAL.Models
         public string Name { get; set; }
         public bool IsAvailable { get; set; }
         public ICollection<StudentSchedule> StudentSchedules { get; set; }
-        public ICollection<FollowUpSchedule> FollowUpSchedules { get; set; }
         public ICollection<InstructorSchedule> InstructorSchedules { get; set; }
     }
 }

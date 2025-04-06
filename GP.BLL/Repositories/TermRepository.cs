@@ -33,6 +33,31 @@ namespace GP.BLL.Repositories
                                             t.Semester == semester &&
                                             t.AcademicYear == academicYear);
         }
+        public Term GetTermBySemesterYear(SemesterType semester, int academicYear)
+        {
+            Console.WriteLine($"Searching for Semester: {(int)semester}, AcademicYear: {academicYear}");
+
+            var term = context.Terms
+                .Include(t => t.Enrollments)                // Load enrollments
+                    .ThenInclude(e => e.Course)             // Load course details
+                    .ThenInclude(c => c.InstructorSchedules) // Load course instructor schedules
+                    .ThenInclude(i => i.Instructor)
+                .Include(t => t.Enrollments)                // Load enrollments again
+                    .ThenInclude(e => e.Student)            // Load student details
+                .FirstOrDefault(t => t.Semester == semester &&
+                                     t.AcademicYear == academicYear);
+
+            if (term == null)
+            {
+                Console.WriteLine("No matching term found in the database.");
+            }
+            else
+            {
+                Console.WriteLine($"Found Term: {term.Id}, Semester: {term.Semester}, Year: {term.AcademicYear}");
+            }
+
+            return term;
+        }
 
     }
 }

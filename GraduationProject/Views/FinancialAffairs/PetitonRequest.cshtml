@@ -1,77 +1,123 @@
 ﻿@{
-	ViewData["Title"] = "Petition Request";
+    ViewData["Title"] = "Petition Request";
+    var deans = ViewData["Deans"] as IEnumerable<FacultyMember>;
+    var colleges = ViewData["Colleges"] as IEnumerable<College>;
+    var deps = ViewData["Department"] as IEnumerable<Department>;
 }
+@model PetitionRequestVM
 <div class="petiton-request container p-3 border" style="width: 800px;">
-        <img src="images/Mti(Gray).png" alt="" class="img-fluid d-block mx-auto py-2" style="width: 150px;">
+    <img src="~images/Mti(Gray).png" alt="" class="img-fluid d-block mx-auto py-2" style="width: 150px;">
 
-        <div>
-            <p class="text-center fw-bold fs-5 text-decoration-underline">Admission and Registration Department</p>
-        </div>
+    <div>
+        <p class="text-center fw-bold fs-5 text-decoration-underline">Admission and Registration Department</p>
+    </div>
 
-        <div class="text-center fw-bold fs-5 text-decoration-underline">
-            <p>Petition</p>
-            <p>To ensure that there are no material errors in monitoring</p>
-        </div>
-    <form method="post" asp-action="AddPetitonRequest" asp-controller="FinancialAffairs">
-            <div class="form-group">
-                <div class="d-flex justify-content-start align-items-center gap-2">
-                    <label class="w-25">Mr. Professor Dr /</label>
-                    <input type="text" class="form-control bg-transparent bb-1" placeholder="Dean Name" required>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2">
-                    <label class="w-25">Dean of the college</label>
-                    <input type="text" class="form-control bg-transparent bb-1" placeholder="College Name" required>
-                </div>
+    <div class="text-center fw-bold fs-5 text-decoration-underline">
+        <p>Petition</p>
+        <p>To ensure that there are no material errors in monitoring</p>
+    </div>
+    <form method="post" asp-action="AddPetitionRequest" asp-controller="FinancialAffairs">
+        <div class="form-group">
+            <div class="d-flex justify-content-start align-items-center gap-2">
+                <label class="w-25">Mr. Professor Dr /</label>
+                <select class="form-control bg-transparent bb-1" name="DeanId" required>
+                    <option value="">Choose..</option>
+                    @if(deans is not null) {
+                        @foreach (var dean in deans) {
+                            <option value="@dean.Id">@dean.FirstName @dean.MiddleName @dean.LastName</option>
+                        }
+                    } 
+                </select>
             </div>
+            <div class="d-flex justify-content-start align-items-center gap-2">
+                <label class="w-25">Dean of the college</label>
+                <select class="form-control bg-transparent bb-1" name="CollegeId" required>
+                    <option value="">Choose..</option>
+                    @if (colleges is not null)
+                    {
+                        @foreach (var college in colleges)
+                        {
+                            <option value="@college.Id">@college.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
 
-            <p class="fw-bold m-3 fs-5">Introduction to you</p>
+        <p class="fw-bold m-3 fs-5">Introduction to you</p>
 
-            <div class="form-group">
-                <div class="d-flex justify-content-start align-items-center gap-2">
-                    <label class="w-25">Student Name </label>
-                <input type="text" class="form-control bg-transparent bb-1" placeholder="Student Name" required>
-                </div>
-                <div class="d-flex justify-content-start align-items-center gap-2">
-                    <label class="w-25">Registration number</label>
-                    <input type="text" class="form-control bg-transparent bb-1" placeholder="Registration Number" required>
-                </div>
+        <div class="form-group">
+            <div class="d-flex justify-content-start align-items-center gap-2">
+                <label class="w-25">Student Name </label>
+                <input type="text" class="form-control bg-transparent bb-1" name="StudentName" placeholder="StudentName" required>
+            </div>
+            <div class="d-flex justify-content-start align-items-center gap-2">
+                <label class="w-25">Registration number</label> @*رقم القيد*@
+                <input type="text" class="form-control bg-transparent bb-1" name="RegistrationNumber" placeholder="Registration Number" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="d-flex justify-content-start align-items-center gap-2">
+                <label class="w-25">Semester</label>
+                <select class ="form-control bg-transparent bb-1" name="Semester">
+                    @foreach (var semester in Enum.GetValues(typeof(SemesterType)))
+                    {
+                        <option value="@semester">@semester.ToString()</option>
+                    }
+                </select>
                 
-            </div>
-            <div class="form-group">
-                <div class="d-flex justify-content-start align-items-center gap-2">
-                    <label class="w-25">Semester</label>
-                    <input type="text" class="form-control bg-transparent bb-1" placeholder="Semester" required>
                 </div>
                 <div class="d-flex justify-content-start align-items-center gap-2">
                     <label class="w-25">Department</label>
-                    <input type="text" class="form-control bg-transparent bb-1" placeholder="Department" required>
+                <select class="form-control bg-transparent bb-1" name="DeptId">
+                    @if(deps is not null) {
+                    @foreach (var dep in deps)
+                    {
+                        <option value="@dep.Id">@dep.Name</option>
+                    }
+                    }
+                </select>
                 </div>
                 
             </div>
             <div class="mb-3">
                 <label class="form-label">Materials to be reviewed</label>
+            
                 <div class="row">
                     <div class="col-md-6">
                         <ol class="list-group list-group-numbered">
-                            <li class="list-group-item"><input type="text" class="form-control" placeholder="Course 1"
-                                    required></li>
-                            <li class="list-group-item"><input type="text" class="form-control" placeholder="Course 2"
-                                    required></li>
-                            <li class="list-group-item"><input type="text" class="form-control" placeholder="Course 3"
-                                    required></li>
+                            <li class="list-group-item position-relative">
+                                <input type="text" class="form-control course-input" placeholder="Search Course 1" onkeyup="filterCourses(this)">
+                                <ul class="dropdown-menu"></ul>
+                            </li>
+                            <li class="list-group-item position-relative">
+                                <input type="text" class="form-control course-input" placeholder="Search Course 2" onkeyup="filterCourses(this)">
+                                <ul class="dropdown-menu"></ul>
+                            </li>
+                            <li class="list-group-item position-relative">
+                                <input type="text" class="form-control course-input" placeholder="Search Course 3" onkeyup="filterCourses(this)">
+                                <ul class="dropdown-menu"></ul>
+                            </li>
                         </ol>
                     </div>
                     <div class="col-md-6">
                         <ol class="list-group list-group-numbered" start="4">
-                            <li class="list-group-item"><input type="text" class="form-control" placeholder="Course 4"
-                                    required></li>
-                            <li class="list-group-item"><input type="text" class="form-control" placeholder="Course 5"
-                                    required></li>
-                            <li class="list-group-item"><input type="text" class="form-control" placeholder="Course 6"
-                                    required></li>
+                            <li class="list-group-item position-relative">
+                                <input type="text" class="form-control course-input" placeholder="Search Course 4" onkeyup="filterCourses(this)">
+                                <ul class="dropdown-menu"></ul>
+                            </li>
+                            <li class="list-group-item position-relative">
+                                <input type="text" class="form-control course-input" placeholder="Search Course 5" onkeyup="filterCourses(this)">
+                                <ul class="dropdown-menu"></ul>
+                            </li>
+                            <li class="list-group-item position-relative">
+                                <input type="text" class="form-control course-input" placeholder="Search Course 6" onkeyup="filterCourses(this)">
+                                <ul class="dropdown-menu"></ul>
+                            </li>
                         </ol>
                     </div>
                 </div>
+           
             </div>
 
             <p class="text-center fw-bold fs-5 text-decoration-underline">Best regards....</p>
@@ -87,38 +133,94 @@
                 </div>
                 <div class="d-flex justify-content-start align-items-center gap-2">
                     <label>Date</label>
-                    <input type="date" class="form-control bg-transparent bb-1" style="width: 200px;" required>
+                    <input type="date" class="form-control bg-transparent bb-1" name="Date" style="width: 200px;" required>
                     
                 </div>
             </div>
 
             <div class="card p-3 mt-4">
-                <h4 class="border-bottom pb-2">Decision</h4>
-                <div class="mb-3">
-                    <textarea class="form-control" rows="3"></textarea>
-                </div>
+                
                 <div class="form-group">
                     <div class="border-top pt-3 mt-3">
                         <div class="row">
                             <div class="col-md-4">
                                 <label class="form-label">The number of courses in which the petition is requested</label>
-                                <input type="number" class="form-control" min="1" max="6">
+                            <input name="NumberOfCourses" type="number" class="form-control" min="1" max="6">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label pb-4">Amount paid</label>
-                                <input type="text" class="form-control">
+                            <input name="AmountPaid" type="text" class="form-control">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label pb-4">Payment date</label>
-                                <input type="date" class="form-control">
+                            <input name="PaymentDate" type="date" class="form-control">
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
-        <button class="btn btn-danger" type="submit">Send</button>
+        <button class="btn btn-primary mt-3" type="submit">Send</button>
         </form>
         <p class="text-start mt-3 fw-bold">Financial Affairs</p>
     </div>
 
+@section Scripts {
+    <script>
+        // 📌 Static list of courses (Can be fetched from a database)
+            let availableCourses = []; // Dynamically loaded courses
+
+        // Fetch courses from API
+        async function fetchCourses() {
+            try {
+                const response = await fetch("/Course/GetCourses"); // Adjust URL as needed
+                availableCourses = await response.json();
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", fetchCourses);
+        // 🎯 Function to filter courses based on user input
+        function filterCourses(inputElement) {
+            const query = inputElement.value.toLowerCase();
+            const dropdown = inputElement.nextElementSibling; // The <ul> element (dropdown)
+
+            dropdown.innerHTML = ""; // Clear previous results
+            dropdown.classList.remove("show"); // Hide dropdown initially
+
+            if (query === "") return; // Do nothing if input is empty
+
+            // 🔎 Filter courses based on input text
+            const matches = availableCourses.filter(course => course.toLowerCase().includes(query));
+
+            if (matches.length === 0) return; // No matches found, exit
+
+            // 🔽 Populate dropdown with matching courses
+            matches.forEach(course => {
+                const item = document.createElement("li");
+                item.classList.add("dropdown-item", "px-3", "py-2");
+                item.textContent = course;
+                item.style.cursor = "pointer";
+
+                // ✅ Click to select course
+                item.onclick = function () {
+                    inputElement.value = course; // Set selected course
+                    inputElement.setAttribute("name", "Courses[]");
+                    dropdown.classList.remove("show"); // Hide dropdown
+                };
+                dropdown.appendChild(item);
+            });
+
+            dropdown.classList.add("show"); // Show dropdown when results are available
+        }
+
+        // 🛑 Hide dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+            document.querySelectorAll(".dropdown-menu").forEach(menu => {
+                if (!menu.previousElementSibling.contains(event.target)) {
+                    menu.classList.remove("show");
+                }
+            });
+        });
+    </script>
+}

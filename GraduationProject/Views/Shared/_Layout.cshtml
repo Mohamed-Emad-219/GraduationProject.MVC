@@ -48,14 +48,35 @@
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Advisor"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="SemesterInfoPage">Semester Info</a>
+                            </li>
                             <li class="nav-item"> 
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="InstructorInfoPage">Instructor Schedule</a> 
                             </li> 
-                            <li class="nav-item"> 
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="SemesterInfoPage">Semester Info</a> 
-                            </li> 
+                            
                             <li class="nav-item"> 
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="Dashboard">Dashboard</a> 
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Advisor" asp-action="Requests">Requests</a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Advisor" asp-action="IndividualStudentProgress">Student Progress Report</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if(SignInManager.IsSignedIn(User) && User.IsInRole("Dean")) {
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="CourseEnrollmentReport">Course Enrollment Report</a>
                             </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Student")) //done
@@ -87,6 +108,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="FinancialAffairs" asp-action="PaymentDetails">Payment</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FinancialAffairs" asp-action="PetitonRequest">Petiton Request</a>
+                            </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("ManagerOfStudentAffairs"))
                         {
@@ -101,6 +125,12 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="StudentAffairs" asp-action="ReceiptTable">Receipts</a>
+                            </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("FollowUp"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="FollowUp" asp-action="FollowUpSchedule">Follow Up Schedule</a>
                             </li>
                         }
                     </ul>

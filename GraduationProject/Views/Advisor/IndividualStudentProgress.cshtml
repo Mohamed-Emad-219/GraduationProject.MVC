@@ -1,0 +1,46 @@
+﻿@{
+	ViewData["Title"] = "Student Progress Report";
+}
+<div class="container py-4">
+    <div class="search w-75 mx-auto mb-4">
+        <p class="fs-4">Student ID:</p>
+        <form id="searchForm" class="d-flex" role="search">
+            <input class="form-control me-2" name="Id" id="std-id" type="search" placeholder="Student Id" aria-label="Search">
+            <button class="btn btn-outline-success" id="search-id" type="button">Search</button>
+        </form>
+    </div>
+    <div class="printContainer" id="searchResults"></div>
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/print.js"></script>
+    <script>
+            
+            $(document).ready(function () {
+            $("#search-id").click(function (event) {
+                event.preventDefault(); // Prevents form reload
+
+                var Id = $("#std-id").val();
+                if (!Id) {
+                    alert("Please enter a Student ID");
+                    return;
+                }
+
+                $.ajax({
+                    url: "/Advisor/Search",
+                    type: "get", // Or "POST" depending on your API
+                    data: { id: Id },
+                    success: function (response) {
+                        $("#searchResults").html(response); // Load partial view here
+                    },
+                    error: function () {
+                        $("#searchResults").html("<p class='text-center fs-4 fw-bold text-danger'>Student not found.</p>");
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -12,5 +12,6 @@ namespace GP.BLL.Interfaces
         Term GetTermById(int Id);
         Term GetTermByLevel(int level);
         Term GetTermByDetails(int level, SemesterType semester, int academicYear);
+        Term GetTermBySemesterYear(SemesterType semester, int academicYear);
     }
 }

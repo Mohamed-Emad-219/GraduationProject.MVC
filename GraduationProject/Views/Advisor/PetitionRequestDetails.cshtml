@@ -1,9 +1,16 @@
 ﻿@{
-	ViewData["Title"] = "Petition Request Details";
+    ViewData["Title"] = "Petition Request Details";
+    var req = ViewData["PetitionRequest"] as PetitionRequest;
+    var courses = ViewData["PetitionCourses"] as IEnumerable<PetitionCourse>;
 }
-
+<div class="container">
+<div class="back-button position-absolute">
+    <a class="text-primary m-3 d-block" asp-action="Requests" asp-controller="Advisor"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
+</div>
+</div>
 <div class="petition-request container p-3 border" style="width: 800px;">
-    <img src="images/Mti(Gray).png" alt="" class="img-fluid d-block mx-auto py-2" style="width: 150px;">
+    
+    <img src="~/images/Mti(Gray).png" alt="" class="img-fluid d-block mx-auto py-2" style="width: 150px;">
 
     <div class="text-center fw-bold fs-5 text-decoration-underline">
         <p>Admission and Registration Department</p>
@@ -15,11 +22,11 @@
         <div class="form-group">
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label class="w-25">Mr. Professor Dr /</label>
-                <span>dean_name </span>
+                <span>@req.Dean.FirstName @req.Dean.MiddleName @req.Dean.LastName </span>
             </div>
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label class="w-25">Dean of the college</label>
-                <span> college_name </span>
+                <span> @req.College.Name </span>
             </div>
         </div>
 
@@ -28,28 +35,35 @@
         <div class="form-group">
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label class="w-25">Student Name</label>
-                <span> student_name </span>
+                <span> @req.StudentName </span>
             </div>
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label class="w-25">Registration number</label>
-                <span>registration_number </span>
+                <span> @req.RegistrationNumber </span>
             </div>
         </div>
         <div class="form-group">
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label class="w-25">Semester</label>
-                <span> semester </span>
+                <span> @req.Semester </span>
             </div>
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label class="w-25">Department</label>
-                <span> department </span>
+                <span> @req.Department.Name </span>
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Materials to be reviewed</label>
             <ul class="list-group">
-                <li class="list-group-item"> course </li>
+                @foreach(var course in courses) {
+                    @if(course is not null) {
+                    <li class="list-group-item"> @course.Course.Name </li>
+                    }else {
+                        <p>No Courses!</p>
+                    }
+                }
+               
             </ul>
         </div>
 
@@ -58,42 +72,38 @@
         <div class="signature">
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label>Signature</label>
-                <span>signature </span>
+                <span>@req.StudentName </span>
             </div>
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label>Name</label>
-                <span>student_name </span>
+                <span>@req.StudentName</span>
             </div>
             <div class="d-flex justify-content-start align-items-center gap-2">
                 <label>Date</label>
-                <span> petition_date </span>
+                <span> @req.Date </span>
             </div>
         </div>
 
         <div class="card p-3 mt-4">
-            <h4 class="border-bottom pb-2">Decision</h4>
-            <div class="mb-3">
-                <p>decision </p>
-            </div>
             <div class="form-group">
                 <div class="border-top pt-3 mt-3">
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Number of courses petitioned</label><br>
-                            <span> num_courses </span>
+                            <span> @req.NumberOfCourses </span>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Amount paid</label><br>
-                            <span> amount_paid </span>
+                            <span> @req.AmountPaid L.E </span>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Payment date</label><br>
-                            <span> payment_date </span>
+                            <span> @req.PaymentDate </span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-    <p class="text-start mt-3 fw-bold">Financial Affairs</p>
+    <a class="my-3 text-center btn btn-large btn-primary" asp-action="ResultPetition" asp-controller="Advisor" asp-route-id="@req.Id">Result</a>
 </div>
