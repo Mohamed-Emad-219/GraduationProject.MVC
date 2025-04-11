@@ -11,10 +11,8 @@ namespace GP.DAL.Models
     public class Advisor
     {
         public int Id { get; set; }
-
         public string UserId { get; set; }
         public GPUser User { get; set; }
-
         [StringLength(16, MinimumLength = 16, ErrorMessage = "SSN must be exactly 16 digits.")]
         [RegularExpression(@"^\d{16}$", ErrorMessage = "SSN must contain only numbers.")]
         public string SSN { get; set; }
@@ -29,7 +27,5 @@ namespace GP.DAL.Models
         public string Address { get; set; }
         public Gender Gender { get; set; }
         public ICollection<Student> Students { get; set; }
-        public ICollection<StudentSchedule> StudentSchedules { get; set; }
-        public ICollection<InstructorSchedule> InstructorSchedules { get; set; }
     }
 }

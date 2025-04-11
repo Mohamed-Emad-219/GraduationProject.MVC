@@ -25,4 +25,8 @@
     <ProjectReference Include="..\GP.DAL\GP.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\AI\" />
+  </ItemGroup>
+
 </Project>

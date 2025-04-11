@@ -28,7 +28,6 @@ namespace GraduationProject.Controllers.Student
             var userId = user.Id;
             var std = _studentRepository.GetStudentByUserId(userId);
             ViewData["Schedule"] = _studentScheduleRepository.GetStudentScheduleByGroup(std.Group, std.Level);
-
             return View();
         }
     }

@@ -1,41 +1,41 @@
 ﻿@{
     var student = ViewData["Student"] as Student;
     var reportNumber = ViewData["ReportNumber"] as string;
-    var completedHours =  ViewData["completedHours"];
-    var remainingHours =  ViewData["remainingHours"];
+    var completedHours =  ViewData["completedHours"] ?? 0;
+    var remainingHours =  ViewData["remainingHours"] ?? 144;
     var courses = ViewData["completedCourses"] as IEnumerable<Enrollment>;
-    var date = ViewData["Date"];
+    var date = ViewData["Date"] ?? 0;
     var advisor = ViewData["Advisor"] as Advisor;
 }
-@if (student is not null && completedHours is not null && remainingHours is not null && courses is not null && date is not null && advisor is not null)
-{
+@* @if (student is not null && courses is not null && advisor is not null) *@
+@* { *@
     <div class="container mt-5 py-5 shadow" id="report">
         <div class="d-flex justify-content-between mb-4">
             <img src="~/images/Mti(Gray).png" alt="" style="width: 100px;">
             <img src="~/images/advisorylogo no stroke .png" alt="" style="width: 60px;">
             <img src="~/images/CS(Gray).png" alt="" style="width: 60px;">
         </div>
-        <h1 class="text-center mb-4">Individual Student Progress Report</h1>
-        <h2 class="text-center">MTI University</h2>
-        <p class="text-center">Department: <span id="departmentName">@student.Department.Name</span></p>
-        <p class="text-center">Date: @reportNumber</p>
+        <h3 class="text-center mb-4">Individual Student Progress Report</h3>
+        <h4 class="text-center">MTI University</h4>
+        <p class="text-center m-1">Department: <span id="departmentName">@student?.Department?.Name</span></p>
+        <p class="text-center m-1">Report Number: @reportNumber</p>
 
-        <h3>Student Information</h3>
+        <h4>Student Information</h4>
         <ul>
-            <li><strong>Student Name:</strong> <span id="studentName">@student.FirstName @student.MiddleName @student.LastName</span></li>
-            <li><strong>Student ID:</strong> <span id="studentID">@student.Id</span></li>
-            <li><strong>Major:</strong> <span id="studentMajor">@student.Department.Name</span></li>
-            <li><strong>Academic Advisor:</strong> <span id="advisorName">@student.Advisor.FirstName @student.Advisor.MiddleName @student.Advisor.LastName</span></li>
+            <li><strong>Student Name:</strong> <span id="studentName">@student?.FirstName @student?.MiddleName @student?.LastName</span></li>
+            <li><strong>Student ID:</strong> <span id="studentID">@student?.Id</span></li>
+            <li><strong>Major:</strong> <span id="studentMajor">@student?.Department?.Name</span></li>
+            <li><strong>Academic Advisor:</strong> <span id="advisorName">@student?.Advisor?.FirstName @student?.Advisor?.MiddleName @student?.Advisor?.LastName</span></li>
         </ul>
 
-        <h3>Enrollment Summary</h3>
-        <ul class="fs-4">
+        <h4>Enrollment Summary</h4>
+        <ul class="fs-6">
             <li><strong>Total Required Credit Hours for Graduation:</strong> <span id="totalCredits">144</span></li>
             <li><strong>Completed Credit Hours:</strong> <span id="completedCredits">@completedHours</span></li>
             <li><strong>Remaining Credit Hours:</strong> <span id="remainingCredits">@remainingHours</span></li>
         </ul>
 
-        <h3>Completed Courses</h3>
+        <h4>Completed Courses</h4>
         <table class="table table-bordered text-center">
             <thead class="table-light">
                 <tr>
@@ -50,23 +50,23 @@
                 @foreach(var course in courses)
                 {
                     <tr>
-                        <td>@course.Course.Code</td>
-                        <td>@course.Course.Name</td>
-                        <td>@course.Course.CreditHour</td>
-                        <td>@course.Term.Semester</td>
-                        <td>@course.Grade</td>
+                        <td>@course?.Course?.Code</td>
+                        <td>@course?.Course?.Name</td>
+                        <td>@course?.Course?.CreditHour</td>
+                        <td>@course?.Term?.Semester</td>
+                        <td>@course?.Grade</td>
                     </tr>
                 }
         </tbody>
     </table>
 
 
-    <h3>Remarks and Recommendations</h3>
-    <p id="remarks">Student is progressing well and on track for graduation. Recommended to take additional elective courses to fulfill graduation requirements. Meeting with an academic advisor is advised to ensure proper course selection.</p>
+    <h4>Remarks and Recommendations</h4>
+    <p class="fs-6 m-1" id="remarks">Student is progressing well and on track for graduation. Recommended to take additional elective courses to fulfill graduation requirements. Meeting with an academic advisor is advised to ensure proper course selection.</p>
 
-    <p class="mt-4"><strong>Academic Advisor Signature:</strong> @advisor.FirstName @advisor.MiddleName @advisor.LastName</p>
+    <p class="mt-2"><strong>Academic Advisor Signature:</strong> @advisor?.FirstName @advisor?.MiddleName @advisor?.LastName</p>
     <p><strong>Date:</strong> @date</p>
 </div>
-}else {
-    <p>Somthing is null</p>
-}
+@* }else { *@
+    @* <p>Somthing is null</p> *@
+@* } *@

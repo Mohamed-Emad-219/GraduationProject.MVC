@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using GP.DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using GP.BLL.Repositories;
 
 namespace GraduationProject.Controllers.Advisor
 {
@@ -23,8 +24,10 @@ namespace GraduationProject.Controllers.Advisor
         private readonly IAdvisorRepository advisorRepository;
         private readonly IPetitionRequestRepository petitionRequestRepository;
         private readonly IPetitionCourseRepository petitionCourseRepository;
+        private readonly IStudentDistribution studentDistributionRepositroy;
         private readonly IResultPetitionRepository resultPetitionRepository;
-        public AdvisorController(IResultPetitionRepository _resultPetitionRepository, IPetitionCourseRepository _petitionCourseRepository, IPetitionRequestRepository _petitionRequestRepository, IAdvisorRepository _advisorRepository, UserManager<GPUser> _userManager, IEnrollmentRepository _enrollmentRepository, IStudentRepository studentRepository, IPlaceRepository placeRepository, IFacultyMemberRepsitory facultyMemberRepsitory, IDepartmentRepository departmentRepository, ICourseRepository courseRepository)
+        
+        public AdvisorController(IStudentDistribution _studentDistribution, IResultPetitionRepository _resultPetitionRepository, IPetitionCourseRepository _petitionCourseRepository, IPetitionRequestRepository _petitionRequestRepository, IAdvisorRepository _advisorRepository, UserManager<GPUser> _userManager, IEnrollmentRepository _enrollmentRepository, IStudentRepository studentRepository, IPlaceRepository placeRepository, IFacultyMemberRepsitory facultyMemberRepsitory, IDepartmentRepository departmentRepository, ICourseRepository courseRepository)
         {
             _departmentRepository = departmentRepository;
             _courseRepository = courseRepository;
@@ -36,7 +39,9 @@ namespace GraduationProject.Controllers.Advisor
             advisorRepository = _advisorRepository;
             petitionRequestRepository = _petitionRequestRepository;
             petitionCourseRepository = _petitionCourseRepository;
+            studentDistributionRepositroy = _studentDistribution;
             resultPetitionRepository = _resultPetitionRepository;
+            
         }
         public IActionResult Dashboard()
         {
@@ -110,13 +115,9 @@ namespace GraduationProject.Controllers.Advisor
         [HttpPost]
         public IActionResult AddResultPetition(ResultPetition model)
         {
-            if (!ModelState.IsValid)
-            {
-                return Json(new { success = false, message = "Invalid data. Please check your inputs and try again." });
-            }
-
-            var result = new ResultPetition
-            {
+            if (!ModelState.IsValid) return Json(new { success = false, 
+                message = "Invalid data. Please check your inputs and try again." });
+            var result = new ResultPetition {
                 PetitionCourseId = model.PetitionCourseId,
                 ErrorInCorrection = model.ErrorInCorrection,
                 ApplicationSubmitted = model.ApplicationSubmitted,
@@ -128,10 +129,7 @@ namespace GraduationProject.Controllers.Advisor
                 Notes = model.Notes,
                 AdvisorId = model.AdvisorId
             };
-
             resultPetitionRepository.AddResultPetition(result);
-            
-
             return Json(new { success = true, message = "Result added successfully!" });
         }
 
@@ -175,6 +173,31 @@ namespace GraduationProject.Controllers.Advisor
             // Combine "R", date, and random number to form the report number
             return $"R{formattedDate}{randomNumber}";
         }
-        
+        public IActionResult StudentDistributionReport()
+        {
+            return View();
+        }
+        public async Task<IActionResult> GetDistributionReport(int year)
+        {
+            if(year == 0)
+            {
+                return BadRequest("Enter Year.");
+            }
+            ViewData["year"] = year;
+            ViewData["totalStudents"] = await studentDistributionRepositroy.totalNumberofStudents(year);
+            ViewData["totalDepartments"] = await studentDistributionRepositroy.totalNumberofDepartment();
+            ViewData["avgStudents"] = await studentDistributionRepositroy.AVGStudentperdepartment(year);
+            ViewData["HighestEnrollments"] = await studentDistributionRepositroy.HighestEnrollments(year);
+            ViewData["LowestEnrollments"] = await studentDistributionRepositroy.LowestEnrollments(year);
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            ViewData["number"] = GenerateReportNumber();
+            var departmentStats = await studentDistributionRepositroy.GetStudentsPerDepartment(year);
+            var user = await userManager.GetUserAsync(User);
+            var advisor = advisorRepository.GetAdvisorByUserId(user.Id);
+            ViewData["Advisor"] = advisor;
+            ViewData["departmentStats"] = departmentStats;
+            await Task.Delay(1000);
+            return PartialView("_StudentDistribution");
+        }
     }
 }

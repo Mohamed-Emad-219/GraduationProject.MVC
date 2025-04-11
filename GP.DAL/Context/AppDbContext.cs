@@ -26,15 +26,23 @@ namespace GP.DAL.Context
         {
             modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
 
-
             #region Idenity
             modelBuilder.Entity<IdentityUserLogin<string>>().HasNoKey();
             modelBuilder.Entity<IdentityUserRole<string>>().HasNoKey();
             modelBuilder.Entity<IdentityUserToken<string>>().HasNoKey();
-            #endregion  
+            #endregion
 
+            #region NoACTION
 
-
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var foreignKeys = entityType.GetForeignKeys();
+                foreach (var foreignKey in foreignKeys)
+                {
+                    foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+                }
+            }
+            #endregion
 
 
             // College and dean (facultymembers) 1-1
@@ -49,7 +57,6 @@ namespace GP.DAL.Context
                 .WithOne(c => c.College)
                 .HasForeignKey(c => c.CollegeId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             //college and student 1-m
             modelBuilder.Entity<College>()
                 .HasMany(c => c.Students)
@@ -207,19 +214,6 @@ namespace GP.DAL.Context
                 .HasForeignKey(s => s.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // advisor to schedules 1-m
-            modelBuilder.Entity<StudentSchedule>()
-                .HasOne(s => s.Advisor)
-                .WithMany(a => a.StudentSchedules)
-                .HasForeignKey(s => s.AdvisorId)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<InstructorSchedule>()
-                .HasOne(s => s.Advisor)
-                .WithMany(a => a.InstructorSchedules)
-                .HasForeignKey(s => s.AdvisorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
             var dateConverter = new ValueConverter<DateOnly, DateTime>(
                 v => v.ToDateTime(TimeOnly.MinValue), // Convert DateOnly -> DateTime
                 v => DateOnly.FromDateTime(v));       // Convert DateTime -> DateOnly
@@ -228,9 +222,6 @@ namespace GP.DAL.Context
                 .Property(e => e.BirthDate)
                 .HasConversion(dateConverter)
                 .HasColumnType("date");
-
-
-
 
             modelBuilder.Entity<Advisor>()
                 .HasIndex(e => e.SSN)

@@ -17,9 +17,11 @@
         <div class="row" id="info-fees">
             <div class="col-md-6">
                 <p><strong>Student ID: </strong><span id="std-id">@student?.Id</span></p>
-                    <p><strong>Student Name: </strong><span id="std-name">@student?.FirstName @student?.MiddleName @student?.LastName</span></p>
-                    <p><strong>Level: </strong><span id="std-level">@term?.Level</span></p>
-                    <p><strong>Registered Year: </strong><span id="std-year">@student?.RegisterYear</span></p>
+                <p><strong>Student Name: </strong><span id="std-name">@student?.FirstName 
+                    @student?.MiddleName @student?.LastName</span></p>
+                <p><strong>Level: </strong><span id="std-level">@term?.Level</span></p>
+                <p><strong>Registered Year: 
+                </strong><span id="std-year">@student?.RegisterYear</span></p>
             </div>
             <div class="col-md-6">
                 <h4>New Courses: Semester @term?.Semester @term?.AcademicYear</h4>
@@ -31,8 +33,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var course in courses)
-                        {
+                        @foreach (var course in courses) {
                             <tr>
                                 <td>@course?.Name</td>
                                 <td>3 hours</td>
@@ -44,30 +45,25 @@
                 <p><strong>Payments:</strong> $@total</p>
             </div>
         </div>
-            <form asp-controller="FinancialAffairs" asp-action="Receipt" method="post">
-                <input type="hidden" name="StudentId" value="@student.Id" />
-                <input type="hidden" name="StudentName" value="@student.FirstName @student.MiddleName @student.LastName" />
-                <input type="hidden" name="Level" value="@term.Level" />
-                <input type="hidden" name="RegisteredYear" value="@student.RegisterYear" />
-
-                @* <input type="hidden" name="TermId" value="@term.Id" /> *@
-                <input type="hidden" name="Semester" value="@term.Semester" />
-                <input type="hidden" name="AcademicYear" value="@term.AcademicYear" />
-
-                <input type="hidden" name="Amount" value="@total" />
-
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Confirm</button>
-        </div>
-            </form>
+        <form asp-controller="FinancialAffairs" asp-action="Receipt" method="post">
+            <input type="hidden" name="StudentId" value="@student.Id" />
+            <input type="hidden" name="StudentName" 
+                value="@student.FirstName @student.MiddleName @student.LastName" />
+            <input type="hidden" name="Level" value="@term?.Level" />
+            <input type="hidden" name="RegisteredYear" value="@student.RegisterYear" />
+            <input type="hidden" name="Semester" value="@term.Semester" />
+            <input type="hidden" name="AcademicYear" value="@term.AcademicYear" />
+            <input type="hidden" name="Amount" value="@total" />
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Confirm</button>
+            </div>
+        </form>
     </div>
 </div>
 }
-
 @section Scripts {
     <script>
         var info = document.getElementById("student-info");
             info.classList.remove("d-none");
-
     </script>
 }

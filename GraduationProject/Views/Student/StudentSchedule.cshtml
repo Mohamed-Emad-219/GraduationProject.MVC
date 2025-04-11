@@ -5,10 +5,12 @@
 }
 
 <section class="student">
-    <div class="container py-3" id="searchResults">
+    <div id="searchResults">
+        <div class="container py-3" id="report"></div>
         <div class="heading-schedule d-flex justify-content-between align-items-center">
-            <p class="p-0 fs-5 fw-bold semester">Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span> <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span></p>
-            <img src="../images/Mti(Gray).png" alt="">
+            <p class="p-0 fs-5 fw-bold semester">Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
+                <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span></p>
+            <img src="../images/Mti(Gray).png" alt="" style="width: 100px;">
         </div>
         <h1 class="heading text-center m-1">Schedule of Classes</h1>
         <div class="w-100 mt-1 d-flex justify-content-around">
@@ -26,7 +28,7 @@
                 @foreach (var daySchedule in groupedSchedule)
                 {
                     <p class="day fs-5 fw-bold">@daySchedule.Key</p>
-                    <table class="table scheduleTable">
+                    <table class="table scheduleTable" style="height: 50px;">
                         <thead>
                             <tr class="table-secondary">
                                 <th>Code</th>
@@ -42,9 +44,10 @@
                             {
                                 <tr>
                                     <td>@row.CourseCode</td>
-                                    <td>@row.Course?.Name</td>
-                                    <td>@row.Instructor?.FirstName @row.Instructor?.MiddleName @row.Instructor?.LastName @row.Assistant?.FirstName @row.Assistant?.MiddleName @row.Assistant?.LastName </td>
-                                    <td>@row.Place?.Name</td>
+                                    <td style="width: fit-content;">@row.Course?.Name</td>
+                                    <td style="width: fit-content;">@row.Instructor?.FirstName @row.Instructor?.MiddleName 
+                                        @row.Instructor?.LastName @row.Assistant?.FirstName @row.Assistant?.MiddleName @row.Assistant?.LastName </td>
+                                    <td style="width: fit-content;">@row.Place?.Name</td>
                                     <td>@row.Place?.Type</td>
                                     <td>@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
                                 </tr>
@@ -57,6 +60,7 @@
         <div class="m-auto my-4 text-center ">
             <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
         </div>
+    </div>
     </div>
 </section>
 

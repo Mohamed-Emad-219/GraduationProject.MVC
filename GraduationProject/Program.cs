@@ -11,38 +11,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+// context
 builder.Services.AddDbContext<AppDbContext>(op =>
 {
     op.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnection"));
 });
 builder.Services.AddIdentity<GPUser, IdentityRole>(
-              config =>
-              {
-
-                  //config.Password.RequiredUniqueChars = 2;
-                  //config.Password.RequireDigit = true;
-                  //config.Password.RequireLowercase = true;
-                  //config.Password.RequireUppercase = true;
-                  //config.Password.RequireNonAlphanumeric = true;
-                  //config.User.RequireUniqueEmail = true;
-                  //config.Lockout.MaxFailedAccessAttempts = 5;
-                  //config.Lockout.DefaultLockoutTimeSpan = System.TimeSpan.FromMinutes(5);
-                  //config.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
-              }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
-
+    config => {}).AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+//cookies
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
 
 builder.Services.ConfigureApplicationCookie(
-               config =>
-               {
-                   config.LoginPath = "/Account/SignIn";
-                   //config.ExpireTimeSpan = System.TimeSpan.FromDays(5);
-                   //config.SlidingExpiration = true;
-               });
+    config =>
+    {
+        config.LoginPath = "/Account/SignIn";
+    }
+);
 
-//builder.Services.AddDbContext<AppDbContext>();
 #region Register
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
 builder.Services.AddScoped<IInstructorScheduleRepositroy,InstructorScheduleRepositroy>();
@@ -65,6 +52,7 @@ builder.Services.AddScoped<IPetitionRequestRepository, PetitionRequestRepository
 builder.Services.AddScoped<IPetitionCourseRepository, PetitionCourseRepository>();
 builder.Services.AddScoped<IResultPetitionRepository, ResultPetitionRepository>();
 builder.Services.AddScoped<IFollowUpRepository, FollowUpRepository>();
+builder.Services.AddScoped<IStudentDistribution, StudentDistributionRepositroy>();
 
 #endregion
 var app = builder.Build();

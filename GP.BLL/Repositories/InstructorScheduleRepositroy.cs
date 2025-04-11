@@ -22,21 +22,20 @@ namespace GP.BLL.Repositories
         public IEnumerable<InstructorSchedule> GetInstructorScheduleByInstructorId(int InstructorId)
         {
             return _dbContext.InstructorSchedules
-    .Where(s => s.InstructorId == InstructorId) // Filter only instructor schedules
-    .Include(s => s.Course)
-    .Include(s => s.Place)
-    .Include(s => s.Instructor)
-    .ToList();
-
+                .Where(s => s.InstructorId == InstructorId)
+                .Include(s => s.Course)
+                .Include(s => s.Place)
+                .Include(s => s.Instructor)
+                .ToList();
         }
         public IEnumerable<InstructorSchedule> GetAssistantScheduleByAssistantId(int AssistantId)
         {
             return _dbContext.InstructorSchedules
-    .Where(s => s.AssistantId == AssistantId) // Filter only assistant schedules
-    .Include(s => s.Course)
-    .Include(s => s.Place)
-    .Include(s => s.Assistant)
-    .ToList();
+                .Where(s => s.AssistantId == AssistantId) 
+                .Include(s => s.Course)
+                .Include(s => s.Place)
+                .Include(s => s.Assistant)
+                .ToList();
         }
     }
 }

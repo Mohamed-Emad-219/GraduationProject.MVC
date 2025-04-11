@@ -54,55 +54,36 @@ namespace GP.DAL.Seed
         public static async Task CreateAdvisors(UserManager<GPUser> userManager, IServiceProvider serviceProvider, IHostEnvironment env)
         {
             var dbContext = serviceProvider.GetRequiredService<AppDbContext>();
-
             // Get the absolute path to the JSON file in wwwroot
             string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "advisor.json");
-
             if (!File.Exists(filePath))
             {
                 Console.WriteLine("Error: JSON file not found at " + filePath);
                 return;
             }
-
             // Read JSON file
             string jsonData = await File.ReadAllTextAsync(filePath);
-
             // Deserialize JSON to List<AdvisorProfile>
             var advisors = JsonConvert.DeserializeObject<List<Advisor>>(jsonData);
-            //Console.WriteLine(advisors);
-
-            foreach (var advisor in advisors)
-            {
+            foreach (var advisor in advisors) {
                 string email = $"{advisor.FirstName.ToLower()}.{advisor.LastName.ToLower()}@g.com";
-                //Console.WriteLine(email);
-                if (await userManager.FindByEmailAsync(email) == null)
-                {
-                    var user = new GPUser
-                    {
-                        UserName = email,
-                        Email = email,
-                        EmailConfirmed = true
+                if (await userManager.FindByEmailAsync(email) == null) {
+                    var user = new GPUser {
+                        UserName = email, Email = email, EmailConfirmed = true
                     };
-                    
                     var result = await userManager.CreateAsync(user, "qweQWE123!!");
-                    if (result.Succeeded)
-                    {
+                    if (result.Succeeded) {
                         await userManager.AddToRoleAsync(user, "Advisor");
 
                         // Insert Advisor
                         advisor.UserId = user.Id;
                         dbContext.Advisors.Add(advisor);
-                    }
-                    else
-                    {
+                    } else {
                         Console.WriteLine("User creation failed for: " + email);
                         foreach (var error in result.Errors)
-                        {
                             Console.WriteLine($"➡ Error: {error.Code} - {error.Description}");
-                        }
                     }
-                }else
-                {
+                }else {
                         Console.WriteLine($"User with username {email} already exists.");
                         continue;
                 }

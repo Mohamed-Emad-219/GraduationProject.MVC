@@ -1,0 +1,85 @@
+﻿@{
+    var totalStudents = ViewData["totalStudents"] ?? 0;
+    var totalDepartments = ViewData["totalDepartments"] ?? 0;
+    var avgStudents = ViewData["avgStudents"] ?? 0;
+    var year = ViewData["year"];
+    var HighestEnrollments = (KeyValuePair<string, int>)ViewData["HighestEnrollments"];
+    var LowestEnrollments = (KeyValuePair<string, int>)ViewData["LowestEnrollments"];
+    var user = ViewData["Advisor"] as Advisor;
+    var date = ViewData["Date"];
+    var reportNumber = ViewData["number"];
+    var departmentStats = ViewData["departmentStats"] as List<GP.BLL.ViewModels.Departmentsvm>;
+}
+@if(departmentStats is not null ){
+<div class="container mt-5 py-5 shadow" id="report">
+        <div class="d-flex justify-content-between mb-4">
+            <img src="~/images/Mti(Gray).png" alt="" style="width: 100px;">
+            <img src="~/images/advisorylogo no stroke .png" alt="" style="width: 60px;">
+            <img src="~/images/CS(Gray).png" alt="" style="width: 60px;">
+        </div>
+    
+    <h3 class="text-center">Student Distribution Across Departments</h3>
+        <h4 class="text-center mb-4">MTI University</h4>
+    <p class="text-center m-1">Academic Year: <span id="academicYear">@year</span></p>
+    <p class="text-center m-1">Report Number: @reportNumber</p>
+    <h4>1. Overview</h4>
+    <p class="m-1">
+        This report provides an analysis of student enrollment across various
+        departments for the academic year <span id="academicYearOverview">@year</span>.
+        It includes total student numbers, percentage distribution, and trends.
+    </p>
+    <h4>2. Summary Statistics</h4>
+    <ul>
+        <li>
+            <strong>Total Students Enrolled:</strong> 
+            <span id="totalStudents">@totalStudents </span>
+        </li>
+        <li>
+            <strong>Total Departments:</strong> 
+            <span id="totalDepartments">@totalDepartments </span>
+        </li>
+        <li>
+            <strong>Average Students per Department:</strong> 
+            <span id="avgStudents">@avgStudents </span>
+        </li>
+    </ul>
+    <h4>3. Student Distribution Table</h4>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Department Name</th>
+                <th>Number of Students</th>
+                <th>Percentage of Total (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (departmentStats != null && departmentStats.Count > 0)
+            {
+                @foreach (var dept in departmentStats)
+                {
+                    <tr>
+                        <td>@dept.DepartmentName</td>
+                        <td>@dept.NumberOfStudents</td>
+                        <td>@dept.Percentage.ToString("F2")%</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No data available.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h4>4. Trends & Observations</h4>
+    <ul>
+        <li>Department <span class="fw-bold">@HighestEnrollments.Key</span> with the highest enrollments: @HighestEnrollments.Value</li>
+            <li>Department <span class="fw-bold">@LowestEnrollments.Key</span> with the lowest enrollments: @LowestEnrollments.Value</li>
+    </ul>
+    <p class="mt-4"><strong>Prepared by:</strong> <span id="preparedBy">@user?.FirstName @user?.MiddleName @user?.LastName</span></p>
+    <p class="m-0"><strong>Date: </strong>@date</p>
+</div>
+}else {
+    <p>error</p>
+}

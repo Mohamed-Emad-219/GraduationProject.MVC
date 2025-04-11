@@ -29,23 +29,26 @@ namespace GraduationProject.Controllers.Instructor
             _collegeRepository = collegeRepository;
             enrollmentRepository = _enrollmentRepository;
         }
+
         [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> InstructorSchedule()
         {
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
             var inst = _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
-            ViewData["Schedule"] = _instructorScheduleRepositroy.GetInstructorScheduleByInstructorId(inst.Id);
+            ViewData["Schedule"] = _instructorScheduleRepositroy
+                .GetInstructorScheduleByInstructorId(inst.Id);
             return View();
         }
-        [Authorize(Roles = "Assistant")]
 
+        [Authorize(Roles = "Assistant")]
         public async Task<IActionResult> AssistantSchedule()
         {
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
             var assistant = _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
-            ViewData["Schedule"] = _instructorScheduleRepositroy.GetAssistantScheduleByAssistantId(assistant.Id);
+            ViewData["Schedule"] = _instructorScheduleRepositroy
+                .GetAssistantScheduleByAssistantId(assistant.Id);
             return View();
         }
         [Authorize(Roles = "Dean")]
@@ -75,6 +78,7 @@ namespace GraduationProject.Controllers.Instructor
             ViewData["AcademicYear"] = AcademicYear;
             ViewData["ReportNumber"] = GenerateReportNumber();
             ViewData["Dean"] = dean;
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
             var ReportData = enrollmentRepository.GetEnrollmentReport(CourseCode, Semester, AcademicYear);
             return PartialView("_CourseEnroll", ReportData);
         }

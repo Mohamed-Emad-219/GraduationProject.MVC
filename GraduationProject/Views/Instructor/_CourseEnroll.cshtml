@@ -5,6 +5,7 @@
     var academicyear = ViewData["AcademicYear"];
     var reportNumber = ViewData["ReportNumber"];
     var dean = ViewData["Dean"] as FacultyMember;
+    var date = ViewData["Date"];
 }
 @model GP.BLL.ViewModels.EnrollmentReportVM
 <div class="container mt-5 py-5 shadow" id="report">
@@ -20,7 +21,6 @@
         <p>Academic Year: @academicyear | Semester: @semester</p>
         <p>Report Number: @reportNumber</p>
     </header>
-
     <section class="course-info my-4 p-3 border rounded">
         <h4>1. Course Information</h4>
         <ul class="list-group">
@@ -28,10 +28,8 @@
             <li class="list-group-item"><strong>Course Title:</strong> @Model.CourseTitle</li>
             <li class="list-group-item"><strong>Instructor:</strong> @Model.Instructor</li>
             <li class="list-group-item"><strong>Credits:</strong> @Model.Credits</li>
-            
         </ul>
-        </section>
-
+    </section>
     <section class="enrollment-summary my-4 p-3 border rounded">
         <h4>2. Enrollment Summary</h4>
         <table class="table table-striped table-hover">
@@ -44,8 +42,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var student in Model.Enrollments)
-                {
+                @foreach (var student in Model.Enrollments) {
                     <tr>
                         <td>@student.StudentId</td>
                         <td>@student.StudentName</td>
@@ -56,26 +53,18 @@
             </tbody>
         </table>
     </section>
-
-        <section class="enrollment-stats my-4 p-3 border rounded">
-            <h4>3. Enrollment Statistics</h4>
-            <ul class="list-group">
-            <li class="list-group-item"><strong>Total Students Enrolled:</strong> @Model.TotalEnrolled</li>
-            <li class="list-group-item"><strong>Total Capacity:</strong> @Model.TotalCapacity</li>
-            <li class="list-group-item"><strong>Percentage of Seats Filled:</strong> @Model.PercentageSeatsFilled</li>
-            </ul>
-        </section>
-
-
-        <section class="additional-notes my-4 p-3 border rounded">
-            <h4>4. Additional Notes</h4>
-            <p>[Include any important remarks regarding the course, enrollment trends, or faculty comments.]</p>
-        </section>
-
-        <div class="row mt-4">
-            <div>
-                <p><strong>Faculty Dean Signature:</strong> @if(dean is not null){ <p>@dean.FirstName @dean.MiddleName @dean.LastName </p>}</p>
-            </div>
-        </div>
-
-    </div>
+    <section class="enrollment-stats my-4 p-3 border rounded">
+        <h4>3. Enrollment Statistics</h4>
+        <ul class="list-group">
+        <li class="list-group-item"><strong>Total Students Enrolled:</strong> @Model.TotalEnrolled</li>
+        <li class="list-group-item"><strong>Total Capacity:</strong> @Model.TotalCapacity</li>
+        <li class="list-group-item"><strong>Percentage of Seats Filled:</strong> @Model.PercentageSeatsFilled</li>
+        </ul>
+    </section>
+    <section class="additional-notes my-4 p-3 border rounded">
+        <h4>4. Additional Notes</h4>
+        <p>[Include any important remarks regarding the course, enrollment trends, or faculty comments.]</p>
+    </section>
+    <p><strong>Faculty Dean Signature:</strong>@dean?.FirstName @dean?.MiddleName @dean?.LastName </p>
+    <p><strong>Date:</strong> @date</p>
+</div>

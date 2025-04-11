@@ -20,7 +20,8 @@ namespace GraduationProject.Controllers.Auth
         private readonly IFinancialAffairsRepository financialAffairsRepository;
         private readonly IStudentAffairsRepository studentAffairsRepository;
         private readonly IAdminRepository adminRepository;
-       public AuthController(IAdminRepository _adminRepository, IStudentAffairsRepository _studentAffairsRepository, IFinancialAffairsRepository _financialAffairsRepository, IAdvisorRepository _advisorRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IStudentRepository _studentRepository, UserManager<GPUser> userManager,SignInManager<GPUser> signInManager, RoleManager<IdentityRole> roleManager
+        private readonly IFollowUpRepository followUpRepository;
+       public AuthController(IFollowUpRepository _followUpRepository, IAdminRepository _adminRepository, IStudentAffairsRepository _studentAffairsRepository, IFinancialAffairsRepository _financialAffairsRepository, IAdvisorRepository _advisorRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IStudentRepository _studentRepository, UserManager<GPUser> userManager,SignInManager<GPUser> signInManager, RoleManager<IdentityRole> roleManager
                                  )
         {
             _userManager = userManager;
@@ -32,6 +33,7 @@ namespace GraduationProject.Controllers.Auth
             financialAffairsRepository = _financialAffairsRepository;
             studentAffairsRepository = _studentAffairsRepository;
             adminRepository = _adminRepository;
+            followUpRepository = _followUpRepository;
         }
         [HttpGet]
         public IActionResult Register()
@@ -97,7 +99,6 @@ namespace GraduationProject.Controllers.Auth
                 }
             }
             return View(model);
-
         }
         public async Task<IActionResult> Logout()
         {
@@ -129,29 +130,15 @@ namespace GraduationProject.Controllers.Auth
             var ss = studentAffairsRepository.GetStudentAffairsByUserId(user.Id);
             var adv = advisorRepository.GetAdvisorByUserId(user.Id);
             var adm = adminRepository.GetAdminByUserId(user.Id);
+            var followup = followUpRepository.GetFollowUpByUserId(user.Id);
             ViewData["Email"] = user.Email;
-            if (f != null)
-            {
-                return View("Profile", f);
-            }else if(s != null)
-            {
-                return View("Profile", s);
-            }else if(ff != null){
-                return View("Profile", ff);
-            }
-            else if (ss != null)
-            {
-                return View("Profile", ss);
-            }
-            else if (adv != null)
-            {
-                return View("Profile", adv);
-
-            }
-            else if (adm != null)
-            {
-                return View("Profile", adm);
-            }
+            if (f != null) return View("Profile", f);
+            else if(s != null) return View("Profile", s);
+            else if(ff != null)  return View("Profile", ff);
+            else if (ss != null) return View("Profile", ss);
+            else if (adv != null) return View("Profile", adv);
+            else if (adm != null) return View("Profile", adm);
+            else if (followup != null) return View("Profile", followup);
             return RedirectToAction("Index", "Home");
         }
         public IActionResult EditProfile()

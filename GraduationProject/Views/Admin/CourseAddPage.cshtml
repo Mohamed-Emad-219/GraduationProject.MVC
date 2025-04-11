@@ -5,7 +5,8 @@
 @model Course
 <section class="container add-course" style="width: 800px;">
     <div class="back-button position-absolute">
-        <a class="text-primary m-3 d-block" asp-action="Dashboard" asp-controller="Admin"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
+        <a class="text-primary m-3 d-block" asp-action="Dashboard" asp-controller="Admin">
+            <i class="fa-2x fa-solid fa-arrow-left"></i></a>
     </div>
     <h1 class="fs-4 m-3 py-3 px-5">Add Course</h1>
     <form asp-controller="Course" asp-action="Add" method="post" class="m-auto p-4">

@@ -10,14 +10,16 @@
             <h5>Ministry of Higher Education</h5>
             <h6>Modern University for Technology and Information</h6>
             <h6>Faculty of Computers and Artificial Intelligence</h6>
-            <p class="p-0 fs-5 fw-bold semester">Semester : @schedule?.FirstOrDefault().Semester @schedule?.FirstOrDefault().AcademicYear</p>
+            <p class="p-0 fs-5 fw-bold semester">Semester : @schedule?.FirstOrDefault().Semester 
+                @schedule?.FirstOrDefault().AcademicYear</p>
         </div>
         <div>
             <img src="~/images/Mti(Gray).png" alt="MTI Logo" width="150">
         </div>
     </div>
     <h5 class="text-center">Teaching Assistant Timetable</h5>
-    <p><strong>Assistant:</strong>  @schedule?.FirstOrDefault().Assistant.FirstName @schedule?.FirstOrDefault().Assistant.MiddleName @schedule?.FirstOrDefault().Assistant.LastName</p>
+    <p><strong>Assistant:</strong>  @schedule?.FirstOrDefault().Assistant.FirstName 
+        @schedule?.FirstOrDefault().Assistant.MiddleName @schedule?.FirstOrDefault().Assistant.LastName</p>
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>

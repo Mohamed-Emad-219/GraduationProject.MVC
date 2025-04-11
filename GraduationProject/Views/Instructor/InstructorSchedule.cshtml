@@ -2,7 +2,6 @@
     ViewData["Title"] = "Instructor Schedule";
     var schedule = ViewData["Schedule"] as IEnumerable<InstructorSchedule>;
 }
-
 <div class="container mt-4 doctor-schedule schedule-s" id="searchResults">
     <div class="table-container">  
           <div class="header-section">  
@@ -10,14 +9,16 @@
                   <h5>Ministry of Higher Education</h5>  
                   <h6>Modern University for Technology and Information</h6>  
                   <h6>Faculty of Computers and Artificial Intelligence</h6>
-                <p class="p-0 fs-5 fw-bold semester">Semester : @schedule?.FirstOrDefault().Semester @schedule?.FirstOrDefault().AcademicYear</p>
+                <p class="p-0 fs-5 fw-bold semester">Semester : @schedule?.FirstOrDefault().Semester 
+                    @schedule?.FirstOrDefault().AcademicYear</p>
             </div>  
               <div>  
                   <img src="~/images/Mti(Gray).png" alt="MTI Logo" width="150">  
               </div>  
           </div>  
           <h5 class="text-center">Instructor Timetable</h5>
-        <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().Instructor.FirstName @schedule?.FirstOrDefault().Instructor.MiddleName @schedule?.FirstOrDefault().Instructor.LastName</p>
+        <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().Instructor.FirstName 
+            @schedule?.FirstOrDefault().Instructor.MiddleName @schedule?.FirstOrDefault().Instructor.LastName</p>
         <table class="table table-bordered text-center">  
               <thead class="table-dark">  
                   <tr>  
@@ -27,11 +28,10 @@
                      <th>Place</th>
                      <th>Type</th>
   					 <th>Time</th> 
-                   
                   </tr>  
               </thead>  
               <tbody>  
-               @foreach(var day in schedule){
+              @foreach(var day in schedule){
                     <tr>
                         <td>@day.Day</td>
                         <td>@day.CourseCode</td>
@@ -40,8 +40,7 @@
                         <td>@day.Place?.Type</td>
                         <td>@day.TimeBegin.ToString(@"hh\:mm") - @day.TimeEnd.ToString(@"hh\:mm")</td>
                     </tr>
-                }
-                    
+              }      
               </tbody>  
           </table>  
       </div>
@@ -52,3 +51,4 @@
 @section Scripts {
     <script src="~/js/print.js"></script>
 }
+

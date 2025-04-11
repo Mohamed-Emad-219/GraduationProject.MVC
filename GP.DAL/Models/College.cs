@@ -11,11 +11,8 @@ namespace GP.DAL.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        // One-to-One relationship for the Head of the Department
         public int? DeanId { get; set; }
         public FacultyMember? Dean { get; set; }
-
-        // One-to-Many relationship for Department
         public ICollection<Department>? Departments { get; set; }
         public ICollection<Student>? Students { get; set; }
         public ICollection<Receipt>? Receipts { get; set; }

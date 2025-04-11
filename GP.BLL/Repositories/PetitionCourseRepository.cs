@@ -25,12 +25,15 @@ namespace GP.BLL.Repositories
         }
         public IEnumerable<PetitionCourse> GetPetitionCoursesByPetitionId(int Id)
         {
-            return _dbContext.PetitionCourses.Where(p => p.PetitionRequestId == Id).Include(p => p.Course).ToList();
+            return _dbContext.PetitionCourses
+                .Where(p => p.PetitionRequestId == Id)
+                .Include(p => p.Course)
+                .ToList();
         }
         public PetitionCourse GetPetitionCourseByPetitionCourseId(int Id)
         {
             return _dbContext.PetitionCourses
-                .Include(p => p.PetitionRequest) // Include related PetitionRequest before querying
+                .Include(p => p.PetitionRequest)
                 .FirstOrDefault(p => p.Id == Id);
         }
     }

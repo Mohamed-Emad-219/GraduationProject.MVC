@@ -21,7 +21,8 @@ namespace GP.BLL.Repositories
         public int AddResultPetition(ResultPetition result)
         {
             context.ResultPetitions.Add(result);
-            var petitioncourse = petitionCourseRepository.GetPetitionCourseByPetitionCourseId(result.PetitionCourseId);
+            var petitioncourse = petitionCourseRepository
+                .GetPetitionCourseByPetitionCourseId(result.PetitionCourseId);
             petitioncourse.PetitionRequest.Status = "Done";
             return context.SaveChanges();
         }

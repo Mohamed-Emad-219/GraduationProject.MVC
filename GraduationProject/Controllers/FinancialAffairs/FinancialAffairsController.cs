@@ -148,17 +148,12 @@ namespace GraduationProject.Controllers.FinancialAffairs
             ViewData["Department"] = departmentRepository.GetDepartments();
             return View();
         }
+        [Route("/FinancialAffairs/AddPetitionRequest")]
         [Authorize(Roles = "FinancialAffairs")]
         [HttpPost]
-        [Route("/FinancialAffairs/AddPetitionRequest")]
-        public IActionResult AddPetitionRequest(PetitionRequestVM model)
-        {
-            if (!ModelState.IsValid)
-            {
-                // If validation fails, return the form with errors
-                return View(model);
-            }
-
+        public IActionResult AddPetitionRequest(PetitionRequestVM model) {
+            // If validation fails, return the form with errors
+            if (!ModelState.IsValid) return View(model); 
             // Create a new PetitionRequest entity (assuming a PetitionRequest table exists)
             var petition = new PetitionRequest
             {
@@ -173,12 +168,9 @@ namespace GraduationProject.Controllers.FinancialAffairs
                 AmountPaid = model.AmountPaid,
                 PaymentDate = model.PaymentDate
             };
-
             petitionRequestRepository.AddPetition(petition);
-
-            // Save Courses in a separate table (if needed)
-            foreach (var courseName in model.Courses)
-            {
+            // Save Courses in a separate table 
+            foreach (var courseName in model.Courses) {
                 var course = new PetitionCourse
                 {
                     PetitionRequestId = petition.Id, // Link to petition
@@ -186,10 +178,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
                 };
                 petitionCourseRepository.AddPetitionCourse(course);
             }
-
-            return RedirectToAction("Index", "Home"); // Redirect to a success page
+            return RedirectToAction("Index", "Home"); // Redirect to home page
         }
-
-
     }
 }
