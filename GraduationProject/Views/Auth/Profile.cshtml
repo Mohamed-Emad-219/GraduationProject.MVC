@@ -2,27 +2,25 @@
     ViewData["Title"] = "Profile";
     var email = ViewData["Email"];
 }
-<section class="profile py-5">
+<section class="profile py-4">
     <div class="container">
-        <h1 class="text-center mt-3">Personal Info</h1>
-
-        <div class="profile-container">
+        <h3 class="text-primary">Personal Info</h3>
+        <div class="d-flex justify-content-center align-items-center">
             <div class="profile-img">
                 <img id="profileImage" src="~/images/default-profile.png" alt="Profile">
             </div>
-
-            <div class="profile-info">
+            <div class="profile-info fs-6">
                 <h4>Hello @Model.FirstName @Model.MiddleName @Model.LastName</h4><br>
-                <p><strong>Email:</strong></p>
+                <p class="m-0"><strong>Email:</strong></p>
                 <div class="info-box" id="email">@email</div><br>
-                <p><strong>Address:</strong></p>
+                <p class="m-0"><strong>Address:</strong></p>
                 <div class="info-box" id="address">@Model.Address</div><br>
-                <p><strong>Phone:</strong></p>
+                <p class ="m-0"><strong>Phone:</strong></p>
                 <div class="info-box" id="phone">@Model.MobilePhone</div><br>
             </div>
         </div>
         <div class="mb-3 w-100">
-            <a asp-controller="Auth" asp-action="" class="btn btn-primary m-auto d-block w-25">Edit Profile</a>
+            <a asp-controller="Auth" asp-action="EditProfile" class="btn btn-primary m-auto d-block w-25">Edit Profile</a>
         </div>
 </div>
 </section>

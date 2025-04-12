@@ -1,6 +1,7 @@
 ﻿using GP.BLL.Interfaces;
 using GP.DAL.Context;
 using GP.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ namespace GP.BLL.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
+        private readonly UserManager<GPUser> userManager;
         private readonly AppDbContext context;
-        public StudentRepository(AppDbContext _context)
+        public StudentRepository(UserManager<GPUser> userManager, AppDbContext _context)
         {
+            this.userManager = userManager;
             context = _context;
         }
         public Student GetStudentByUserId(string UserId)
@@ -51,6 +54,21 @@ namespace GP.BLL.Repositories
         {
             context.Students.Update(student);
             context.SaveChanges();
+        }
+        public async Task<int> UpdateStudentAsync(int Id, string Email, string Address, string MobilePhone)
+        {
+            var faculty = context.Students.FirstOrDefault(f => f.Id == Id);
+            if (faculty == null)
+            {
+                return 0; // not found
+            }
+
+            await userManager.SetEmailAsync(faculty.User, Email);
+            faculty.Address = Address;
+            faculty.MobilePhone = MobilePhone;
+
+            context.Students.Update(faculty);
+            return context.SaveChanges(); // returns number of affected rows
         }
     }
 }

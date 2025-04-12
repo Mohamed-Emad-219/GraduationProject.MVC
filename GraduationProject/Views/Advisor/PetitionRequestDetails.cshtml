@@ -8,8 +8,8 @@
     <a class="text-primary m-3 d-block" asp-action="Requests" asp-controller="Advisor"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
 </div>
 </div>
-<div class="petition-request container p-3 border" style="width: 800px;">
-    
+<div id="searchResults">
+<div class="petition-request container p-3 border w-75" id="report">
     <img src="~/images/Mti(Gray).png" alt="" class="img-fluid d-block mx-auto py-2" style="width: 150px;">
 
     <div class="text-center fw-bold fs-5 text-decoration-underline">
@@ -87,16 +87,16 @@
         <div class="card p-3 mt-4">
             <div class="form-group">
                 <div class="border-top pt-3 mt-3">
-                    <div class="row">
-                        <div class="col-md-4">
+                    <div class="d-flex justify-content-around">
+                        <div class="">
                             <label class="form-label">Number of courses petitioned</label><br>
                             <span> @req.NumberOfCourses </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="">
                             <label class="form-label">Amount paid</label><br>
                             <span> @req.AmountPaid L.E </span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="">
                             <label class="form-label">Payment date</label><br>
                             <span> @req.PaymentDate </span>
                         </div>
@@ -105,5 +105,10 @@
             </div>
         </div>
     </form>
-    <a class="my-3 text-center btn btn-large btn-primary" asp-action="ResultPetition" asp-controller="Advisor" asp-route-id="@req.Id">Result</a>
+    <a class="my-3 text-center btn btn-sm btn-primary" asp-action="ResultPetition" asp-controller="Advisor" asp-route-id="@req.Id">Result</a>
+    <button class="btn btn-sm btn-primary" onclick="printContainer()" type="button">Print</button>
 </div>
+</div>
+@section Scripts {
+    <script src="~/js/print.js"></script>
+}

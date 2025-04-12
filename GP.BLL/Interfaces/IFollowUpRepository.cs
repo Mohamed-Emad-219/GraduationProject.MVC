@@ -1,4 +1,5 @@
 ﻿using GP.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace GP.BLL.Interfaces
         Task<IEnumerable<FollowUpEntry>> GetFollowUpEntriesAsyncById(int followUpId);
         Task UpdateFollowUpEntriesAsync(IEnumerable<FollowUpEntry> followUpEntries);
         Task<FollowUpEntry> GetFollowUpEntryAsync(int followUpEntryId, int followUpId);
+        public Task<int> UpdateFollowUpAsync(int Id, string Email, string Address, string MobilePhone);
+       
     }
 }

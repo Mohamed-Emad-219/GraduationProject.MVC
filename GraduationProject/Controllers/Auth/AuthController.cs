@@ -124,7 +124,7 @@ namespace GraduationProject.Controllers.Auth
         public async Task<IActionResult> ShowProfile()
         {
             var user = await _userManager.GetUserAsync(User);
-            var f = facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
+            var f = await facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
             var s = studentRepository.GetStudentByUserId(user.Id);
             var ff = financialAffairsRepository.GetFinancialAffairsByUserId(user.Id);
             var ss = studentAffairsRepository.GetStudentAffairsByUserId(user.Id);
@@ -141,9 +141,47 @@ namespace GraduationProject.Controllers.Auth
             else if (followup != null) return View("Profile", followup);
             return RedirectToAction("Index", "Home");
         }
-        public IActionResult EditProfile()
+        public async Task<IActionResult> EditProfile()
         {
-            return View("EditProfile");
+            var user = await _userManager.GetUserAsync(User);
+            var f = await facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
+            var s = studentRepository.GetStudentByUserId(user.Id);
+            var ff = financialAffairsRepository.GetFinancialAffairsByUserId(user.Id);
+            var ss = studentAffairsRepository.GetStudentAffairsByUserId(user.Id);
+            var adv = advisorRepository.GetAdvisorByUserId(user.Id);
+            var adm = adminRepository.GetAdminByUserId(user.Id);
+            var followup = followUpRepository.GetFollowUpByUserId(user.Id);
+            ViewData["Email"] = user.Email;
+            if (f != null) return View("EditProfile", f);
+            else if (s != null) return View("EditProfile", s);
+            else if (ff != null) return View("EditProfile", ff);
+            else if (ss != null) return View("EditProfile", ss);
+            else if (adv != null) return View("EditProfile", adv);
+            else if (adm != null) return View("EditProfile", adm);
+            else if (followup != null) return View("EditProfile", followup);
+            return RedirectToAction("ShowProfile");
+        }
+        [HttpPost]
+        [Route("/Auth/UpdateProfileInfo")]
+        public async Task<IActionResult> UpdateProfileInfo(string Email, string Address, string MobilePhone)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var f = await facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
+            var s = studentRepository.GetStudentByUserId(user.Id);
+            var ff = financialAffairsRepository.GetFinancialAffairsByUserId(user.Id);
+            var ss = studentAffairsRepository.GetStudentAffairsByUserId(user.Id);
+            var adv = advisorRepository.GetAdvisorByUserId(user.Id);
+            var adm = adminRepository.GetAdminByUserId(user.Id);
+            var followup = followUpRepository.GetFollowUpByUserId(user.Id);
+            ViewData["Email"] = user.Email;
+            if (f != null) await facultyMemberRepsitory.UpdateFacultyAsync(f.Id, Email, Address, MobilePhone);
+            else if (s != null) await studentRepository.UpdateStudentAsync(s.Id, Email, Address, MobilePhone);
+            else if (ff != null) await financialAffairsRepository.UpdateFinancialAffairsAsync(ff.Id, Email, Address, MobilePhone);
+            else if (ss != null) await studentAffairsRepository.UpdateStudentAffairsAsync(ss.Id, Email, Address, MobilePhone);
+            else if (adv != null) await advisorRepository.UpdateAdvisorAsync(adv.Id, Email, Address, MobilePhone);
+            else if (adm != null) await adminRepository.UpdateAdminAsync(adm.Id, Email, Address, MobilePhone);
+            else if (followup != null) await followUpRepository.UpdateFollowUpAsync(followup.Id, Email, Address, MobilePhone);
+            return RedirectToAction("ShowProfile");
         }
     }
 }

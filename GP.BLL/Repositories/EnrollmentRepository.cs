@@ -37,10 +37,63 @@ namespace GP.BLL.Repositories
             return _context.Enrollments
                       .Where(e => e.StudentId == studentId)
                       .OrderByDescending(e => e.Term.AcademicYear) // Latest year first
-                      .ThenByDescending(e => e.Term.Semester) // Latest semester first
+                      .ThenBy(e => e.Term.Semester) // Latest semester first
                       .Select(e => e.Term)
                       .FirstOrDefault();
         }
+        public void EnrollStudentToNextTerm(int studentId)
+        {
+            var lastTerm = GetLastTermForStudent(studentId);
+            var nextTerm = GetNextTermForStudent(studentId); // same logic you already use
+
+            if (nextTerm == null) return;
+
+            var nextCourses = _termCourseRepository.GetCoursesPerTerm(nextTerm.Id);
+
+            foreach (var course in nextCourses)
+            {
+                var enrollment = new Enrollment
+                {
+                    StudentId = studentId,
+                    CourseCode = course.Code,
+                    TermId = nextTerm.Id,
+                    Grade = "F" // not graded yet
+                };
+                _context.Enrollments.Add(enrollment);
+            }
+
+            _context.SaveChanges();
+        }
+        public Term GetNextTermForStudent(int studentId)
+        {
+            var lastTerm = GetLastTermForStudent(studentId);
+
+            if (lastTerm == null)
+            {
+                // NEW STUDENT
+                int currentYear = DateTime.Now.Year;
+                var term = _termRepository.GetTermByDetails(1, SemesterType.Fall, currentYear);
+                return term;
+            }
+            else
+            {
+                // EXISTING STUDENT
+                SemesterType nextSemester = (lastTerm.Semester == SemesterType.Spring)
+                    ? SemesterType.Fall
+                    : SemesterType.Spring;
+
+                int nextAcademicYear = (nextSemester == SemesterType.Spring)
+                    ? lastTerm.AcademicYear + 1
+                    : lastTerm.AcademicYear;
+
+                int level = (lastTerm.Semester == SemesterType.Spring) 
+                    ? lastTerm.Level + 1 
+                    : lastTerm.Level;
+                var term = _termRepository.GetTermByDetails(level, nextSemester, nextAcademicYear);
+                return term;
+            }
+        }
+
         public void EnrollPassedStudentsToNextTerm(int level)
         {
             // 1. Get students in the given level

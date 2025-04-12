@@ -132,7 +132,7 @@ td {
 }
 
 .admin .dashboard #departments-table {
-    width: 40%;
+    width: fit-content;
 }
 
 /*nav .nav-icons li:nth-of-type(1) {
@@ -236,13 +236,6 @@ td {
     margin-bottom: 10px;
 }
 
-.profile .profile-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh;
-    padding: 20px;
-}
 
 .profile .profile-img {
     flex: 1;
@@ -262,7 +255,7 @@ td {
 }
 
 .profile .info-box {
-    background-color: #ddd;
+    background-color: rgb(248, 248, 248);
     padding: 10px;
     border-radius: 5px;
 }

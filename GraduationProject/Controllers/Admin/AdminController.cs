@@ -42,12 +42,6 @@ namespace GraduationProject.Controllers.Admin
             ViewData["Departments"] = _departmentRepository.GetDepartments();
             return View();
         }
-        [HttpPost]
-        public IActionResult CourseEdit(GP.DAL.Models.Course course)
-        {
-            _courseRepository.UpdateCourse(course);
-            return RedirectToAction("Dashboard");
-        }
         public IActionResult DepartmentEditPage(int id)
         {
             ViewData["Department"] = _departmentRepository.GetDepartmentById(id);
@@ -55,6 +49,14 @@ namespace GraduationProject.Controllers.Admin
             ViewData["Heads"] = _facultyMemberRepsitory.GetHeads();
             return View();
         }
+
+        [HttpPost]
+        public IActionResult CourseEdit(GP.DAL.Models.Course course)
+        {
+            _courseRepository.UpdateCourse(course);
+            return RedirectToAction("Dashboard");
+        }
+        
         [HttpPost]
         public IActionResult DepartmentEdit(GP.DAL.Models.Department dep)
         {

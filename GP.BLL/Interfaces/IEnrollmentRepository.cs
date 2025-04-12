@@ -16,5 +16,7 @@ namespace GP.BLL.Interfaces
         int GetCompletedHoursForStudent(int studentId);
         IEnumerable<Enrollment> GetCompletedCoursesForStudent(int studentId);
         EnrollmentReportVM GetEnrollmentReport(string courseCode, SemesterType semester, int year);
+        public Term GetNextTermForStudent(int studentId);
+        public void EnrollStudentToNextTerm(int studentId);
     }
 }

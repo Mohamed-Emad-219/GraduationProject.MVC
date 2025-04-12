@@ -10,6 +10,6 @@ namespace GP.BLL.Interfaces
     public interface IAdvisorRepository
     {
         Advisor GetAdvisorByUserId(string UserId);
-
+        Task<int> UpdateAdvisorAsync(int Id, string Email, string Address, string MobilePhone);
     }
 }

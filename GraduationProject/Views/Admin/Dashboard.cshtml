@@ -4,35 +4,39 @@
     var departments = ViewData["Departments"] as IEnumerable<Department>;
 }
 <section class="admin">
-    <div class="container dashboard py-5">
-        <h2 class="mb-3">Courses</h2>
-        <table class="table table-striped table-hover" id="courses-table">
+    <div class="container dashboard py-1">
+        <h4 class="mb-2">Courses</h4>
+        <table class="table table-striped table-hover fs-6" id="courses-table">
             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>level</th>
-                    <th>No of Lectures</th>
-                    <th>No of Sections</th>
-                    <th>No of Hours</th>
-                    <th>Department</th>
-                    <th>Status</th>
+                    <th style="width: fit-content;">Code</th>
+                    <th style="width: fit-content;">Name</th>
+                    <th style="width: fit-content;">level</th>
+                    <th style="width: fit-content;">No of Lectures</th>
+                    <th style="width: fit-content;">No of Sections</th>
+                    <th style="width: fit-content;" >No of Hours</th>
+                    <th style="width: fit-content;">Department</th>
+                    <th style="width: fit-content;" colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var course in courses)
                 {
                     <tr>
-                        <td>@course.Code</td>
-                        <td>@course.Name</td>
-                        <td>@course.Level</td>
-                        <td>@course.NoOfLec</td>
-                        <td>@course.NoOfSec</td>
-                        <td>@course.CreditHour</td>
-                        <td>@course.Department.Name</td>
-                        <td>
-                            <a>Edit</a> 
-                            <a asp-action="Delete" asp-controller="Course" asp-route-id="@course.Code" class="btn btn-small btn-danger">Delete</a> 
+                        <td style="width: fit-content;">@course.Code</td>
+                        <td style="width: fit-content;">@course.Name</td>
+                        <td style="width: fit-content;">@course.Level</td>
+                        <td style="width: fit-content;">@course.NoOfLec</td>
+                        <td style="width: fit-content;">@course.NoOfSec</td>
+                        <td style="width: fit-content;">@course.CreditHour</td>
+                        <td style="width: fit-content;">@course.Department.Name</td>
+                        <td style="width: fit-content;" class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="CourseEditPage" asp-controller="Admin" 
+                                asp-route-id="@course.Code" class="btn btn-sm btn-success">Edit</a>
+                                <a asp-action="Delete" asp-controller="Course" 
+                                asp-route-id="@course.Code" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -40,26 +44,29 @@
         </table>
         <br>
         <div>
-            <a class="btn btn-primary w-25 d-block m-auto" asp-controller="Admin" asp-action="CourseAddPage">Add Course</a>
+            <a class="btn btn-primary w-25 d-block m-auto" asp-controller="Admin" 
+            asp-action="CourseAddPage">Add Course</a>
         </div>
-        <h2 class=" mb-3">Departments</h2>
+        <h4 class=" mb-2">Departments</h4>
         <table class="table table-striped table-hover" id="departments-table">
-            <thead>
+             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Name</th>
-                    <th>Status</th>
+                    <th style="width: fit-content;">Code</th>
+                    <th style="width: fit-content;">Name</th>
+                    <th style="width: fit-content;" colspan="2">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var dep in departments)
                 {
                     <tr>
-                        <td>@dep.Id</td>
-                        <td>@dep.Name</td>
-                        <td>
-                            <a asp-action="DepartmentEditPage" asp-controller="Admin" asp-route-id="@dep.Id" class="btn btn-small btn-success">Edit</a>
-                            <a asp-action="Delete" asp-controller="Department" asp-route-id="@dep.Id" class="btn btn-small btn-danger">Delete</a>
+                        <td style="width: fit-content;">@dep.Id</td>
+                        <td style="width: fit-content;">@dep.Name</td>
+                        <td style="width: fit-content;" class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="DepartmentEditPage" asp-controller="Admin" asp-route-id="@dep.Id" class="btn btn-sm btn-success">Edit</a>
+                                <a asp-action="Delete" asp-controller="Department" asp-route-id="@dep.Id" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
                         </td>
                     </tr>
                 }

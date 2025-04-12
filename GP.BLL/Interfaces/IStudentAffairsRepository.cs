@@ -10,7 +10,7 @@ namespace GP.BLL.Interfaces
     public interface IStudentAffairsRepository
     {
         StudentAffairs GetStudentAffairsByUserId(string UserId);
-        //StudentAffairs GetManagerByUserId(string UserId);
+        Task<int> UpdateStudentAffairsAsync(int Id, string Email, string Address, string MobilePhone);
 
     }
 }

@@ -25,7 +25,6 @@ namespace GraduationProject.Controllers.Course
                 ViewData["Departments"] = _departmentRepository.GetDepartments();
                 return RedirectToAction("CourseAddPage", "Admin", course.Code);
             }
-
             _courseRepository.AddCourse(course);
 
             return RedirectToAction("Dashboard", "Admin");

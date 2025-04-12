@@ -2,18 +2,18 @@
     ViewData["Title"] = "Edit Profile";
 }
 
-
+<div class="container">
+    <div class="back-button position-absolute">
+        <a class="text-primary m-3 d-block" asp-action="ShowProfile" asp-controller="Auth">
+            <i class="fa-2x fa-solid fa-arrow-left"></i>
+        </a>
+    </div>
+</div>
 <div class="container d-flex justify-content-center align-items-center">
+    
     <div class="card p-4 shadow" style="width: 450px;">
         <h3 class="text-center mb-3">Edit Personal Info</h3>
-        <form asp-controller="Auth" asp-action="ShowProfile" method="post">
-        <div class="text-center">
-            <img id="profileImage" src="~/images/default-profile.png" class="rounded-circle mb-3 w-50" alt="Profile">
-            <div class="input-group mb-3">
-                <input type="file" class="form-control" id="profilePic" accept="image/*">
-                <label class="input-group-text" for="profilePic"><i class="fas fa-upload"></i></label>
-            </div>
-        </div>
+        <form asp-controller="Auth" asp-action="UpdateProfileInfo">
         <div class="mb-2">
             <label class="form-label" for="Email">Email</label>
             <input type="email" class="form-control" id="Email" name="Email" value="">
@@ -26,7 +26,7 @@
             <label class="form-label" for="MobilePhone">Mobile Phone</label>
             <input type="text" class="form-control" name="MobilePhone" id="MobilePhone">
         </div>
-        <a class="btn btn-primary w-100" type="submit" >Confirm</a>
+        <button class="btn btn-primary w-100" type="submit">Confirm</button>
         </form>
     </div>
 </div>

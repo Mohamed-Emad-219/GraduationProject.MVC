@@ -4,12 +4,10 @@
     var courses = ViewData["PetitionCourses"] as IEnumerable<PetitionCourse>;
     var user = ViewData["User"] as Advisor;
 }
-<div class="container">
-<div class="back-button position-absolute">
-    <a class="text-primary m-3 d-block" asp-action="Requests" asp-controller="Advisor"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
-</div>
-</div>
 <div class="container result">
+    <div class="back-button mb-2">
+        <a class="text-primary d-block" asp-action="Requests" asp-controller="Advisor"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
+    </div>
     @if (courses is not null && request is not null)
     {
         @foreach (var course in courses)

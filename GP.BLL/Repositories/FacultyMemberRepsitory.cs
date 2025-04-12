@@ -1,6 +1,7 @@
 ﻿using GP.BLL.Interfaces;
 using GP.DAL.Context;
 using GP.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,11 @@ namespace GP.BLL.Repositories
     public class FacultyMemberRepsitory : IFacultyMemberRepsitory
     {
         private readonly AppDbContext _dbContext;
-
-        public FacultyMemberRepsitory(AppDbContext dbContext)
+        private readonly UserManager<GPUser> _userManager;
+        public FacultyMemberRepsitory(UserManager<GPUser> userManager, AppDbContext dbContext)
         {
             _dbContext = dbContext;
+            _userManager = userManager;
         }
         public IEnumerable<FacultyMember> GetHeads()
         {
@@ -39,6 +41,20 @@ namespace GP.BLL.Repositories
         {
             return _dbContext.Colleges.Where(f => f.DeanId.HasValue && f.Id == CollegeId).Select(c => c.Dean).FirstOrDefault();
         }
-        
+        public async Task<int> UpdateFacultyAsync(int Id, string Email, string Address, string MobilePhone)
+        {
+            var faculty = _dbContext.FacultyMembers.FirstOrDefault(f => f.Id == Id);
+            if (faculty == null)
+            {
+                return 0; // not found
+            }
+
+            await _userManager.SetEmailAsync(faculty.User, Email);
+            faculty.Address = Address;
+            faculty.MobilePhone = MobilePhone;
+
+           _dbContext.FacultyMembers.Update(faculty);
+            return await _dbContext.SaveChangesAsync(); // returns number of affected rows
+        }
     }
 }

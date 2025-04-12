@@ -1,6 +1,7 @@
 ﻿using GP.BLL.Interfaces;
 using GP.DAL.Context;
 using GP.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,11 @@ namespace GP.BLL.Repositories
 {
     public class FollowUpRepository : IFollowUpRepository
     {
+        private readonly UserManager<GPUser> userManager;
         private readonly AppDbContext context;
-        public FollowUpRepository(AppDbContext context)
+        public FollowUpRepository(UserManager<GPUser> userManager, AppDbContext context)
         {
+            this.userManager = userManager;
             this.context = context;
         }
 
@@ -69,6 +72,21 @@ namespace GP.BLL.Repositories
         public FollowUp GetFollowUpByUserId(string UserId)
         {
             return context.FollowUps.FirstOrDefault(f => f.UserId == UserId);
+        }
+        public async Task<int> UpdateFollowUpAsync(int Id, string Email, string Address, string MobilePhone)
+        {
+            var faculty = context.FollowUps.FirstOrDefault(f => f.Id == Id);
+            if (faculty == null)
+            {
+                return 0; // not found
+            }
+
+            await userManager.SetEmailAsync(faculty.User, Email);
+            faculty.Address = Address;
+            faculty.MobilePhone = MobilePhone;
+
+            context.FollowUps.Update(faculty);
+            return context.SaveChanges(); // returns number of affected rows
         }
     }
 }

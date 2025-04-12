@@ -10,5 +10,6 @@ namespace GP.BLL.Interfaces
     public interface IAdminRepository
     {
         Admin GetAdminByUserId(string UserId);
+        Task<int> UpdateAdminAsync(int Id, string Email, string Address, string MobilePhone);
     }
 }

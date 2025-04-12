@@ -14,8 +14,10 @@
 }
 @if(user is not null) {
 <section class="financial-affairs receipt">
-    <div class="container py-4" id=" searchResults">
-        <h2 class="text-center mb-4">Tuition Receipt</h2>
+        <div id="searchResults">
+
+            <div class="container py-4" id="report">
+                <h4 class="text-center mb-4">Tuition Receipt</h4>
         <form method="post" asp-action="AddReceipt" asp-controller="FinancialAffairs" class="receipt-form m-auto">
                 <div>
                     <label class="px-5 fs-5" for="">Registration @semester @academic</label>
@@ -115,6 +117,7 @@
                 <button class="btn w-25 btn-lg btn-primary" onclick="printContainer()" type="button">Print</button>
             </div>
         </form>
+            </div>
     </div>
 </section>
 }
