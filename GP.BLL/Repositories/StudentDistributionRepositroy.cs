@@ -19,10 +19,10 @@ namespace GP.BLL.Repositories
         {
             _dbcontext = dbcontext;
         }
-        public async Task<double> AVGStudentperdepartment(int year)
+        public async Task<double> AVGStudentperdepartment(int year, SemesterType semester)
         {
             var totalStudents = await _dbcontext.Enrollments
-        .Where(e => e.Term.AcademicYear == year)
+        .Where(e => e.Term.AcademicYear == year && e.Term.Semester == semester)
         .Select(e => e.Student)
         .CountAsync();
 
@@ -39,9 +39,9 @@ namespace GP.BLL.Repositories
             return await _dbcontext.Departments.CountAsync();
         }
 
-        public async Task<int> totalNumberofStudents(int year)
+        public async Task<int> totalNumberofStudents(int year, SemesterType semester)
         {
-            return await _dbcontext.Enrollments.Where(e => e.Term.AcademicYear == year).Select(e => e.StudentId).CountAsync();
+            return await _dbcontext.Enrollments.Where(e => e.Term.AcademicYear == year && e.Term.Semester == semester).Select(e => e.StudentId).CountAsync();
         }
         public IEnumerable<Department> GetAllDepartments()
         {
@@ -58,11 +58,11 @@ namespace GP.BLL.Repositories
         //    int departmentCount = _dbcontext.Departments.Count();
         //    return departmentCount > 0 ? (double)totalStudents / departmentCount : 0;
         //}
-        public async Task<List<Departmentsvm>> GetStudentsPerDepartment(int year)
+        public async Task<List<Departmentsvm>> GetStudentsPerDepartment(int year, SemesterType semester)
         {
             // Get total number of students for the year (only once)
             var totalStudents = await _dbcontext.Enrollments
-                .Where(e => e.Term.AcademicYear == year)
+                .Where(e => e.Term.AcademicYear == year && e.Term.Semester == semester)
                 .Select(e => e.StudentId) // use StudentId for performance
                 .CountAsync();
 
@@ -72,7 +72,7 @@ namespace GP.BLL.Repositories
                 {
                     DepartmentName = d.Name,
                     NumberOfStudents = _dbcontext.Enrollments
-                        .Where(e => e.Term.AcademicYear == year && e.Student.DeptId == d.Id)
+                        .Where(e => e.Term.AcademicYear == year && e.Term.Semester == semester && e.Student.DeptId == d.Id)
                         .Select(e => e.StudentId) // again, use StudentId instead of full entity
                         .Distinct()
                         .Count(), // ⚠️ this is still problematic, needs to be evaluated below
@@ -91,9 +91,9 @@ namespace GP.BLL.Repositories
             return departmentStats;
         }
 
-        public async Task<KeyValuePair<string, int>> HighestEnrollments(int year)
+        public async Task<KeyValuePair<string, int>> HighestEnrollments(int year, SemesterType semester)
         {
-            var deps = await GetStudentsPerDepartment(year);
+            var deps = await GetStudentsPerDepartment(year, semester);
 
             if (deps == null || deps.Count == 0)
                 return new KeyValuePair<string, int>("N/A", 0);
@@ -104,9 +104,9 @@ namespace GP.BLL.Repositories
         }
 
 
-        public async Task<KeyValuePair<string, int>> LowestEnrollments(int year)
+        public async Task<KeyValuePair<string, int>> LowestEnrollments(int year, SemesterType semester)
         {
-            var deps = await GetStudentsPerDepartment(year);
+            var deps = await GetStudentsPerDepartment(year, semester);
 
             if (deps == null || deps.Count == 0)
                 return new KeyValuePair<string, int>("N/A", 0);

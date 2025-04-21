@@ -12,7 +12,7 @@
         "Level": 4,
         "BirthDate": "2003-02-23",
         "HighSchoolGrade": 79.8,
-        "DeptId": 1,
+        "DeptId": 7,
         "AdvisorId": 1
     },
     {
@@ -28,7 +28,7 @@
         "Level": 4,
         "BirthDate": "2001-03-22",
         "HighSchoolGrade": 97.2,
-        "DeptId": 2,
+        "DeptId": 7,
         "AdvisorId": 2
     },
     {
@@ -44,7 +44,7 @@
         "Level": 2,
         "BirthDate": "2003-07-10",
         "HighSchoolGrade": 89.7,
-        "DeptId": 1,
+        "DeptId": 10,
         "AdvisorId": 1
     },
     {
@@ -60,7 +60,7 @@
         "Level": 1,
         "BirthDate": "2004-12-05",
         "HighSchoolGrade": 91.5,
-        "DeptId": 3,
+        "DeptId": 8,
         "AdvisorId": 1
     },
     {
@@ -76,7 +76,7 @@
         "Level": 4,
         "BirthDate": "2000-08-25",
         "HighSchoolGrade": 88.9,
-        "DeptId": 2,
+        "DeptId": 8,
         "AdvisorId": 2
     },
     {
@@ -92,7 +92,7 @@
         "Level": 3,
         "BirthDate": "2002-02-18",
         "HighSchoolGrade": 96.1,
-        "DeptId": 1,
+        "DeptId": 10,
         "AdvisorId": 1
     },
     {
@@ -108,7 +108,7 @@
         "Level": 4,
         "BirthDate": "2001-09-30",
         "HighSchoolGrade": 85.3,
-        "DeptId": 3,
+        "DeptId": 7,
         "AdvisorId": 2
     },
     {
@@ -124,7 +124,7 @@
         "Level": 2,
         "BirthDate": "2003-06-14",
         "HighSchoolGrade": 92.7,
-        "DeptId": 2,
+        "DeptId": 7,
         "AdvisorId": 1
     },
     {
@@ -140,7 +140,7 @@
         "Level": 1,
         "BirthDate": "2004-10-20",
         "HighSchoolGrade": 94.6,
-        "DeptId": 3,
+        "DeptId": 9,
         "AdvisorId": 2
     },
     {
@@ -156,7 +156,7 @@
         "Level": 4,
         "BirthDate": "1999-05-02",
         "HighSchoolGrade": 90.2,
-        "DeptId": 1,
+        "DeptId": 10,
         "AdvisorId": 2
     },
     {
@@ -172,7 +172,7 @@
         "Level": 3,
         "BirthDate": "2002-11-30",
         "HighSchoolGrade": 95.3,
-        "DeptId": 2,
+        "DeptId": 10,
         "AdvisorId": 1
     },
     {
@@ -188,7 +188,7 @@
         "Level": 4,
         "BirthDate": "2001-07-08",
         "HighSchoolGrade": 97.8,
-        "DeptId": 3,
+        "DeptId": 9,
         "AdvisorId": 2
     },
     {
@@ -204,7 +204,7 @@
         "Level": 2,
         "BirthDate": "2003-04-12",
         "HighSchoolGrade": 88.5,
-        "DeptId": 1,
+        "DeptId": 8,
         "AdvisorId": 2
     },
     {
@@ -220,7 +220,7 @@
         "Level": 1,
         "BirthDate": "2004-01-05",
         "HighSchoolGrade": 92.1,
-        "DeptId": 2,
+        "DeptId": 7,
         "AdvisorId": 1
     }
 ]

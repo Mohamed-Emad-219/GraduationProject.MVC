@@ -12,12 +12,14 @@ namespace GP.DAL.Models
     {
         [Key]
         public string Code { get; set; }
-        public string Name { get; set; }
-        public int CreditHour { get; set; }
+        public string CourseName { get; set; }
+        public int? CreditHour { get; set; }
         public int Level { get; set; }
-        public int NoOfSec { get; set; }
-        public int NoOfLec { get; set; }
-        public int DeptId { get; set; }
+        public SemesterType Semester { get; set; }
+        public int? NoOfSec { get; set; }
+        public int NeedsLab { get; set; }
+        public int? NoOfLec { get; set; }
+        public int? DeptId { get; set; }
         public Department Department { get; set; }
         public ICollection<StudentSchedule>? StudentSchedules { get; set; }
         public ICollection<InstructorSchedule>? InstructorSchedules { get; set; }

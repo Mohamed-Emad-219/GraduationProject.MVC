@@ -4,7 +4,7 @@ namespace GraduationProject.ViewModels
 {
     public class PetitionRequestVM
     {
-        public int DeanId { get; set; }
+        public string DeanId { get; set; }
         public int CollegeId { get; set; }
         public int DeptId { get; set; }
 

@@ -57,13 +57,13 @@ namespace GP.BLL.Repositories
             _dbContext.Remove(college);
             return _dbContext.SaveChanges();
         }
-        public College GetCollegeByDeanId(int Id)
+        public College GetCollegeByDeanId(string Id)
         {
             var college = _dbContext.Colleges
                                   .FirstOrDefault(c => c.DeanId == Id);
             return college;
         }
-        public int GetCollegeIdByDeanId(int Id)
+        public int GetCollegeIdByDeanId(string Id)
         {
             var college = _dbContext.Colleges
                                   .FirstOrDefault(c => c.DeanId == Id);

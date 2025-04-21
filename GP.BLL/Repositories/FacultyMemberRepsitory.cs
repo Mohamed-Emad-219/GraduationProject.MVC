@@ -22,11 +22,11 @@ namespace GP.BLL.Repositories
         }
         public IEnumerable<FacultyMember> GetHeads()
         {
-            return _dbContext.Departments.Where(d => d.HeadId.HasValue).Select(d => d.Head).ToList();
+            return _dbContext.Departments.Where(d => !string.IsNullOrEmpty(d.HeadId)).Select(d => d.Head).ToList();
         }
         public IEnumerable<FacultyMember> GetDeans()
         {
-            return _dbContext.Colleges.Where(d => d.DeanId.HasValue).Select(d => d.Dean).ToList();
+            return _dbContext.Colleges.Where(d => !string.IsNullOrEmpty(d.DeanId)).Select(d => d.Dean).ToList();
         }
         public IEnumerable<FacultyMember> GetAll()
         {
@@ -39,11 +39,11 @@ namespace GP.BLL.Repositories
         }
         public FacultyMember GetDeanByCollegeId(int CollegeId)
         {
-            return _dbContext.Colleges.Where(f => f.DeanId.HasValue && f.Id == CollegeId).Select(c => c.Dean).FirstOrDefault();
+            return _dbContext.Colleges.Where(f => !string.IsNullOrEmpty(f.DeanId) && f.Id == CollegeId).Select(c => c.Dean).FirstOrDefault();
         }
-        public async Task<int> UpdateFacultyAsync(int Id, string Email, string Address, string MobilePhone)
+        public async Task<int> UpdateFacultyAsync(string Id, string Email, string Address, string MobilePhone)
         {
-            var faculty = _dbContext.FacultyMembers.FirstOrDefault(f => f.Id == Id);
+            var faculty = _dbContext.FacultyMembers.FirstOrDefault(f => f.TeacherId == Id);
             if (faculty == null)
             {
                 return 0; // not found

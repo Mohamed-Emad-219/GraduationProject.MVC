@@ -37,7 +37,7 @@ namespace GraduationProject.Controllers.Instructor
             var userId = user.Id;
             var inst = _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
             ViewData["Schedule"] = _instructorScheduleRepositroy
-                .GetInstructorScheduleByInstructorId(inst.Id);
+                .GetInstructorScheduleByInstructorId(inst.Result.TeacherId);
             return View();
         }
 
@@ -48,32 +48,19 @@ namespace GraduationProject.Controllers.Instructor
             var userId = user.Id;
             var assistant = _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
             ViewData["Schedule"] = _instructorScheduleRepositroy
-                .GetAssistantScheduleByAssistantId(assistant.Id);
+                .GetAssistantScheduleByAssistantId(assistant.Result.TeacherId);
             return View();
         }
         [Authorize(Roles = "Dean")]
-        public async Task<IActionResult> CourseEnrollmentReport()
+        public IActionResult CourseEnrollmentReport()
         {
-            var user = await _userManager.GetUserAsync(User);
-            var dean = await _facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
-            await Task.Delay(1000);
-            var collegeid = _collegeRepository.GetCollegeIdByDeanId(dean.Id);
-            ViewData["Department"] = await _departmentRepository.GetDepartmentsByCollegeIdAsync(collegeid);
-            //await Task.Delay(1000);
             return View();
         }
-        public async Task<IActionResult> SearchEnroll(string CourseCode, int DeptId, int CollegeId, SemesterType Semester, int AcademicYear)
+        public async Task<IActionResult> SearchEnroll(string CourseCode, SemesterType Semester, int AcademicYear)
         {
-            ViewData["Department"] = _departmentRepository.GetDepartmentById(DeptId);
-            if (ViewData["Department"] == null)
-            {
-                return NotFound("Department not found.");
-            }
-
             var user = await _userManager.GetUserAsync(User);
             var dean = await _facultyMemberRepsitory.GetFacultyByUserIdAsync(user.Id);
             await Task.Delay(1000);
-            ViewData["College"] = _collegeRepository.GetCollegeByDeanId(dean.Id);
             ViewData["Semester"] = Semester.ToString();
             ViewData["AcademicYear"] = AcademicYear;
             ViewData["ReportNumber"] = GenerateReportNumber();

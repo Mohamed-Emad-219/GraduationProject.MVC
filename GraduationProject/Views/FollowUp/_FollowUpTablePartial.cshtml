@@ -29,9 +29,9 @@
 
                         <tr>
                             <td>@schedule.CourseCode</td>
-                            <td>@schedule.Course.Name</td>
-                            <td>@schedule.Instructor?.FirstName @schedule.Instructor?.MiddleName @schedule.Instructor?.LastName @schedule.Assistant?.FirstName @schedule.Assistant?.MiddleName @schedule.Assistant?.LastName</td>
-                            <td>@schedule.Place.Name</td>
+                            <td>@schedule.Course.CourseName</td>
+                            <td>@schedule.FacultyMember?.FirstName @schedule.FacultyMember?.MiddleName @schedule.FacultyMember?.LastName</td>
+                            <td>@schedule.Place.PlaceName</td>
                             <td>@($"{schedule.TimeBegin:hh\\:mm} - {schedule.TimeEnd:hh\\:mm}")</td>
 
                             @for (int i = 1; i <= 14; i++)

@@ -10,12 +10,12 @@ namespace GP.BLL.Interfaces
 {
     public interface IStudentDistribution
     {
-        public Task<int> totalNumberofStudents(int year);
+        public Task<int> totalNumberofStudents(int year, SemesterType semester);
         public Task<int> totalNumberofDepartment();
-        public Task<double> AVGStudentperdepartment(int year);
+        public Task<double> AVGStudentperdepartment(int year, SemesterType semester);
         public IEnumerable<Department> GetAllDepartments();
-        Task<List<Departmentsvm>> GetStudentsPerDepartment(int year);
-        public Task<KeyValuePair<string, int>> HighestEnrollments(int year);
-        public Task<KeyValuePair<string, int>> LowestEnrollments(int year);
+        Task<List<Departmentsvm>> GetStudentsPerDepartment(int year, SemesterType semester);
+        public Task<KeyValuePair<string, int>> HighestEnrollments(int year, SemesterType semester);
+        public Task<KeyValuePair<string, int>> LowestEnrollments(int year, SemesterType semester);
     }
 }

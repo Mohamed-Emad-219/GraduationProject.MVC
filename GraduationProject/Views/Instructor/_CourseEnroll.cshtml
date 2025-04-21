@@ -1,6 +1,4 @@
 ﻿@{
-    var dep = ViewData["Department"] as Department;
-    var college = ViewData["College"] as College;
     var semester = ViewData["Semester"];
     var academicyear = ViewData["AcademicYear"];
     var reportNumber = ViewData["ReportNumber"];
@@ -15,9 +13,7 @@
         <img src="~/images/CS(Gray).png" alt="" style="width: 60px;">
     </div>
     <header class="text-center">
-        <h2>Course Enrollments Report</h2>
-        <h3>Collage: @if (college is not null){  @college.Name }else { <strong>No College</strong> }</h3>
-        <h5>Department: @if (dep is not null){ @dep.Name}else{ <strong>No Dep</strong> }</h5>
+        <h3>Course Enrollments Report</h3>
         <p>Academic Year: @academicyear | Semester: @semester</p>
         <p>Report Number: @reportNumber</p>
     </header>

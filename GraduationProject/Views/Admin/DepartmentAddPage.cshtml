@@ -34,7 +34,7 @@
                 @if(heads is not null){
                 @foreach (var head in heads)
                 {
-                    <option value="@head.Id">@head.FirstName @head.MiddleName @head.LastName</option>
+                    <option value="@head.TeacherId">@head.FirstName @head.MiddleName @head.LastName</option>
                 }}
             </select>
             <span asp-validation-for="HeadId" class="text-danger"></span>

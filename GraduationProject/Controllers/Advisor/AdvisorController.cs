@@ -177,21 +177,22 @@ namespace GraduationProject.Controllers.Advisor
         {
             return View();
         }
-        public async Task<IActionResult> GetDistributionReport(int year)
+        public async Task<IActionResult> GetDistributionReport(int year,SemesterType semester)
         {
             if(year == 0)
             {
                 return BadRequest("Enter Year.");
             }
             ViewData["year"] = year;
-            ViewData["totalStudents"] = await studentDistributionRepositroy.totalNumberofStudents(year);
+            ViewData["semester"] = semester;
+            ViewData["totalStudents"] = await studentDistributionRepositroy.totalNumberofStudents(year, semester);
             ViewData["totalDepartments"] = await studentDistributionRepositroy.totalNumberofDepartment();
-            ViewData["avgStudents"] = await studentDistributionRepositroy.AVGStudentperdepartment(year);
-            ViewData["HighestEnrollments"] = await studentDistributionRepositroy.HighestEnrollments(year);
-            ViewData["LowestEnrollments"] = await studentDistributionRepositroy.LowestEnrollments(year);
+            ViewData["avgStudents"] = await studentDistributionRepositroy.AVGStudentperdepartment(year, semester);
+            ViewData["HighestEnrollments"] = await studentDistributionRepositroy.HighestEnrollments(year, semester);
+            ViewData["LowestEnrollments"] = await studentDistributionRepositroy.LowestEnrollments(year, semester);
             ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
             ViewData["number"] = GenerateReportNumber();
-            var departmentStats = await studentDistributionRepositroy.GetStudentsPerDepartment(year);
+            var departmentStats = await studentDistributionRepositroy.GetStudentsPerDepartment(year, semester);
             var user = await userManager.GetUserAsync(User);
             var advisor = advisorRepository.GetAdvisorByUserId(user.Id);
             ViewData["Advisor"] = advisor;

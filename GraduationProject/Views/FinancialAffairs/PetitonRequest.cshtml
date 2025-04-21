@@ -24,7 +24,7 @@
                     <option value="">Choose..</option>
                     @if(deans is not null) {
                         @foreach (var dean in deans) {
-                            <option value="@dean.Id">@dean.FirstName @dean.MiddleName @dean.LastName</option>
+                            <option value="@dean.TeacherId">@dean.FirstName @dean.MiddleName @dean.LastName</option>
                         }
                     } 
                 </select>

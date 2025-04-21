@@ -1,14 +1,6 @@
 [
   {
-    "Name": "Engineering",
-    "DeanId": 1
-  },
-  {
     "Name": "Computers and Artificial Intelligence",
-    "DeanId": 2
-  },
-  {
-    "Name": "Pharmacy",
-    "DeanId": 3
+    "DeanId": "D1"
   }
 ]

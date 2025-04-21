@@ -36,12 +36,10 @@ namespace GraduationProject.Controllers.StudentAffairs
         }
         [HttpPost]
         [Route("StudentAffairs/NewApplicationAdd")]
-        //[ValidateAntiForgeryToken]
         public IActionResult NewApplicationAdd(GP.DAL.Models.Student student)
         {
             if (ModelState.IsValid)
             {
-
                 studentRepository.AddStudent(student);
 
                 var application = new Application

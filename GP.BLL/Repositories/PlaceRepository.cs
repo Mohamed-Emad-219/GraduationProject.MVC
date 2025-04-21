@@ -25,7 +25,7 @@ namespace GP.BLL.Repositories
         public IEnumerable<PlaceDTO> GetPlacesNameId()
         {
             return context.Places
-        .Select(c => new PlaceDTO { Value = c.Id, Text = c.Name }) // Avoid circular references
+        .Select(c => new PlaceDTO { Value = c.PlaceId, Text = c.PlaceName }) // Avoid circular references
         .ToList();
         }
     }

@@ -2,20 +2,23 @@
     ViewData["Title"] = "Student Schedule";
     var schedule = ViewData["Schedule"] as IEnumerable<StudentSchedule>;
     var groupedSchedule = schedule?.GroupBy(s => s.Day) ?? new List<IGrouping<string, StudentSchedule>>();
+    var group = ViewData["group"];
 }
 
 <section class="student">
     <div id="searchResults">
         <div class="container py-3" id="report"></div>
         <div class="heading-schedule d-flex justify-content-between align-items-center">
-            <p class="p-0 fs-5 fw-bold semester">Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
-                <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span></p>
+            <p class="p-0 fs-5 fw-bold semester">
+                Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
+                <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span>
+            </p>
             <img src="../images/Mti(Gray).png" alt="" style="width: 100px;">
         </div>
         <h1 class="heading text-center m-1">Schedule of Classes</h1>
         <div class="w-100 mt-1 d-flex justify-content-around">
             <p class="fs-3 fw-bold mb-0">Level: <span id="level">@schedule?.FirstOrDefault().Level</span> 
-                <span id="dep">@schedule?.FirstOrDefault().Department.Name</span>
+                <span id="dep"></span> | G<span>@group</span>
             </p>
         </div>
         <div class="schedule">
@@ -44,10 +47,11 @@
                             {
                                 <tr>
                                     <td>@row.CourseCode</td>
-                                    <td style="width: fit-content;">@row.Course?.Name</td>
-                                    <td style="width: fit-content;">@row.Instructor?.FirstName @row.Instructor?.MiddleName 
-                                        @row.Instructor?.LastName @row.Assistant?.FirstName @row.Assistant?.MiddleName @row.Assistant?.LastName </td>
-                                    <td style="width: fit-content;">@row.Place?.Name</td>
+                                    <td style="width: fit-content;">@row.Course?.CourseName</td>
+                                    <td style="width: fit-content;">
+                                        @row.FacultyMember?.FullName
+                                    </td>
+                                    <td style="width: fit-content;">@row.Place?.PlaceName</td>
                                     <td>@row.Place?.Type</td>
                                     <td>@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
                                 </tr>

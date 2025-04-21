@@ -8,7 +8,7 @@ namespace GP.DAL.Dto
 {
     public class PlaceDTO
     {
-        public int Value { get; set; }
+        public string Value { get; set; }
         public string Text { get; set; }
     }
 }

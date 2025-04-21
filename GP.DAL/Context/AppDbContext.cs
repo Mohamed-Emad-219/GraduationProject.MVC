@@ -82,12 +82,6 @@ namespace GP.DAL.Context
                 .WithOne(fm => fm.Department)
                 .HasForeignKey(fm => fm.DeptId)
                 .OnDelete(DeleteBehavior.Restrict);
-            // department and StudentSchedule 1-m
-            modelBuilder.Entity<Department>()
-                .HasMany(d => d.StudentSchedules)
-                .WithOne(fm => fm.Department)
-                .HasForeignKey(fm => fm.DeptId)
-                .OnDelete(DeleteBehavior.Restrict);
             // department and course 1-m
             modelBuilder.Entity<Department>()
                 .HasMany(d => d.Courses)
@@ -139,10 +133,11 @@ namespace GP.DAL.Context
 
             // One-to-Many relationship between Instructor and Schedule
             modelBuilder.Entity<InstructorSchedule>()
-                .HasOne(s => s.Instructor)
+                .HasOne(s => s.FacultyMember)
                 .WithMany(fm => fm.InstructorSchedules)
-                .HasForeignKey(s => s.InstructorId)
+                .HasForeignKey(s => s.TeacherId)
                 .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Enrollment>()
                 .HasOne(s => s.Term)
@@ -150,12 +145,6 @@ namespace GP.DAL.Context
                 .HasForeignKey(s => s.TermId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // One-to-Many relationship between Assistant and Schedule
-            modelBuilder.Entity<InstructorSchedule>()
-                .HasOne(s => s.Assistant)
-                .WithMany(fm => fm.AssistantSchedules)
-                .HasForeignKey(s => s.AssistantId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             // One-to-Many relationship between Place and Schedule
             modelBuilder.Entity<StudentSchedule>()
@@ -325,6 +314,8 @@ namespace GP.DAL.Context
             modelBuilder.Entity<CoursesTerm>()
                     .HasKey(e => new { e.TermId, e.CourseCode });
 
+
+
             // Configure relationship between Term and CoursesTerm
             modelBuilder.Entity<CoursesTerm>()
                 .HasOne(e => e.Term)
@@ -363,6 +354,8 @@ namespace GP.DAL.Context
                 .HasForeignKey(f => f.FollowUpId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<CourseInstructor>()
+                .HasKey(ur => new { ur.CourseCode, ur.TeacherId });
         }
         #region Models
         public DbSet<Advisor> Advisors { get; set; }
@@ -389,6 +382,7 @@ namespace GP.DAL.Context
         public DbSet<PetitionRequest> PetitionRequests { get; set; }
         public DbSet<PetitionCourse> PetitionCourses { get; set; }
 
+        public DbSet<CourseInstructor> CourseInstructors { get; set; }
         public DbSet<ResultPetition> ResultPetitions { get; set; }
 
         #endregion

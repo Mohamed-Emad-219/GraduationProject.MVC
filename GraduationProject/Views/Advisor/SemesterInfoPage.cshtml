@@ -7,67 +7,88 @@
         <h1 class="heading text-center m-1">Welcome!</h1>
         <div class="d-flex">
             <div class="info w-100">
-                <form asp-controller="Advisor" asp-action="DefaultSchedule">
-                    <div class="w-75 mb-3">
-                        <label class="fs-4 m-1" for="List">Choose List</label>
-                        <select class="form-select" id="List" name="List">
-                            <option value="2013">2013</option>
-                            <option value="2016">2016</option>
-                            <option value="2020">2020</option>
-                        </select>
+                @* <form asp-controller="Advisor" asp-action="DefaultSchedule"> *@
+                @*     <div class="w-75 mb-3"> *@
+                @*         <label class="fs-4 m-1" for="List">Choose List</label> *@
+                @*         <select class="form-select" id="List" name="List"> *@
+                @*             <option value="2013">2013</option> *@
+                @*             <option value="2016">2016</option> *@
+                @*             <option value="2020">2020</option> *@
+                @*         </select> *@
+                @*     </div> *@
+                @*     <div class="w-75 mb-3"> *@
+                @*         <label class="fs-4 m-1" for="Semester">Choose Semester</label> *@
+                @*         <select class="form-select" id="Semester" name="Semester"> *@
+                @*             <option value="Fall">Fall</option> *@
+                @*             <option value="Spring">Spring</option> *@
+                @*             <option value="Summer">Summer</option> *@
+                @*         </select> *@
+                @*     </div> *@
+                @*     <div class="w-75 mb-3"> *@
+                @*         <label class="fs-4 m-1" for="Level">Choose Level</label> *@
+                @*         <select class="form-select" id="Level" name="Level"> *@
+                @*             <option value="1">1</option> *@
+                @*             <option value="2">2</option> *@
+                @*             <option value="3">3</option> *@
+                @*             <option value="4">4</option> *@
+                @*         </select> *@
+                @*     </div> *@
+                @*     <div class="w-75 mb-3"> *@
+                @*         <label class="fs-4 m-1" for="Course">Choose Course</label> *@
+                @*         <div class="input-group mb-3"> *@
+                @*             <div class="input-group-text"> *@
+                @*                 <input name="Course" id="course1" class="course form-check-input mt-0" type="checkbox" *@
+                @*                        value="English Language 1"> *@
+                @*             </div> *@
+                @*             <label for="course1" class="form-control">English Language 1</label> *@
+                @*         </div> *@
+                @*         <div class="input-group mb-3"> *@
+                @*             <div class="input-group-text"> *@
+                @*                 <input name="Course" id="course2" class="course form-check-input mt-0" type="checkbox" *@
+                @*                        value="English Language 2"> *@
+                @*             </div> *@
+                @*             <label for="course2" class="form-control">English Language 2</label> *@
+                @*         </div> *@
+                @*         <div class="input-group mb-3"> *@
+                @*             <div class="input-group-text"> *@
+                @*                 <input name="Course" id="course3" class="course form-check-input mt-0" type="checkbox" *@
+                @*                        value="Intro to Computer Science"> *@
+                @*             </div> *@
+                @*             <label for="course3" class="form-control">Intro to Computer Science</label> *@
+                @*         </div> *@
+                @*         <div class="input-group mb-3"> *@
+                @*             <div class="input-group-text"> *@
+                @*                 <input name="Course" id="course4" class="course form-check-input mt-0" type="checkbox" *@
+                @*                        value="Physics"> *@
+                @*             </div> *@
+                @*             <label for="course4" class="form-control">Physics</label> *@
+                @*         </div> *@
+                @*     </div> *@
+                @*     <div class="mt-3"> *@
+                @*         <button class="btn btn-primary px-4" type="submit">Next</button> *@
+                @*     </div> *@
+                @* </form> *@
+
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
                     </div>
-                    <div class="w-75 mb-3">
-                        <label class="fs-4 m-1" for="Semester">Choose Semester</label>
-                        <select class="form-select" id="Semester" name="Semester">
-                            <option value="Fall">Fall</option>
-                            <option value="Spring">Spring</option>
-                            <option value="Summer">Summer</option>
-                        </select>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
                     </div>
-                    <div class="w-75 mb-3">
-                        <label class="fs-4 m-1" for="Level">Choose Level</label>
-                        <select class="form-select" id="Level" name="Level">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                    <div class="w-75 mb-3">
-                        <label class="fs-4 m-1" for="Course">Choose Course</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <input name="Course" id="course1" class="course form-check-input mt-0" type="checkbox"
-                                       value="English Language 1">
-                            </div>
-                            <label for="course1" class="form-control">English Language 1</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <input name="Course" id="course2" class="course form-check-input mt-0" type="checkbox"
-                                       value="English Language 2">
-                            </div>
-                            <label for="course2" class="form-control">English Language 2</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <input name="Course" id="course3" class="course form-check-input mt-0" type="checkbox"
-                                       value="Intro to Computer Science">
-                            </div>
-                            <label for="course3" class="form-control">Intro to Computer Science</label>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-text">
-                                <input name="Course" id="course4" class="course form-check-input mt-0" type="checkbox"
-                                       value="Physics">
-                            </div>
-                            <label for="course4" class="form-control">Physics</label>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <button class="btn btn-primary px-4" type="submit">Next</button>
-                    </div>
+                }
+
+                <!-- Button to trigger the AI Training -->
+                <form method="post" asp-action="TrainScheduler" asp-controller="Ai">
+                    <button type="submit" class="btn btn-primary">Train Scheduler</button>
                 </form>
+
             </div>
             <div class="image w-100">
                 <img class="w-100" src="~/images/advising.png" alt="">

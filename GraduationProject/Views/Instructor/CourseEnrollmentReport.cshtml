@@ -1,26 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Course Enrollment Report";
-    var deps = ViewData["Department"] as IEnumerable<Department>;
 }
 <div class="container py-4">
     <div class="search w-75 mx-auto mb-4">
         <form id="searchForm" role="search">
-
-            <label for="DeptId" class="fs-5">Department:</label>
-            <select id="DeptId" class="form-control mb-2">
-                <option value="">-- Select Department --</option>
-                @if (deps is not null)
-                {
-                    @foreach (var dep in deps)
-                    {
-                        <option value="@dep.Id">@dep.Name</option>
-                    }
-                }
-                else
-                {
-                    <option>No Departments</option>
-                }
-            </select>
 
             <label for="AcademicYear" class="fs-5">Academic Year:</label>
             <select id="AcademicYear" class="form-control mb-2">
@@ -36,9 +19,8 @@
             <label for="Semester" class="fs-5">Semester:</label>
             <select id="Semester" class="form-control mb-2">
                 <option value="">-- Select Semester --</option>
-                <option value="2">Fall</option>
-                <option value="0">Spring</option>
-                <option value="1">Summer</option>
+                <option value="1">Fall</option>
+                <option value="2">Spring</option>
             </select>
 
             <label for="CourseCode" class="fs-5">Course Code</label>
@@ -62,7 +44,6 @@
                 $("#search-id").click(function (event) {
                     event.preventDefault(); // Prevents form reload
 
-                var DeptId = $("#DeptId").val();
                 var Semester = $("#Semester").val();
                 var AcademicYear = $("#AcademicYear").val();
                 var CourseCode = $("#CourseCode").val();
@@ -74,7 +55,7 @@
                     $.ajax({
                     url: "/Instructor/SearchEnroll",
                         type: "get", // Or "POST" depending on your API
-            data: { CourseCode: CourseCode,DeptId: DeptId, Semester: Semester , AcademicYear: AcademicYear},
+            data: { CourseCode: CourseCode, Semester: Semester , AcademicYear: AcademicYear},
                     success: function (response) {
                             $("#searchResults").html(response); // Load partial view here
                         },

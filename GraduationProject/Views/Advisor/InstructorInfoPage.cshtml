@@ -18,7 +18,7 @@
             <select name="InstructorId" id="InstructorId" class="form-control">
                 <option value="">Select Instructor</option>
                 @foreach(var i in instructors){
-                    <option value="@i.Id">@i.FirstName @i.MiddleName @i.LastName</option>
+                    <option value="@i.TeacherId">@i.FirstName @i.MiddleName @i.LastName</option>
                 }
                 
             </select>
@@ -61,7 +61,7 @@
                             <select name="CourseIds[]" class="form-control">
                                 <option value="">Select Course</option>
                                 @foreach(var c in courses) {
-                                    <option value="@c.Code">@c.Name</option>
+                                    <option value="@c.Code">@c.CourseName</option>
                                 }
                             </select>
                         </td>
@@ -70,7 +70,7 @@
                                 <option value="">Select Place</option>
                             @foreach (var c in places)
                             {
-                                    <option value="@c.Id">@c.Name</option>
+                                    <option value="@c.PlaceId">@c.PlaceName</option>
                             }
                             </select>
                         </td>

@@ -27,7 +27,9 @@ namespace GraduationProject.Controllers.Student
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
             var std = _studentRepository.GetStudentByUserId(userId);
-            ViewData["Schedule"] = _studentScheduleRepository.GetStudentScheduleByGroup(std.Group, std.Level);
+            ViewData["Schedule"] = _studentScheduleRepository
+                .GetStudentScheduleByGroup(std.Group, std.Level);
+            ViewData["group"] = std.Group;
             return View();
         }
     }

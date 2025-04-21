@@ -3,6 +3,7 @@
     var totalDepartments = ViewData["totalDepartments"] ?? 0;
     var avgStudents = ViewData["avgStudents"] ?? 0;
     var year = ViewData["year"];
+    var semester = ViewData["semester"];
     var HighestEnrollments = (KeyValuePair<string, int>)ViewData["HighestEnrollments"];
     var LowestEnrollments = (KeyValuePair<string, int>)ViewData["LowestEnrollments"];
     var user = ViewData["Advisor"] as Advisor;
@@ -19,8 +20,7 @@
         </div>
     
     <h3 class="text-center">Student Distribution Across Departments</h3>
-        <h4 class="text-center mb-4">MTI University</h4>
-    <p class="text-center m-1">Academic Year: <span id="academicYear">@year</span></p>
+        <p class="text-center m-1">Academic Year: @year | Semester: @semester</p>
     <p class="text-center m-1">Report Number: @reportNumber</p>
     <h4>1. Overview</h4>
     <p class="m-1">

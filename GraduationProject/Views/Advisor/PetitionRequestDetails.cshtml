@@ -58,7 +58,7 @@
             <ul class="list-group">
                 @foreach(var course in courses) {
                     @if(course is not null) {
-                    <li class="list-group-item"> @course.Course.Name </li>
+                    <li class="list-group-item"> @course.Course.CourseName </li>
                     }else {
                         <p>No Courses!</p>
                     }

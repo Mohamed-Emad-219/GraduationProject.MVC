@@ -15,7 +15,7 @@ namespace GP.DAL.Models
 
         // Foreign keys (related to dropdown selections)
         [Required]
-        public int DeanId { get; set; }
+        public string DeanId { get; set; }
 
         [Required]
         public int CollegeId { get; set; }

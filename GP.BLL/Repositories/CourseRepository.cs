@@ -27,13 +27,13 @@ namespace GP.BLL.Repositories
 
         public List<string> GetAllCourses()
         {
-            return _dbContext.Courses.Select(c => c.Name).ToList();
+            return _dbContext.Courses.Select(c => c.CourseName).ToList();
         }
 
         public IEnumerable<CourseDTO> GetCoursesNameCode()
         {
             return _dbContext.Courses
-        .Select(c => new CourseDTO { Value = c.Code,Text = c.Name }) // Avoid circular references
+        .Select(c => new CourseDTO { Value = c.Code,Text = c.CourseName }) // Avoid circular references
         .ToList();
         }
         public async Task<Course> GetCourseById(string id)
@@ -60,7 +60,7 @@ namespace GP.BLL.Repositories
         public string GetCourseCodeByName(string name)
         {
             return _dbContext.Courses
-                     .Where(c => c.Name == name)
+                     .Where(c => c.CourseName == name)
                      .Select(c => c.Code)
                      .FirstOrDefault();
         }

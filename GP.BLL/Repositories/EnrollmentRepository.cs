@@ -44,7 +44,7 @@ namespace GP.BLL.Repositories
         public void EnrollStudentToNextTerm(int studentId)
         {
             var lastTerm = GetLastTermForStudent(studentId);
-            var nextTerm = GetNextTermForStudent(studentId); // same logic you already use
+            var nextTerm = GetNextTermForStudent(studentId); 
 
             if (nextTerm == null) return;
 
@@ -162,7 +162,7 @@ namespace GP.BLL.Repositories
         {
             return _context.Enrollments
             .Where(e => e.StudentId == studentId)
-            .Sum(e => e.Course.CreditHour);
+            .Sum(e => e.Course.CreditHour ?? 0);
         }
         public IEnumerable<Enrollment> GetCompletedCoursesForStudent(int studentId)
         {
@@ -188,9 +188,9 @@ namespace GP.BLL.Repositories
             var e =  new EnrollmentReportVM
             {
                 CourseCode = courseCode,
-                CourseTitle = enrollments.FirstOrDefault()?.Course.Name ?? "N/A",
+                CourseTitle = enrollments.FirstOrDefault()?.Course.CourseName ?? "N/A",
                 Instructor = enrollments.FirstOrDefault()?.Course.InstructorSchedules
-                .Select(i => $"{i.Instructor.FirstName} {i.Instructor.MiddleName} {i.Instructor.LastName}")
+                .Select(i => $"{i.FacultyMember.FirstName} {i.FacultyMember.MiddleName} {i.FacultyMember.LastName}")
                 .FirstOrDefault() ?? "N/A",
                 Credits = enrollments.FirstOrDefault()?.Course.CreditHour ?? 0,
                 Enrollments = enrollments.Select(e => new EnrollmentViewModel

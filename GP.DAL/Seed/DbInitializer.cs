@@ -283,7 +283,7 @@ namespace GP.DAL.Seed
                 {
                     foreach (var member in facultyMembers)
                     {
-                        var existingMember = context.FacultyMembers.FirstOrDefault(fm => fm.Id == member.Id);
+                        var existingMember = context.FacultyMembers.FirstOrDefault(fm => fm.TeacherId == member.TeacherId);
 
                         if (existingMember != null)
                         {
@@ -314,7 +314,7 @@ namespace GP.DAL.Seed
                                 member.MobilePhone = "02365142982";
                                 // Insert Advisor
                                 member.UserId = user.Id;
-                                member.Id = 0;
+                                member.TeacherId = "";
                                 member.DeptId = 10;
                                 context.FacultyMembers.Add(member);
                             }
@@ -647,6 +647,85 @@ namespace GP.DAL.Seed
 
             }
         }
+        public static async Task SeedFacultyUpdate(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
+        {
+            var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "updatefaculty.json");
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("Error: JSON file not found at " + filePath);
+                return;
+            }
+
+            // Read JSON file
+            string jsonData = await File.ReadAllTextAsync(filePath);
+
+            // Deserialize to a list of objects
+            var facultyUpdates = System.Text.Json.JsonSerializer.Deserialize<List<FacultyUpdateDto>>(jsonData);
+
+            if (facultyUpdates == null)
+            {
+                Console.WriteLine("Error: Failed to deserialize JSON data.");
+                return;
+            }
+
+            foreach (var update in facultyUpdates)
+            {
+                var faculty = await context.FacultyMembers.FirstOrDefaultAsync(f => f.TeacherId == update.TeacherId);
+                if (faculty != null)
+                {
+                    string email = $"{update.FirstName.ToLower()}.{update.LastName.ToLower()}@g.com";
+                    //Console.WriteLine(email);
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var user = new GPUser
+                        {
+                            UserName = email,
+                            Email = email,
+                            EmailConfirmed = true
+                        };
+
+                        var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                        if (result.Succeeded)
+                        {
+                            if (update.WorkingHours == 6)
+                                await userManager.AddToRoleAsync(user, "Instructor");
+                            else if (update.WorkingHours == 28)
+                                await userManager.AddToRoleAsync(user, "Assistant");
+                            else if (update.WorkingHours == 3)
+                                await userManager.AddToRoleAsync(user, "Dean");
+
+                            // Insert Advisor
+                            faculty.UserId = user.Id;
+                            faculty.SSN = update.SSN;
+                            faculty.FirstName = update.FirstName;
+                            faculty.MiddleName = update.MiddleName;
+                            faculty.LastName = update.LastName;
+                            faculty.MobilePhone = update.MobilePhone;
+                            faculty.Address = update.Address;
+                            faculty.WorkingHours = update.WorkingHours;
+                        }
+                    }
+                }
+            }
+
+            await context.SaveChangesAsync();
+            Console.WriteLine("Faculty members updated successfully.");
+        }
+
+        // Create a DTO for the JSON structure
+        public class FacultyUpdateDto
+        {
+            public string TeacherId { get; set; }
+            public string? SSN { get; set; }
+            public string? FirstName { get; set; }
+            public string? MiddleName { get; set; }
+            public string? LastName { get; set; }
+            public string FullName { get; set; } // You may not need to update this
+            public string? MobilePhone { get; set; }
+            public string? Address { get; set; }
+            public int? WorkingHours { get; set; }
+        }
+
         public static async Task SeedStudents(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
             string filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "students.json");

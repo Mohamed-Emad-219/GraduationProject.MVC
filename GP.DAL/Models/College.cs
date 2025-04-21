@@ -11,7 +11,7 @@ namespace GP.DAL.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int? DeanId { get; set; }
+        public string? DeanId { get; set; }
         public FacultyMember? Dean { get; set; }
         public ICollection<Department>? Departments { get; set; }
         public ICollection<Student>? Students { get; set; }

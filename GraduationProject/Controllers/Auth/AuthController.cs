@@ -174,7 +174,7 @@ namespace GraduationProject.Controllers.Auth
             var adm = adminRepository.GetAdminByUserId(user.Id);
             var followup = followUpRepository.GetFollowUpByUserId(user.Id);
             ViewData["Email"] = user.Email;
-            if (f != null) await facultyMemberRepsitory.UpdateFacultyAsync(f.Id, Email, Address, MobilePhone);
+            if (f != null) await facultyMemberRepsitory.UpdateFacultyAsync(f.TeacherId, Email, Address, MobilePhone);
             else if (s != null) await studentRepository.UpdateStudentAsync(s.Id, Email, Address, MobilePhone);
             else if (ff != null) await financialAffairsRepository.UpdateFinancialAffairsAsync(ff.Id, Email, Address, MobilePhone);
             else if (ss != null) await studentAffairsRepository.UpdateStudentAffairsAsync(ss.Id, Email, Address, MobilePhone);

@@ -17,8 +17,9 @@
               </div>  
           </div>  
           <h5 class="text-center">Instructor Timetable</h5>
-        <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().Instructor.FirstName 
-            @schedule?.FirstOrDefault().Instructor.MiddleName @schedule?.FirstOrDefault().Instructor.LastName</p>
+        <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().FacultyMember.FirstName 
+            @schedule?.FirstOrDefault().FacultyMember.MiddleName @schedule?.FirstOrDefault().FacultyMember.LastName
+        </p>
         <table class="table table-bordered text-center">  
               <thead class="table-dark">  
                   <tr>  
@@ -35,8 +36,8 @@
                     <tr>
                         <td>@day.Day</td>
                         <td>@day.CourseCode</td>
-                        <td>@day.Course?.Name</td>
-                        <td>@day.Place?.Name</td>
+                        <td>@day.Course?.CourseName</td>
+                        <td>@day.Place?.PlaceName</td>
                         <td>@day.Place?.Type</td>
                         <td>@day.TimeBegin.ToString(@"hh\:mm") - @day.TimeEnd.ToString(@"hh\:mm")</td>
                     </tr>

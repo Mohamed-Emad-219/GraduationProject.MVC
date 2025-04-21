@@ -41,7 +41,7 @@ namespace GP.BLL.Repositories
                 .Include(t => t.Enrollments)                // Load enrollments
                     .ThenInclude(e => e.Course)             // Load course details
                     .ThenInclude(c => c.InstructorSchedules) // Load course instructor schedules
-                    .ThenInclude(i => i.Instructor)
+                    .ThenInclude(i => i.FacultyMember)
                 .Include(t => t.Enrollments)                // Load enrollments again
                     .ThenInclude(e => e.Student)            // Load student details
                 .FirstOrDefault(t => t.Semester == semester &&

@@ -19,22 +19,22 @@ namespace GP.BLL.Repositories
         {
             _dbContext = dbContext;
         }
-        public IEnumerable<InstructorSchedule> GetInstructorScheduleByInstructorId(int InstructorId)
+        public IEnumerable<InstructorSchedule> GetInstructorScheduleByInstructorId(string InstructorId)
         {
             return _dbContext.InstructorSchedules
-                .Where(s => s.InstructorId == InstructorId)
+                .Where(s => s.TeacherId == InstructorId && s.TeacherId.StartsWith("I"))
                 .Include(s => s.Course)
                 .Include(s => s.Place)
-                .Include(s => s.Instructor)
+                .Include(s => s.FacultyMember)
                 .ToList();
         }
-        public IEnumerable<InstructorSchedule> GetAssistantScheduleByAssistantId(int AssistantId)
+        public IEnumerable<InstructorSchedule> GetAssistantScheduleByAssistantId(string AssistantId)
         {
             return _dbContext.InstructorSchedules
-                .Where(s => s.AssistantId == AssistantId) 
+                .Where(s => s.TeacherId == AssistantId && s.TeacherId.StartsWith("TA"))
                 .Include(s => s.Course)
                 .Include(s => s.Place)
-                .Include(s => s.Assistant)
+                .Include(s => s.FacultyMember)
                 .ToList();
         }
     }

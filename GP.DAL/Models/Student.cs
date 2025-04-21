@@ -16,7 +16,7 @@ namespace GP.DAL.Models
         public string? UserId { get; set; }
         public GPUser? User { get; set; }
 
-        public int? Group { get; set; }
+        public string? Group { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
