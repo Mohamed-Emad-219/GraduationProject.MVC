@@ -3,6 +3,8 @@ using GP.BLL.Repositories;
 using GP.DAL.Context;
 using GP.DAL.Models;
 using GP.DAL.Seed;
+using GraduationProject.Appsettingsconfig;
+using GraduationProject.Helpers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +55,11 @@ builder.Services.AddScoped<IPetitionCourseRepository, PetitionCourseRepository>(
 builder.Services.AddScoped<IResultPetitionRepository, ResultPetitionRepository>();
 builder.Services.AddScoped<IFollowUpRepository, FollowUpRepository>();
 builder.Services.AddScoped<IStudentDistribution, StudentDistributionRepositroy>();
+builder.Services.AddScoped<EmailSettings, EmailSettings>();
+
+
+
+builder.Services.Configure<mailsettings>(builder.Configuration.GetSection("mailsettings"));
 
 #endregion
 var app = builder.Build();

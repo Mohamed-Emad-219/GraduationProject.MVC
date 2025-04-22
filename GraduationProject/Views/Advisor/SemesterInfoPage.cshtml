@@ -6,7 +6,7 @@
     <div class="container">
         <h1 class="heading text-center m-1">Welcome!</h1>
         <div class="d-flex">
-            <div class="info w-100">
+            <div class="info w-100 align-content-center ">
                 @* <form asp-controller="Advisor" asp-action="DefaultSchedule"> *@
                 @*     <div class="w-75 mb-3"> *@
                 @*         <label class="fs-4 m-1" for="List">Choose List</label> *@
@@ -68,25 +68,30 @@
                 @*         <button class="btn btn-primary px-4" type="submit">Next</button> *@
                 @*     </div> *@
                 @* </form> *@
-
+                <div>
+                    <p class="fs-4">We are now in <span class="text-success fw-bold">Spring 2025</span> !</p>
+                </div>
+                <div class="mt-5">
+                    <p class="fs-4">Click to <span class="text-success fw-bold">Generate</span> the student schedules and the instructors/teaching assistants schedules</p>
+                </div>
 
                 @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="alert alert-success">
+                    <div class="mt-5 alert alert-success">
                         @TempData["SuccessMessage"]
                     </div>
                 }
 
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <div class="alert alert-danger">
+                    <div class="mt-5 alert alert-danger">
                         @TempData["ErrorMessage"]
                     </div>
                 }
 
                 <!-- Button to trigger the AI Training -->
                 <form method="post" asp-action="TrainScheduler" asp-controller="Ai">
-                    <button type="submit" class="btn btn-primary">Train Scheduler</button>
+                    <button type="submit" class="btn btn-success btn-lg mt-3">Generate Schedules</button>
                 </form>
 
             </div>

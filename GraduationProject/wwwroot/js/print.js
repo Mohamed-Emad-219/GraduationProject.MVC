@@ -11,8 +11,17 @@
             <head>${headContent}
                 <title>Report</title>
                 <style>
-                    @@page { margin: 15mm; }
-                    @@media print { * { -webkit-print-color-adjust: exact; } }
+                    @page {
+                        margin: 15mm;
+                        @bottom-right {
+                            content: "Page " counter(page) " of " counter(pages);
+                            font-size: 12px;
+                            color: gray;
+                        }
+                    }
+                    @media print {
+                        * { -webkit-print-color-adjust: exact; }
+                    }
                     html, body { 
                         margin: 0 !important; 
                         padding: 0 !important; 
@@ -29,4 +38,3 @@
         printWindow.print();
     };
 }
-

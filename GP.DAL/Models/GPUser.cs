@@ -17,5 +17,6 @@ namespace GP.DAL.Models
         public virtual Admin Admin { get; set; }
         public virtual FinancialAffairs FinancialAffairs { get; set; }
         public virtual StudentAffairs StudentAffairs { get; set; }
+        public virtual FollowUp FollowUp { get; set; }
     }
 }

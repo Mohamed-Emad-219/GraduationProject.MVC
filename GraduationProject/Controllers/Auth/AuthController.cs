@@ -2,10 +2,12 @@
 using GP.DAL.Context;
 using GP.DAL.Models;
 using GraduationProject.Controllers.Home;
+using GraduationProject.Helpers;
 using GraduationProject.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using Microsoft.EntityFrameworkCore;
 
 namespace GraduationProject.Controllers.Auth
 {
@@ -20,8 +22,9 @@ namespace GraduationProject.Controllers.Auth
         private readonly IFinancialAffairsRepository financialAffairsRepository;
         private readonly IStudentAffairsRepository studentAffairsRepository;
         private readonly IAdminRepository adminRepository;
+        private readonly EmailSettings _email;
         private readonly IFollowUpRepository followUpRepository;
-       public AuthController(IFollowUpRepository _followUpRepository, IAdminRepository _adminRepository, IStudentAffairsRepository _studentAffairsRepository, IFinancialAffairsRepository _financialAffairsRepository, IAdvisorRepository _advisorRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IStudentRepository _studentRepository, UserManager<GPUser> userManager,SignInManager<GPUser> signInManager, RoleManager<IdentityRole> roleManager
+       public AuthController(EmailSettings email, IFollowUpRepository _followUpRepository, IAdminRepository _adminRepository, IStudentAffairsRepository _studentAffairsRepository, IFinancialAffairsRepository _financialAffairsRepository, IAdvisorRepository _advisorRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IStudentRepository _studentRepository, UserManager<GPUser> userManager,SignInManager<GPUser> signInManager, RoleManager<IdentityRole> roleManager
                                  )
         {
             _userManager = userManager;
@@ -33,6 +36,7 @@ namespace GraduationProject.Controllers.Auth
             financialAffairsRepository = _financialAffairsRepository;
             studentAffairsRepository = _studentAffairsRepository;
             adminRepository = _adminRepository;
+            _email = email;
             followUpRepository = _followUpRepository;
         }
         [HttpGet]
@@ -109,17 +113,95 @@ namespace GraduationProject.Controllers.Auth
         {
             return View("ForgetPassword");
         }
-        public IActionResult VerifyEmail()
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordVM forgetPassword)
         {
-            return Redirect("ForgetPassword");
+            if (!ModelState.IsValid)
+            {
+                return View(forgetPassword);
+            }
+
+            var user = await _userManager.Users
+                         .FirstOrDefaultAsync(u =>
+                         u.Admin.MobilePhone == forgetPassword.MobilePhone ||
+                         u.Advisor.MobilePhone == forgetPassword.MobilePhone ||
+                         u.Student.MobilePhone == forgetPassword.MobilePhone ||
+                         u.FacultyMember.MobilePhone == forgetPassword.MobilePhone ||
+                         u.StudentAffairs.MobilePhone == forgetPassword.MobilePhone ||
+                         u.FinancialAffairs.MobilePhone == forgetPassword.MobilePhone ||
+                         u.FollowUp.MobilePhone == forgetPassword.MobilePhone
+                         );
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Your mobile Phone not found.");
+                return View(forgetPassword);
+            }
+
+            if (!await IsRealEmail(forgetPassword.Email))
+            {
+                ModelState.AddModelError(string.Empty, "Please enter a valid real email (Gmail, Yahoo, etc.).");
+                return View(forgetPassword);
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetPasswordUrl = Url.Action("NewPassword", "Auth", new { token = token, mobile = forgetPassword.MobilePhone }, Request.Scheme);
+
+            var email = new Email()
+            {
+                Subject = "Reset Password",
+                Recipients = forgetPassword.Email,
+                Body = resetPasswordUrl
+            };
+
+            _email.SendEmail(email);
+
+            return Json(new { success = true, message = "Email has been sent. Please check your inbox!" });
         }
-        public IActionResult VerifyCode()
+
+        private async Task<bool> IsRealEmail(string email)
         {
-            return View("NewPassword");
+            return email.EndsWith("@gmail.com") ||
+                   email.EndsWith("@yahoo.com") ||
+                   email.EndsWith("@outlook.com");
         }
-        public IActionResult VerifyPassword()
+
+
+        [HttpGet]
+        public IActionResult NewPassword(string mobile, string token)
         {
-            return View("Login");
+            TempData["mobile"] = mobile;
+            TempData["token"] = token;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> NewPassword(ResetPasswordVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var mobile = TempData["mobile"] as string;
+                var token = TempData["token"] as string;
+                var user = await _userManager.Users
+                         .FirstOrDefaultAsync(u =>
+                         u.Admin.MobilePhone == mobile ||
+                         u.Advisor.MobilePhone == mobile ||
+                         u.Student.MobilePhone == mobile ||
+                         u.FacultyMember.MobilePhone == mobile ||
+                         u.StudentAffairs.MobilePhone == mobile ||
+                         u.FinancialAffairs.MobilePhone == mobile ||
+                         u.FollowUp.MobilePhone == mobile
+                         );
+                var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return View(model);
         }
         public async Task<IActionResult> ShowProfile()
         {
