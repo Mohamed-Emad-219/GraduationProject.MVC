@@ -1,0 +1,49 @@
+﻿@{
+    var user = ViewData["user"] as FinancialAffairs;
+    var date = ViewData["date"];
+    var reportNumber = ViewData["ReportNumber"];
+    var reportdate = ViewData["reportDate"];
+}
+@model List<Receipt>
+<div class="container mt-5 py-5 shadow" id="report">
+    <div class="d-flex justify-content-between">
+        <img src="../../images/Mti(Gray).png" alt="" style="width:100px;">
+        <img src="../../images/advisorylogo no stroke .png" alt="" style="width:60px;">
+        <img src="../../images/CS(Gray).png" alt="" style="width:60px;">
+    </div>
+    <h3 class="text-center">University Revenue Report</h3>
+    <p class="text-center">Report Period: @date</p>
+    <p class="text-center">Report Number: @reportNumber</p>
+
+    <!-- Summary of Tuition Revenue -->
+    <h4 class="mt-4">1. Summary of Tuition Revenue</h4>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Academic Year</th>
+                <th>Semester</th>
+                <th>Total Enrolled Students</th>
+                <th>Total Tuition Collected</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var receipt in Model.GroupBy(r => new { r.AcademicYear, r.Semester }))
+            {
+                var academicYear = receipt.Key.AcademicYear;
+                var semester = receipt.Key.Semester;
+                var totalStudents = receipt.Count();
+                var totalTuition = receipt.Sum(r => r.AmountDue);
+
+                <tr>
+                    <td>@academicYear</td>
+                    <td>@semester</td>
+                    <td>@totalStudents</td>
+                    <td>@String.Format("{0:N2} LE", totalTuition)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p class="mt-4"><strong>Prepared by:</strong> <span id="preparedBy">@user.FirstName @user.MiddleName @user.LastName</span></p>
+    <p><strong>Date:</strong> @reportdate</p>
+</div>

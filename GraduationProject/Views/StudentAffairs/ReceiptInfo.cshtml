@@ -4,15 +4,15 @@
     var receiptf = ViewData["ReceiptFinancial"] as Receipt;
     var user = ViewData["User"] as StudentAffairs;
 }
-@if (receiptf != null && user != null && receiptstd != null)
-{
+@* @if (receiptf != null && user != null && receiptstd != null) *@
+@* { *@
 <section class="financial-affairs receipt">
         <div class="container py-4" id=" searchResults">
             <h2 class="text-center mb-4">Tuition Receipt</h2>
             <form method="post" asp-action="UpdateReceipt" asp-controller="StudentAffairs" class="receipt-form m-auto p-3 bg-light">
-                <input type="hidden" name="Id" value="@receiptf.Id" />
+                <input type="hidden" name="Id" value="@receiptf?.Id" />
                     <div>
-                        <label for="">Registration @receiptf.Semester @receiptf.AcademicYear</label>
+                        <label for="">Registration @receiptf?.Semester @receiptf?.AcademicYear</label>
                     </div>
                 <div class="bg-body-secondary p-2">
                     <div class="header-form d-flex justify-content-start align-items-center gap-2 w-100">
@@ -20,66 +20,66 @@
                             <label for="receiptNo" class="p-1 w-35"
                                 style="background-color: rgb(199, 199, 199);">Receipt
                                 No</label>
-                            <span id="receiptNo">@receiptf.ReceiptId</span>
+                            <span id="receiptNo">@receiptf?.ReceiptId</span>
                         </div>
                         <div class="d-flex gap-1 w-80 justify-content-start align-items-center">
                             <label for="college-name" class="p-1 w-35"
                                 style="background-color: rgb(199, 199, 199);">College
                                 Name</label>
-                            <span id="college-name">@receiptstd.College.Name</span>
+                            <span id="college-name">@receiptstd?.College?.Name</span>
                         </div>
                     </div>
                     <div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <label for="fees" class="p-1">Amount /</label>
-                            <span style="width: 5rem;" id="fees">@receiptf.AmountDue</span>
-                        <span class="w-50" id="fees-text">@receiptf.AmountText</span>
+                            <span style="width: 5rem;" id="fees">@receiptf?.AmountDue</span>
+                        <span class="w-50" id="fees-text">@receiptf?.AmountText</span>
                         </div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <label for="fees-text" class="p-1">It's Value /</label>
-                            <span class="w-50" id="fees-text">@receiptf.AmountFor</span>
+                            <span class="w-50" id="fees-text">@receiptf?.AmountFor</span>
                         </div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                                 <label for="date1" class="p-1 w-35">Due Date /</label>
-                                <span id="date1">@receiptf.DueDate</span>
+                                <span id="date1">@receiptf?.DueDate</span>
                             </div>
                             <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                                 <label for="date2" class="p-1 w-35">Payment Date /</label>
-                                <span id="date2">@receiptf.PaymentDate</span>
+                                <span id="date2">@receiptf?.PaymentDate</span>
                             </div>
                         </div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                             <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                                 <label for="name" class="p-1 w-35">Student Name /</label>
-                                <span id="name">@receiptstd.Student.FirstName @receiptstd.Student.MiddleName @receiptstd.Student.LastName</span>
+                                <span id="name">@receiptstd?.Student?.FirstName @receiptstd?.Student?.MiddleName @receiptstd?.Student?.LastName</span>
                             </div>
                             <div class="d-flex gap-1 w-100 justify-content-start align-items-center">
                                 <label for="reg-year" class="p-1 w-35">Class /</label>
-                                <span class="" id="reg-year">@receiptstd.Student.RegisterYear</span>
+                                <span class="" id="reg-year">@receiptstd?.Student?.RegisterYear</span>
                             </div>
                         </div>
                         <div class="d-flex gap-1 w-100 justify-content-start align-items-center mb-5">
                             <div class="d-flex gap-1 w-50 justify-content-start align-items-center">
                                 <label for="finanName" class="p-1 w-35">Emplyee Name /</label>
-                            <span class="w-50" id="finanName">@receiptf.FinancialAffairs.FirstName 
-                                @receiptf.FinancialAffairs.MiddleName @receiptf.FinancialAffairs.LastName</span>
+                            <span class="w-50" id="finanName">@receiptf?.FinancialAffairs?.FirstName 
+                                @receiptf?.FinancialAffairs?.MiddleName @receiptf?.FinancialAffairs?.LastName</span>
                             </div>
                             <div class="d-flex gap-1 w-sm-40 justify-content-start align-items-center" style="width:25%">
                                 <label for="level" class="p-1 w-35">Level</label>
-                                <span class="text-center w-25" id="level">@receiptstd.Student.Level</span>
+                                <span class="text-center w-25" id="level">@receiptstd?.Student?.Level</span>
                             </div>
                         </div>
                         <div class="d-flex gap-5 w-100 justify-content-center text-center align-items-center mb-5">
                             <div>
                                 <label for="finsignature" class="">Financial Affairs Signature</label>
-                                <input type="text" readonly class="w-100 bb-1 form-control bg-transparent" value="@receiptf.FinancialAffairs.FirstName @receiptf.FinancialAffairs.MiddleName @receiptf.FinancialAffairs.LastName" />
+                                <input type="text" readonly class="w-100 bb-1 form-control bg-transparent" value="@receiptf?.FinancialAffairs?.FirstName @receiptf?.FinancialAffairs?.MiddleName @receiptf?.FinancialAffairs?.LastName" />
 
                             </div>
                             <div>
                                 <label for="stdsignature">Student Affairs Signature</label>
-                                <input type="hidden" name="StudentAffairsId" value="@user.Id">
-                            <input type="text" class="w-100 bb-1 form-control bg-transparent" value="@user.FirstName @user.MiddleName @user.LastName" />
+                                <input type="hidden" name="StudentAffairsId" value="@user?.Id">
+                            <input type="text" class="w-100 bb-1 form-control bg-transparent" value="@user?.FirstName @user?.MiddleName @user?.LastName" />
                             </div>
                         </div>
                     </div>
@@ -106,9 +106,9 @@
             </form>
         </div>
     </section>
-    }else {
-        <p class="text-danger text-center fs-4">Wrong</p>
-    }
+    @* }else { *@
+    @*     <p class="text-danger text-center fs-4">Wrong</p> *@
+    @* } *@
 
 @section Scripts {
     <script src="~/js/print.js"></script>

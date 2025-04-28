@@ -43,12 +43,13 @@ namespace GP.BLL.Repositories
         }
         public void EnrollStudentToNextTerm(int studentId)
         {
+            var student = _studentRepository.GetStudentById(studentId);
             var lastTerm = GetLastTermForStudent(studentId);
             var nextTerm = GetNextTermForStudent(studentId); 
 
             if (nextTerm == null) return;
 
-            var nextCourses = _termCourseRepository.GetCoursesPerTerm(nextTerm.Id);
+            var nextCourses = _termCourseRepository.GetCoursesPerTerm(nextTerm.Id, student.Level, student.DeptId);
 
             foreach (var course in nextCourses)
             {
@@ -107,7 +108,7 @@ namespace GP.BLL.Repositories
                 if (lastTerm == null) continue; // Skip if no term data
 
                 // 4. Check if the student passed all courses in last term
-                var courses = _termCourseRepository.GetCoursesPerTerm(lastTerm.Id);
+                var courses = _termCourseRepository.GetCoursesPerTerm(lastTerm.Id, student.Level, student.DeptId);
                 bool hasPassedAll = courses.All(course =>
                     HasStudentPassedCourse(student.Id, course.Code));
 
@@ -115,7 +116,7 @@ namespace GP.BLL.Repositories
                 if (hasPassedAll)
                 {
                     var nextTerm = GetNextTerm(lastTerm);
-                    var nextCourses = _termCourseRepository.GetCoursesPerTerm(nextTerm.Id);
+                    var nextCourses = _termCourseRepository.GetCoursesPerTerm(nextTerm.Id, student.Level, student.DeptId);
 
                     foreach (var course in nextCourses)
                     {

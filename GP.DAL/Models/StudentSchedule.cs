@@ -20,6 +20,7 @@ namespace GP.DAL.Models
         public SemesterType Semester { get; set; }
         public int? AcademicYear { get; set; }
         public string? PlaceId { get; set; }
+        [ForeignKey("FacultyMember")]
         public string? TeacherId { get; set; }
         public string? CourseCode { get; set; }
         public Place? Place { get; set; }

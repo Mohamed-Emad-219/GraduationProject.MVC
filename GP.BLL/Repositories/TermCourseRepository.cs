@@ -17,6 +17,11 @@ namespace GP.BLL.Repositories
         {
             context = _context;
         }
+        public int AddCourseTerm(CoursesTerm coursesTerm)
+        {
+            context.CoursesTerms.Add(coursesTerm);
+            return context.SaveChanges();
+        }
         public int GetCoursePrice(string courseCode, int termId)
         {
             var courseTerm = context.CoursesTerms
@@ -24,10 +29,10 @@ namespace GP.BLL.Repositories
 
             return courseTerm?.Price ?? 0;
         }
-        public IEnumerable<Course> GetCoursesPerTerm(int Id)
+        public IEnumerable<Course> GetCoursesPerTerm(int Id, int? Level, int? DeptId)
         {
             return context.CoursesTerms
-                  .Where(c => c.TermId == Id)
+                  .Where(c => c.TermId == Id && c.Course.Level == Level && c.Course.DeptId == DeptId)
                   .Select(s => s.Course)
                   .ToList();
         }

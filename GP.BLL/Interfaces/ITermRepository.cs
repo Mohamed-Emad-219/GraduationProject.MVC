@@ -13,5 +13,7 @@ namespace GP.BLL.Interfaces
         Term GetTermByLevel(int level);
         Term GetTermByDetails(int level, SemesterType semester, int academicYear);
         Term GetTermBySemesterYear(SemesterType semester, int academicYear);
+        IEnumerable<Term> GetTerms();
+        int AddTerm(Term term);
     }
 }

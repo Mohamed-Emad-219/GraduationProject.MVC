@@ -7,7 +7,7 @@
 
 <section class="student">
     <div id="searchResults">
-        <div class="container py-3" id="report"></div>
+        <div class="container py-3" id="report">
         <div class="heading-schedule d-flex justify-content-between align-items-center">
             <p class="p-0 fs-5 fw-bold semester">
                 Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
@@ -18,10 +18,10 @@
         <h1 class="heading text-center m-1">Schedule of Classes</h1>
         <div class="w-100 mt-1 d-flex justify-content-around">
             <p class="fs-3 fw-bold mb-0">Level: <span id="level">@schedule?.FirstOrDefault().Level</span> 
-                <span id="dep"></span> | G<span>@group</span>
+                <span id="dep"></span> | <span>@group</span>
             </p>
         </div>
-        <div class="schedule">
+        <div class="schedule m-auto text-start" style="width: 1200px;">
             @if (!groupedSchedule.Any())
             {
                 <p class="text-center text-muted">No schedule available</p>
@@ -46,14 +46,14 @@
                             @foreach (var row in daySchedule)
                             {
                                 <tr>
-                                    <td>@row.CourseCode</td>
-                                    <td style="width: fit-content;">@row.Course?.CourseName</td>
-                                    <td style="width: fit-content;">
-                                        @row.FacultyMember?.FullName
+                                    <td class="text-start">@row.CourseCode</td>
+                                    <td class="text-start" style="width: fit-content;">@row.Course?.CourseName </td>
+                                    <td class="text-start" style="width: fit-content;">
+                                            @row.FacultyMember?.FullName
                                     </td>
-                                    <td style="width: fit-content;">@row.Place?.PlaceName</td>
-                                    <td>@row.Place?.Type</td>
-                                    <td>@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
+                                        <td class="text-start" style="width: fit-content;">@row.Place?.PlaceName</td>
+                                        <td class="text-start">@row.Place?.Type</td>
+                                        <td class="text-start">@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
                                 </tr>
                             }
                         </tbody>

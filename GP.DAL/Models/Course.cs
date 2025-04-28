@@ -27,5 +27,6 @@ namespace GP.DAL.Models
         public ICollection<CoursesTerm>? CoursesTerms { get; set; }
         public ICollection<CoursePrerequisite>? Prerequisites { get; set; }
         public ICollection<CoursePrerequisite>? RequiredFor { get; set; }
+        public ICollection<CourseInstructor>? CourseInstructors { get; set; }
     }
 }

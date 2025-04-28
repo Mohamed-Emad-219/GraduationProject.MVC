@@ -15,5 +15,6 @@ namespace GP.DAL.Models
         public int Level { get; set; }
         public ICollection<CoursesTerm>? CoursesTerms { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
+        
     }
 }

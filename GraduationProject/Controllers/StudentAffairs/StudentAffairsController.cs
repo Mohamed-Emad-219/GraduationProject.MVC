@@ -53,7 +53,7 @@ namespace GraduationProject.Controllers.StudentAffairs
                 studentRepository.AddApplicationIdToStudent(student.Id, application.Id);
                 return RedirectToAction("Index", "Home");
             }
-
+            ViewData["Colleges"] = _collegeRepository.GetColleges();
             return View("NewApplication", student); // Return the form with validation errors if any
         }
         [Authorize(Roles = "StudentAffairs")]
@@ -96,6 +96,7 @@ namespace GraduationProject.Controllers.StudentAffairs
                     await userManager.AddToRoleAsync(user, "Student");
                 }
                 student.Level = 1;
+                student.Group = "G1";
                 var general = departmentRepository.GetDepartmentByName("General");
                 student.DeptId = general.Id;
                 studentRepository.UpdateStudent(student);

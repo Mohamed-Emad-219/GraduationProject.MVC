@@ -19,13 +19,29 @@ namespace GP.BLL.Repositories
         }
         public IEnumerable<StudentSchedule> GetStudentScheduleByGroup(string? group, int? level)
         {
+            var month = DateTime.Now.Month;
+            SemesterType semester;
+
+            if (month >= 9 || month <= 1)
+            {
+                semester = SemesterType.Fall;
+            }
+            else if (month >= 2 && month <= 6)
+            {
+                semester = SemesterType.Spring;
+            }
+            else
+            {
+                semester = SemesterType.Fall;
+            }
             var schedules = context.StudentSchedules
-                .Where(s => s.Level == level)
+                .Where(s => s.Level == level && s.Semester == semester)
+                .Include(s => s.FacultyMember)
                 .Include(s => s.Course)
                 .Include(s => s.Place)
-                .Include(s => s.FacultyMember)
                 .ToList(); // load from DB
 
+            //Console.WriteLine(schedules.Where(s => IsGroupMatch(s.Group, group)).ToList());
             return schedules.Where(s => IsGroupMatch(s.Group, group)).ToList(); // apply C# filter
         }
 
@@ -34,32 +50,41 @@ namespace GP.BLL.Repositories
             if (string.IsNullOrEmpty(dbGroup) || string.IsNullOrEmpty(searchGroup))
                 return false;
 
-            // If exactly matches
-            if (dbGroup == searchGroup)
+            searchGroup = searchGroup.Trim();
+
+            // Direct exact match (e.g., "G1" matches "G1")
+            if (dbGroup.Trim().Equals(searchGroup, StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            // Check if dbGroup is a range like "G1 to G4"
-            if (dbGroup.Contains("to"))
+            // Check if dbGroup is a range like "G1 to G4" (e.g., "G1 to G4" matches "G2")
+            if (dbGroup.Contains("to", StringComparison.OrdinalIgnoreCase))
             {
                 var parts = dbGroup.Split("to", StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 2)
                 {
-                    var start = parts[0].Trim(); // "G1"
-                    var end = parts[1].Trim();   // "G4"
+                    var start = parts[0].Trim();
+                    var end = parts[1].Trim();
 
-                    // Remove the "G" and parse numbers
-                    if (int.TryParse(start.Substring(1), out int startNum) &&
-                        int.TryParse(end.Substring(1), out int endNum) &&
-                        int.TryParse(searchGroup.Substring(1), out int searchNum))
+                    if (start.StartsWith('G') && end.StartsWith('G'))
                     {
-                        // Check if searchNum is between startNum and endNum
-                        return searchNum >= startNum && searchNum <= endNum;
+                        // Remove the "G" and parse the numbers
+                        if (int.TryParse(start.Substring(1), out int startNum) &&
+                            int.TryParse(end.Substring(1), out int endNum) &&
+                            int.TryParse(searchGroup.Substring(1), out int searchNum))
+                        {
+                            // Check if the search group is within the range
+                            return searchNum >= startNum && searchNum <= endNum;
+                        }
                     }
                 }
             }
 
-            // Otherwise, simple contains
-            return dbGroup.Contains(searchGroup);
+            // Check if dbGroup is a list of groups like "G1, G2, G3"
+            var groupList = dbGroup.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(g => g.Trim());
+            //Console.WriteLine($"Group list: {string.Join(", ", groupList)}");
+            // Match if the searchGroup is in the list (e.g., "G1" matches "G1, G2, G3")
+            return groupList.Any(g => g.Equals(searchGroup, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

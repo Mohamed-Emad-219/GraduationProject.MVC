@@ -1,0 +1,52 @@
+﻿@{
+	ViewData["Title"] = "Revenue Report";
+}
+<div class="container py-4">
+    <div class="search w-75 mx-auto mb-4">
+        <form id="searchForm" role="search">
+            <label for="date" class="fs-5">Date:</label>
+            <input type="date" id="date" class="form-control" />
+        </form>
+    </div>
+
+    <div class="printContainer" id="searchResults"></div>
+
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/js/print.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Prevent AJAX call when the page first loads.
+                let initialLoad = true;
+
+                $('#date').on('change', function () {
+                    const date = $(this).val();
+
+
+                    // Avoid making an AJAX call on the first load
+                    if (!initialLoad) {
+                        // Make an AJAX call to fetch the table for the selected day
+                        $.ajax({
+                            url: '/FinancialAffairs/Revenue', // Controller/Action
+                            type: 'GET',
+                            data: { Date: date },
+                            success: function (response) {
+                                $('#searchResults').html(response);
+                            },
+                            error: function () {
+                                $('#searchResults').html('<p class="text-danger">Error loading data.</p>');
+                            }
+                        });
+                    }
+
+                    // Set initialLoad to false after the first change event
+                    initialLoad = false;
+                });
+
+            });
+        </script>
+}

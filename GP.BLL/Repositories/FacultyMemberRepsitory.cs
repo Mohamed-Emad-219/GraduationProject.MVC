@@ -32,6 +32,10 @@ namespace GP.BLL.Repositories
         {
             return _dbContext.FacultyMembers.AsNoTracking().ToList();
         }
+        public IEnumerable<FacultyMember> GetInstructorsAssistants()
+        {
+            return _dbContext.FacultyMembers.Where(f=>f.WorkingHours == 6 || f.WorkingHours == 28).ToList();
+        }
         public async Task<FacultyMember> GetFacultyByUserIdAsync(string UserId)
         {
             return await _dbContext.FacultyMembers
@@ -55,6 +59,11 @@ namespace GP.BLL.Repositories
 
            _dbContext.FacultyMembers.Update(faculty);
             return await _dbContext.SaveChangesAsync(); // returns number of affected rows
+        }
+        public IEnumerable<FacultyMember> GetInstructorsAssistantsByDep(int? DeptId)
+        {
+            return _dbContext.FacultyMembers.Where(f => (f.WorkingHours == 6 || f.WorkingHours == 28)&& f.DeptId == DeptId).ToList();
+
         }
     }
 }

@@ -32,6 +32,7 @@ namespace GP.DAL.Models
         public Department? Department { get; set; }
         public ICollection<InstructorSchedule>? InstructorSchedules { get; set; }
         public ICollection<InstructorSchedule>? AssistantSchedules { get; set; }
+        public ICollection<StudentSchedule>? StudentSchedules { get; set; }
         public ICollection<CourseInstructor>? CourseInstructors { get; set; }
 
     }

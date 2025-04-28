@@ -56,8 +56,8 @@ builder.Services.AddScoped<IResultPetitionRepository, ResultPetitionRepository>(
 builder.Services.AddScoped<IFollowUpRepository, FollowUpRepository>();
 builder.Services.AddScoped<IStudentDistribution, StudentDistributionRepositroy>();
 builder.Services.AddScoped<EmailSettings, EmailSettings>();
-
-
+builder.Services.AddScoped<IRevenuereport, RevenueReport>();
+builder.Services.AddScoped<ITeachingHoursReport, TeachingHoursReport>();
 
 builder.Services.Configure<mailsettings>(builder.Configuration.GetSection("mailsettings"));
 

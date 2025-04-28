@@ -17,7 +17,15 @@ namespace GP.BLL.Repositories
         {
             context = _context;
         }
-
+        public int AddTerm(Term term)
+        {
+            context.Add(term);
+            return context.SaveChanges();
+        }
+        public IEnumerable<Term> GetTerms()
+        {
+            return context.Terms.ToList();
+        }
         public Term GetTermById(int Id)
         {
             return context.Terms.FirstOrDefault(t => t.Id == Id);

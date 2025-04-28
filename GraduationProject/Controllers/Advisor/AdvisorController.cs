@@ -51,6 +51,23 @@ namespace GraduationProject.Controllers.Advisor
         }
         public IActionResult SemesterInfoPage()
         {
+            var month = DateTime.Now.Month;
+            string semester;
+            ViewData["year"] = DateTime.Now.Year;
+
+            if (month >= 9 || month <= 1)
+            {
+                semester = "Fall";
+            }
+            else if (month >= 2 && month <= 6)
+            {
+                semester = "Spring";
+            }
+            else
+            {
+                semester = "Summer";
+            }
+            ViewData["semester"] = semester;
             return View();
         }
         public IActionResult InstructorInfoPage()

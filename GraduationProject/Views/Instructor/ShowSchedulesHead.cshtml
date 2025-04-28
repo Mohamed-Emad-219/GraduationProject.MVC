@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Instructors / Teaching Assistants Table";
+    var instructors = ViewData["inst"] as IEnumerable<FacultyMember>;
+}
+<div class="container py-4">
+    <div class="search w-75 mx-auto mb-4">
+        <form id="searchForm" role="search">
+
+            <label for="inst" class="fs-5">Instructor:</label>
+            <select id="inst" class="form-control mb-2">
+                <option value="">-- Select Instructor --</option>
+                @if (instructors is not null)
+                {
+                    @foreach (var i in instructors)
+                    {
+                        <option value="@i.TeacherId">@i.FullName</option>
+                    }
+                }
+            </select>
+        </form>
+    </div>
+
+    <div class="printContainer" id="searchResults"></div>
+
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/print.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Prevent AJAX call when the page first loads.
+            let initialLoad = true;
+
+            $('#inst').on('change', function () {
+                const inst = $(this).val();
+
+
+                // Avoid making an AJAX call on the first load
+                if (!initialLoad) {
+                    // Make an AJAX call to fetch the table for the selected day
+                    $.ajax({
+                        url: '/Instructor/SchedulesDean', // Controller/Action
+                        type: 'GET',
+                        data: { TeacherId: inst },
+                        success: function (response) {
+                            $('#searchResults').html(response);
+                        },
+                        error: function () {
+                            $('#searchResults').html('<p class="text-danger">Error loading data.</p>');
+                        }
+                    });
+                }
+
+                // Set initialLoad to false after the first change event
+                initialLoad = false;
+            });
+
+        });
+    </script>
+}

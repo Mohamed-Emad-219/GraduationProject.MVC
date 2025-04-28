@@ -1,5 +1,4 @@
 ﻿@{
-    ViewData["Title"] = "Instructor Schedule";
     var schedule = ViewData["Schedule"] as IEnumerable<InstructorSchedule>;
     var dayOrder = new Dictionary<string, int>
     {
@@ -20,15 +19,14 @@
                   <h6>Modern University for Technology and Information</h6>  
                   <h6>Faculty of Computers and Artificial Intelligence</h6>
                 <p class="p-0 fs-5 fw-bold semester">Semester : @schedule?.FirstOrDefault().Semester 
-                    @schedule?.FirstOrDefault().AcademicYear</p>
+                        @schedule?.FirstOrDefault().AcademicYear</p>
             </div>  
               <div>  
                   <img src="~/images/Mti(Gray).png" alt="MTI Logo" width="150">  
               </div>  
           </div>  
           <h5 class="text-center">Instructor Timetable</h5>
-        <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().FacultyMember.FirstName 
-            @schedule?.FirstOrDefault().FacultyMember.MiddleName @schedule?.FirstOrDefault().FacultyMember.LastName
+        <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().FacultyMember.FullName
         </p>
         <table class="table table-bordered text-center">  
               <thead class="table-dark">  
@@ -38,10 +36,10 @@
                      <th>Course Name</th>
                      <th>Place</th>
                      <th>Type</th>
-  					 <th>Time</th> 
+                       <th>Time</th> 
                   </tr>  
               </thead>  
-              <tbody>
+              <tbody>  
                     @foreach (var dayGroup in schedule
                     .OrderBy(s => dayOrder.ContainsKey(s.Day) ? dayOrder[s.Day] : 999) // fallback if missing
                     .GroupBy(s => s.Day)
@@ -61,19 +59,15 @@
                                 <td>@row.Place?.Type</td>
                                 <td>@row.Place?.PlaceName</td>
                                 <td>@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
-                                
                             </tr>
                         }
                     }
                 </tbody>  
           </table>  
       </div>
-    <div class="m-auto my-4 text-center ">
-        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
-    </div>
     </div>
   </div>  
 @section Scripts {
-    <script src="~/js/print.js"></script>
+        <script src="~/js/print.js"></script>
 }
 

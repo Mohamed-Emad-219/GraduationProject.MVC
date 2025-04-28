@@ -18,8 +18,8 @@ namespace GraduationProject.Controllers.Instructor
         private readonly IDepartmentRepository _departmentRepository;
         private readonly ICollegeRepository _collegeRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
-
-        public InstructorController(IEnrollmentRepository _enrollmentRepository, ICollegeRepository collegeRepository, IDepartmentRepository departmentRepository, IFacultyMemberRepsitory facultyMemberRepsitory, UserManager<GPUser> userManager, IInstructorScheduleRepositroy instructorScheduleRepositroy)
+        private readonly ITeachingHoursReport teachingHoursReport;
+        public InstructorController(ITeachingHoursReport _teachingHoursReport, IEnrollmentRepository _enrollmentRepository, ICollegeRepository collegeRepository, IDepartmentRepository departmentRepository, IFacultyMemberRepsitory facultyMemberRepsitory, UserManager<GPUser> userManager, IInstructorScheduleRepositroy instructorScheduleRepositroy)
         {
             //_context = context; // Dependency Injection
             _instructorScheduleRepositroy = instructorScheduleRepositroy;
@@ -28,6 +28,7 @@ namespace GraduationProject.Controllers.Instructor
             _departmentRepository = departmentRepository;
             _collegeRepository = collegeRepository;
             enrollmentRepository = _enrollmentRepository;
+            teachingHoursReport = _teachingHoursReport;
         }
 
         [Authorize(Roles = "Instructor")]
@@ -38,6 +39,7 @@ namespace GraduationProject.Controllers.Instructor
             var inst = _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
             ViewData["Schedule"] = _instructorScheduleRepositroy
                 .GetInstructorScheduleByInstructorId(inst.Result.TeacherId);
+            
             return View();
         }
 
@@ -80,6 +82,80 @@ namespace GraduationProject.Controllers.Instructor
 
             // Combine "R", date, and random number to form the report number
             return $"R{formattedDate}{randomNumber}";
+        }
+        [Authorize(Roles="Dean")]
+        public IActionResult ShowSchedulesDean()
+        {
+            ViewData["inst"] = _facultyMemberRepsitory.GetInstructorsAssistants();
+            return View();
+        }
+        [Authorize(Roles = "Head")]
+        public async Task<IActionResult> ShowSchedulesHead()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            var head = await _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
+            ViewData["inst"] = _facultyMemberRepsitory.GetInstructorsAssistantsByDep(head.DeptId);
+            return View();
+        }
+        public IActionResult SchedulesDean(string TeacherId)
+        {
+            ViewData["Schedule"] = _instructorScheduleRepositroy
+                .GetSchedule(TeacherId);
+            return PartialView("_ScheduleView");
+        }
+        [Authorize(Roles = "Dean")]
+        public IActionResult TeachingHoursDean()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Head")]
+        public IActionResult TeachingHoursHead()
+        {
+            return View();
+        }
+        public async Task<IActionResult> TeachingHourHead(SemesterType Semester, int AcademicYear)
+        {
+            if (AcademicYear == 0)
+            {
+                return BadRequest("Enter Year.");
+            }
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            var head = await _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
+            ViewData["Faculty"] = head;
+            ViewData["insthead"] = teachingHoursReport.GetFacultyMembersHead(head.DeptId);
+            ViewData["year"] = AcademicYear;
+            ViewData["semester"] = Semester;
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            ViewData["number"] = GenerateReportNumber();
+            ViewData["courseshead"] = teachingHoursReport.GetCoursesHead(head.DeptId ,Semester, AcademicYear);
+            ViewData["totalfaculty"] = teachingHoursReport.TotalFacultyMembers();
+            ViewData["totalhours"] = teachingHoursReport.TotalTeachingHoursAssigned();
+            ViewData["overloadhours"] = teachingHoursReport.OverloadTeachingHours();
+
+            return PartialView("_TeachingHour");
+        }
+        public async Task<IActionResult> TeachingHourDean(SemesterType Semester, int AcademicYear)
+        {
+            if (AcademicYear == 0)
+            {
+                return BadRequest("Enter Year.");
+            }
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            ViewData["Faculty"] = await _facultyMemberRepsitory.GetFacultyByUserIdAsync(userId);
+            ViewData["instdean"] = teachingHoursReport.GetFacultyMembersDean();
+            ViewData["year"] = AcademicYear;
+            ViewData["semester"] = Semester;
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            ViewData["number"] = GenerateReportNumber();
+            ViewData["coursesdean"] = teachingHoursReport.GetCoursesDean(Semester, AcademicYear);
+            ViewData["totalfaculty"] = teachingHoursReport.TotalFacultyMembers();
+            ViewData["totalhours"] = teachingHoursReport.TotalTeachingHoursAssigned();
+            ViewData["overloadhours"] = teachingHoursReport.OverloadTeachingHours();
+
+            return PartialView("_TeachingHour");
         }
     }
 }

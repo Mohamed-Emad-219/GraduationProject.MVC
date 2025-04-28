@@ -77,9 +77,45 @@
                                 </ul>
                             </li>
                         }
+
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Instructor")) //done
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="InstructorSchedule">Instructor Schedule</a>
+                            </li>
+                        }
                         @if(SignInManager.IsSignedIn(User) && User.IsInRole("Dean")) {
                             <li>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="CourseEnrollmentReport">Course Enrollment Report</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="ShowSchedulesDean">Staff Schedules</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Instructor" asp-action="CourseEnrollmentReport">Course Enrollment Report</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Instructor" asp-action="TeachingHoursDean">Teaching Hours Report</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Head"))
+                        {
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="ShowSchedulesHead">Staff Schedules</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Instructor" asp-action="TeachingHoursHead">Teaching Hours Report</a>
+                                    </li>
+                                </ul>
                             </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Student")) //done
@@ -88,12 +124,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="StudentSchedule">Student Schedule</a> 
                             </li>
                         }
-                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Instructor")) //done
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="InstructorSchedule">Instructor Schedule</a>
-                            </li>
-                        }
+                        
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Assistant")) //done
                         {
                             <li class="nav-item">
@@ -113,6 +144,16 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="FinancialAffairs" asp-action="PetitonRequest">Petiton Request</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="FinancialAffairs" asp-action="RevenueReport">Revenue Report</a>
+                                    </li>
+                                </ul>
                             </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("ManagerOfStudentAffairs"))

@@ -1,0 +1,66 @@
+﻿@{
+	ViewData["Title"] = "Teaching Hours Report";
+}
+<div class="container py-4">
+    <div class="search w-75 mx-auto mb-4">
+        <form id="searchForm" role="search">
+            <label for="AcademicYear" class="fs-5">Academic Year:</label>
+            <select id="AcademicYear" class="form-control mb-2">
+                <option value="">-- Select Academic Year --</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+
+            <label for="Semester" class="fs-5">Semester:</label>
+            <select id="Semester" class="form-control mb-2">
+                <option value="">-- Select Semester --</option>
+                <option value="1">Fall</option>
+                <option value="2">Spring</option>
+            </select>
+            <button class="btn btn-outline-success mt-3" id="search-id" type="button">Generate Report</button>
+        </form>
+    </div>
+
+    <div class="printContainer" id="searchResults"></div>
+
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/print.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search-id').on('click', function () {
+                event.preventDefault();
+
+                const AcademicYear = $('#AcademicYear').val();
+                const Semester = $('#Semester').val();
+
+                if (!AcademicYear && !Semester) {
+                    alert("Please select all required fields!");
+                    return;
+                }
+
+                    // Make an AJAX call to fetch the table for the selected day
+                    $.ajax({
+                        url: '/Instructor/TeachingHourHead', // Controller/Action
+                        type: 'GET',
+                        data: { Semester: Semester , AcademicYear: AcademicYear },
+                        success: function (response) {
+                            $('#searchResults').html(response);
+                        },
+                        error: function () {
+                            $('#searchResults').html('<p class="text-danger">Error loading data.</p>');
+                        }
+                    });
+            });
+
+        });
+    </script>
+}

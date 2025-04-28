@@ -26,7 +26,9 @@ namespace GraduationProject.Controllers.FinancialAffairs
         private readonly IPetitionRequestRepository petitionRequestRepository;
         private readonly IPetitionCourseRepository petitionCourseRepository;
         private readonly ICourseRepository courseRepository;
-        public FinancialAffairsController(ICourseRepository _courseRepository, IPetitionCourseRepository _petitionCourseRepository, IPetitionRequestRepository _petitionRequestRepository, IDepartmentRepository _departmentRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IFinancialAffairsRepository _financialAffairsRepository, UserManager<GPUser> _userManager, IReceiptRepository _receiptRepository, ICollegeRepository _collegeRepository, IEnrollmentRepository _enrollmentRepository, ITermRepository _termRepository, ITermCourseRepository _termCourseRepository, IStudentRepository studentRepository)
+        private readonly IRevenuereport revenuereport;
+
+        public FinancialAffairsController(IRevenuereport _revenuereport, ICourseRepository _courseRepository, IPetitionCourseRepository _petitionCourseRepository, IPetitionRequestRepository _petitionRequestRepository, IDepartmentRepository _departmentRepository, IFacultyMemberRepsitory _facultyMemberRepsitory, IFinancialAffairsRepository _financialAffairsRepository, UserManager<GPUser> _userManager, IReceiptRepository _receiptRepository, ICollegeRepository _collegeRepository, IEnrollmentRepository _enrollmentRepository, ITermRepository _termRepository, ITermCourseRepository _termCourseRepository, IStudentRepository studentRepository)
         {
             _studentRepository = studentRepository;
             termRepository = _termRepository;
@@ -41,6 +43,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
             petitionRequestRepository = _petitionRequestRepository;
             petitionCourseRepository = _petitionCourseRepository;
             courseRepository = _courseRepository;
+            revenuereport = _revenuereport;
         }
         [Authorize(Roles = "FinancialAffairs")]
         public IActionResult PaymentDetails()
@@ -62,7 +65,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
                 return NotFound("No suitable term found.");
             }
 
-            var courses = termCourseRepository.GetCoursesPerTerm(nextTerm.Id);
+            var courses = termCourseRepository.GetCoursesPerTerm(nextTerm.Id, student.Level, student.DeptId);
 
             int totalPrice = 0;
             foreach (var course in courses)
@@ -211,6 +214,33 @@ namespace GraduationProject.Controllers.FinancialAffairs
                 petitionCourseRepository.AddPetitionCourse(course);
             }
             return RedirectToAction("Index", "Home"); // Redirect to home page
+        }
+        [Authorize(Roles="FinancialAffairs")]
+        public IActionResult RevenueReport()
+        {
+            return View();
+        }
+        public static string GenerateReportNumber()
+        {
+            // Get the current date in YYYYMMDD format
+            string formattedDate = DateTime.Now.ToString("yyyyMMdd");
+
+            // Generate a random 6-digit number
+            Random random = new Random();
+            int randomNumber = random.Next(100000, 999999); // Ensures a 6-digit number
+
+            // Combine "R", date, and random number to form the report number
+            return $"R{formattedDate}{randomNumber}";
+        }
+        public async Task<IActionResult> Revenue(DateTime Date)
+        {
+            var user = await userManager.GetUserAsync(User);
+            ViewData["user"] = financialAffairsRepository.GetFinancialAffairsByUserId(user.Id);
+            ViewData["date"] = Date;
+            ViewData["ReportNumber"] = GenerateReportNumber();
+            ViewData["reportDate"] = DateTime.Now.ToString("dd-MM-yyyy"); 
+            var receipts = revenuereport.GetAllReceipts(Date);
+            return PartialView("_Revenue", receipts);
         }
     }
 }

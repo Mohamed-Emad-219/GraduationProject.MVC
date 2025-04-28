@@ -12,6 +12,7 @@ namespace GP.BLL.Interfaces
         // Task<IEnumerable<InstructorSchedule>> GetInstructorSchedulesAsync();
         IEnumerable<InstructorSchedule> GetInstructorScheduleByInstructorId(string InstructorId);
         IEnumerable<InstructorSchedule> GetAssistantScheduleByAssistantId(string AssistantId);
+        IEnumerable<InstructorSchedule> GetSchedule(string TeacherId);
       ////  Task<InstructorSchedule> CreateInstructorScheduleAsync(InstructorSchedule instructorSchedule);
         //Task<InstructorSchedule> UpdateInstructorScheduleAsync(InstructorSchedule instructorSchedule);
         //Task<InstructorSchedule> DeleteInstructorScheduleAsync(int id);

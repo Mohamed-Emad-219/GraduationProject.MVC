@@ -10,6 +10,7 @@ namespace GP.BLL.Interfaces
     public interface ITermCourseRepository
     {
         int GetCoursePrice(string courseCode, int termId);
-        IEnumerable<Course> GetCoursesPerTerm(int Id);
+        IEnumerable<Course> GetCoursesPerTerm(int Id, int? Level, int? DeptId);
+        int AddCourseTerm(CoursesTerm coursesTerm);
     }
 }

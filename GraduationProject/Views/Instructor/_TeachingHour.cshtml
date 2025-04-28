@@ -1,0 +1,103 @@
+﻿@{
+    var user = ViewData["Faculty"] as FacultyMember;
+    var date = ViewData["Date"];
+    var reportNumber = ViewData["number"];
+    var year = ViewData["year"];
+    var semester = ViewData["semester"];
+    var instructors = (ViewData["instdean"] ?? ViewData["insthead"]) as IEnumerable<FacultyMember>;
+    // var instructorshead = ViewData["insthead"] as IEnumerable<FacultyMember>;
+    var courses = (ViewData["coursesdean"] ?? ViewData["courseshead"]) as List<CourseDisplayVM>;
+    var totalfaculty =  ViewData["totalfaculty"]?? 0;
+    var totalhours = ViewData["totalhours"] ?? 0;
+    var overloadhours = ViewData["overloadhours"] ?? 0;
+}
+<div class="container mt-5 py-5 shadow" id="report">
+    <div class="d-flex justify-content-between">
+        <img src="~/images/Mti(Gray).png" alt="" style="width:100px;">
+        <img src="~/images/advisorylogo no stroke .png" alt="" style="width:60px;">
+        <img src="~/images/CS(Gray).png" alt="" style="width:60px;">
+    </div>
+    <h3 class="text-center">Teaching Hours Report</h3>
+    <p class="text-center m-1">Academic Year: @year | Semester: @semester</p>
+    <p class="text-center m-1">Report Number: @reportNumber</p>
+
+    <!-- Faculty Member Details -->
+    <h4 class="mt-4">1. Faculty Member Details</h4>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Rank</th>
+                <th>Working Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(instructors is not null) {
+                @foreach(var inst in instructors){
+                    <tr>
+                        <td>@inst.FullName</td>
+                        <td>@inst.Department?.Name</td>
+                        
+                            @if(inst.TeacherId.Contains("TA")) {
+                                <td>Teaching Assistant</td>
+                            }else if (inst.TeacherId.Contains("I")) {
+                                <td>Instructor</td>
+                            }
+                        <td>@inst.WorkingHours</td>
+                    </tr>
+                }
+            }
+            else 
+            {
+                <tr>
+                    <td colspan="4">No Instructors</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Course-wise Breakdown -->
+    <h4 class="mt-4">2. Courses</h4>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Faculty Name</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Weekly Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(courses is not null) {
+                @foreach(var c in courses) {
+                    <tr>
+                    <td>@c.FacultyName</td>
+                    <td>@c.CourseCode</td>
+                    <td>@c.CourseName</td>
+                    <td>@c.Credits</td>
+                    <td>@c.WeeklyHours</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">No Courses</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Summary -->
+    <h4 class="mt-4">3. Summary</h4>
+    <ul>
+        <li>Total Faculty Members: <span>@totalfaculty</span></li>
+        <li>Total Teaching Hours Assigned: <span>@totalhours</span></li>
+        <li>Overload Teaching Hours: <span>@overloadhours</span></li>
+    </ul>
+
+    <p class="mt-4"><strong>Prepared by:</strong> <span id="preparedBy">@user?.FullName</span></p>
+    <p class="m-0"><strong>Date: </strong>@date</p>
+</div>

@@ -15,5 +15,7 @@ namespace GP.BLL.Interfaces
         IEnumerable<FacultyMember> GetAll();
         Task<FacultyMember> GetFacultyByUserIdAsync(string UserId);
         Task<int> UpdateFacultyAsync(string Id, string Email, string Address, string MobilePhone);
+        IEnumerable<FacultyMember> GetInstructorsAssistants();
+        IEnumerable<FacultyMember> GetInstructorsAssistantsByDep(int? DeptId);
     }
 }

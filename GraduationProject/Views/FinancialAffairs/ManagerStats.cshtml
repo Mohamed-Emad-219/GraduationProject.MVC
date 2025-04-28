@@ -2,8 +2,8 @@
 	ViewData["Title"] = "Statistics";
 }
 
-<section class="financial-manager">
-    <div class="container py-3">
+<section class="financial-manager" id="searchResults">
+    <div class="container py-3" id="report">
         <h1 class="mb-4 fs-2">Financial Statistics</h1>
         <table class="table table-hover w-75">
             <thead>
@@ -45,11 +45,13 @@
         </div>
         <!-- Print Button -->
         <div>
-            <button class="btn btn-primary btn-lg m-auto" onclick="window.print()">Print</button>
+            <button class="btn btn-primary btn-lg m-auto" onclick="printContainer()">Print</button>
         </div>
     </div>
 </section>
 
 @section Scripts {
-	<script src="~/js/chart.js"></script>
+    <script src="/lib/chart.js-4.4.8/package/dist/chart.umd.js"></script>
+	<script src="/js/chart.js"></script>
+    <script src="~/js/print.js"></script>
 }
