@@ -1,4 +1,5 @@
 ﻿using GP.BLL.Interfaces;
+using GP.BLL.ViewModels;
 using GP.DAL.Context;
 using GP.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,51 @@ namespace GP.BLL.Repositories
         {
             _dbContext.Update(app);
             _dbContext.SaveChanges();
+        }
+        public int GetTotalApplications(int year)
+        {
+            return _dbContext.Applications.Where(a => a.CreatedAt.Year == year).Count();
+        }
+
+        public int GetTotalApproved(int year)
+        {
+            return _dbContext.Applications.Where(a => a.CreatedAt.Year == year).Count(a => a.Status == Status.Approved);
+        }
+
+        public int GetTotalRejected(int year)
+        {
+            return _dbContext.Applications.Where(a => a.CreatedAt.Year == year).Count(a => a.Status == Status.Rejected);
+        }
+
+        public List<CollegeApplicationStats> GetApplicationsByCollege(int year)
+        {
+            return _dbContext.Applications
+                .Where(a => a.Student != null && a.Student.College != null && a.CreatedAt.Year == year)
+                .GroupBy(a => a.Student.College.Name)
+                .Select(g => new CollegeApplicationStats
+                {
+                    CollegeName = g.Key,
+                    TotalApplications = g.Count(),
+                    ApprovedCount = g.Count(a => a.Status == Status.Approved),
+                    RejectedCount = g.Count(a => a.Status == Status.Rejected)
+                })
+                .ToList();
+        }
+
+        public GenderDistribution GetGenderDistribution(int year)
+        {
+            var total = _dbContext.Applications.Count(a => a.CreatedAt.Year == year);
+            var male = _dbContext.Applications.Count(a => a.Student != null && a.Student.Gender == Gender.Male && a.CreatedAt.Year == year);
+            var female = _dbContext.Applications.Count(a => a.Student != null && a.Student.Gender == Gender.Female && a.CreatedAt.Year == year);
+
+            var malePercentage = total > 0 ? Math.Round((male * 100.0 / total), 2) : 0;
+            var femalePercentage = total > 0 ? Math.Round((female * 100.0 / total), 2) : 0;
+
+            return new GenderDistribution
+            {
+                MalePercentage = malePercentage,
+                FemalePercentage = femalePercentage
+            };
         }
     }
 }

@@ -1,0 +1,61 @@
+﻿@{
+    var user = ViewData["user"] as StudentAffairs;
+    var date = ViewData["date"];
+    var reportNumber = ViewData["number"];
+    var year = ViewData["year"];
+}
+@model AdmissionsDashboardViewModel
+<div class="container mt-5 py-5 shadow" id="report">
+        <div class="d-flex justify-content-between">
+            <img src="../images/Mti(Gray).png" alt="" style="width:100px;">
+            <img src="../images/advisorylogo no stroke .png" alt="" style="width:60px;">
+            <img src="../images/CS(Gray).png" alt="" style="width:60px;">
+        </div>
+        <h3 class="text-center my-2">Admissions Report</h3>
+        <p class="text-center">Academic Year: <span id="academicYear">@year</span></p>
+        <p class="text-center">Report Number: <span id="reportDate">@reportNumber</span></p>
+
+        <h4>1. Summary of Admissions</h4>
+        <ul>
+            <li><strong>Total Applications Received:</strong> <span>@Model.TotalApplications</span></li>
+            <li><strong>Total Applicants Approved:</strong> <span>@Model.TotalApproved</span></li>
+            <li><strong>Total Applicants Rejected:</strong> <span>@Model.TotalRejected</span></li>
+        </ul>
+
+        <h4>2. Applications Statistics by College</h4>
+        <table class="table table-bordered text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>College</th>
+                    <th>Applications #</th>
+                    <th>Approved</th>
+                    <th>Rejected</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var stat in Model.CollegeApplicationStats)
+            {
+                <tr>
+                    <td>@stat.CollegeName</td>
+                    <td>@stat.TotalApplications</td>
+                    <td>@stat.ApprovedCount</td>
+                    <td>@stat.RejectedCount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <h4>3. Applications Demographics</h4>
+    <ul>
+        <li>
+            <strong>Gender Distribution:</strong>
+            <ul>
+                <li>Male: <span id="malePercentage">@Model.GenderDistribution.MalePercentage</span>%</li>
+                <li>Female: <span id="femalePercentage">@Model.GenderDistribution.FemalePercentage</span>%</li>
+            </ul>
+        </li>
+    </ul>
+
+        <p class="mt-4"><strong>Prepared by:</strong> <span id="preparedBy">@user.FirstName @user.MiddleName @user.LastName</span></p>
+    <p class="m-0"><strong>Date: </strong>@date</p>
+    </div>

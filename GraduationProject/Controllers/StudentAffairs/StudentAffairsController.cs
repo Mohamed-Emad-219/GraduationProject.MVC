@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using GP.BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using GP.BLL.Repositories;
+using GraduationProject.ViewModels;
 namespace GraduationProject.Controllers.StudentAffairs
 {
     
@@ -141,6 +143,46 @@ namespace GraduationProject.Controllers.StudentAffairs
         public IActionResult ManagerStats()
         {
             return View();
+        }
+        public static string GenerateReportNumber()
+        {
+            // Get the current date in YYYYMMDD format
+            string formattedDate = DateTime.Now.ToString("yyyyMMdd");
+
+            // Generate a random 6-digit number
+            Random random = new Random();
+            int randomNumber = random.Next(100000, 999999); // Ensures a 6-digit number
+
+            // Combine "R", date, and random number to form the report number
+            return $"R{formattedDate}{randomNumber}";
+        }
+        public IActionResult AdmissionReport()
+        {
+            return View();
+        }
+        public async Task<IActionResult> Admission(int AcademicYear)
+        {
+            var user = await userManager.GetUserAsync(User);
+            var userId = user.Id;
+            var studentaff = studentAffairsRepository.GetStudentAffairsByUserId(userId);
+            ViewData["user"] = studentaff;
+            ViewData["date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            ViewData["number"] = GenerateReportNumber();
+            var totalApplications = applicationRepository.GetTotalApplications(AcademicYear);
+            var totalApproved = applicationRepository.GetTotalApproved(AcademicYear);
+            var totalRejected = applicationRepository.GetTotalRejected(AcademicYear);
+            var collegeStats = applicationRepository.GetApplicationsByCollege(AcademicYear);
+            var genderDistribution = applicationRepository.GetGenderDistribution(AcademicYear);
+
+            var viewModel = new AdmissionsDashboardViewModel
+            {
+                TotalApplications = totalApplications,
+                TotalApproved = totalApproved,
+                TotalRejected = totalRejected,
+                CollegeApplicationStats = collegeStats,
+                GenderDistribution = genderDistribution
+            };
+            return PartialView("_Admission", viewModel);
         }
     }
 }

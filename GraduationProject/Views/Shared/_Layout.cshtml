@@ -170,6 +170,16 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="StudentAffairs" asp-action="ReceiptTable">Receipts</a>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="StudentAffairs" asp-action="AdmissionReport">Admission Report</a>
+                                    </li>
+                                </ul>
+                            </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("FollowUp"))
                         {
