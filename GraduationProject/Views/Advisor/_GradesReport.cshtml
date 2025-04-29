@@ -1,0 +1,58 @@
+﻿@{
+    var semester = ViewData["Semester"];
+    var academicyear = ViewData["AcademicYear"];
+    var reportNumber = ViewData["ReportNumber"];
+    var user = ViewData["user"] as Advisor;
+    var date = ViewData["Date"];
+}
+@model GradesReportViewModel
+<div class="container mt-5 py-5 shadow" id="report">
+    <div class="d-flex justify-content-between">
+        <img src="~/images/Mti(Gray).png" alt="" style="width:100px;">
+        <img src="~/images/advisorylogo no stroke .png" alt="" style="width:60px;">
+        <img src="~/images/CS(Gray).png" alt="" style="width:60px;">
+    </div>
+    <div class="text-center">
+        <h3>Student Grades Report</h3>
+        <p><strong>Academic Year:</strong> @academicyear | <strong>Semester:</strong> @semester</p>
+        <p class="text-center"><strong>Report Number: </strong><span>@reportNumber</span></p>
+    </div>
+    <p><strong>Department:</strong> @Model.Department</p>
+    <p><strong>Course:</strong> @Model.Course</p>
+    <p><strong>Instructor:</strong> @Model.Instructor</p>
+
+    <h5 class="mt-4">Student Grades</h5>
+    <table class="table table-bordered text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>GPA</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var grade in Model.StudentGrades)
+            {
+                <tr>
+                    <td>@grade.StudentId</td>
+                    <td>@grade.StudentName</td>
+                    <td>@grade.Grade</td>
+                    <td>@grade.GPA.ToString("F2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h5 class="mt-2">Semester Evaluation Summary</h5>
+    <ul>
+        <li><strong>Highest GPA:</strong> @Model.Summary.HighestGPAName - @Model.Summary.HighestGPAGrade</li>
+        <li><strong>Lowest GPA:</strong> @Model.Summary.LowestGPAName - @Model.Summary.LowestGPAGrade</li>
+        <li><strong>Average GPA:</strong> @Model.Summary.AverageGPA.ToString("F2")</li>
+        <li><strong>Pass Rate:</strong> @Model.Summary.PassRate.ToString("F2") %</li>
+        <li><strong>Failure Rate:</strong> @Model.Summary.FailureRate.ToString("F2") %</li>
+    </ul>
+
+    <p><strong>Academic Advisor Signature: </strong>@user?.FirstName @user?.MiddleName @user?.LastName </p>
+    <p><strong>Date:</strong> @date</p>
+</div>

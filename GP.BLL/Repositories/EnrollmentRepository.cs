@@ -1,6 +1,7 @@
 ﻿using GP.BLL.Interfaces;
 using GP.BLL.ViewModels;
 using GP.DAL.Context;
+using GP.DAL.Dto;
 using GP.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -208,6 +209,74 @@ namespace GP.BLL.Repositories
             return e;
         }
 
+        public List<StudentGradeDto> GetStudentGrades(int year, SemesterType semester, string courseCode)
+        {
+            return _context.Enrollments
+                .Where(e => e.Term.Semester == semester && e.Term.AcademicYear == year && e.CourseCode == courseCode)
+                .Select(e => new StudentGradeDto
+                {
+                    StudentId = e.StudentId,
+                    StudentName = e.Student.FirstName + " " + e.Student.MiddleName + " " + e.Student.LastName,
+                    Grade = e.Grade,
+                    GPA = CalculateGPA(e.Grade)
+                })
+                .ToList();
+        }
 
+        public SemesterEvaluationSummaryDto GetSemesterEvaluationSummary(int year, SemesterType semester, string courseCode)
+        {
+            var grades = _context.Enrollments
+                .Where(e => e.Term.Semester == semester && e.Term.AcademicYear == year && e.CourseCode == courseCode)
+                .Select(e => new
+                {
+                    Name = e.Student.FirstName + " " + e.Student.MiddleName + " " + e.Student.LastName,
+                    Grade = e.Grade,
+                    GPA = CalculateGPA(e.Grade)
+                })
+                .ToList();
+
+            if (!grades.Any())
+                return new SemesterEvaluationSummaryDto();
+
+            var highest = grades.OrderByDescending(g => g.GPA).First();
+            var lowest = grades.OrderBy(g => g.GPA).First();
+            var averageGPA = grades.Average(g => g.GPA);
+            var passCount = grades.Count(g => g.GPA >= 2.0); // Assuming pass if GPA >= 2.0
+            var failCount = grades.Count(g => g.GPA < 2.0);
+            var total = grades.Count;
+
+            return new SemesterEvaluationSummaryDto
+            {
+                HighestGPAName = highest.Name,
+                HighestGPAGrade = highest.Grade,
+                LowestGPAName = lowest.Name,
+                LowestGPAGrade = lowest.Grade,
+                AverageGPA = Math.Round(averageGPA, 2),
+                PassRate = Math.Round(passCount * 100.0 / total, 2),
+                FailureRate = Math.Round(failCount * 100.0 / total, 2)
+            };
+        }
+
+        private static double CalculateGPA(string grade)
+        {
+            // Simple example, you can customize as needed
+            return grade switch
+            {
+                "A+" => 4.0,
+                "A" => 3.8,
+                "A-" => 3.6,
+                "B+" => 3.4,
+                "B" => 3.2,
+                "B-" => 3.0,
+                "C+" => 2.8,
+                "C" => 2.6,
+                "C-" => 2.4,
+                "D+" => 2.2,
+                "D" => 2.0,
+                "F" => 0.0,
+                _ => 0.0 // In case grade is invalid or missing
+            };
+
+        }
     }
 }

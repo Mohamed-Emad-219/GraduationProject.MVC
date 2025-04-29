@@ -36,6 +36,10 @@ namespace GP.BLL.Repositories
         {
             return _dbContext.FacultyMembers.Where(f=>f.WorkingHours == 6 || f.WorkingHours == 28).ToList();
         }
+        public string GetInstructorNameByCourseCode(string courseCode)
+        {
+            return _dbContext.FacultyMembers.Where(f => f.TeacherId.Contains("I") && f.CourseInstructors.FirstOrDefault().CourseCode == courseCode).Select(f=>f.FullName).FirstOrDefault();
+        }
         public async Task<FacultyMember> GetFacultyByUserIdAsync(string UserId)
         {
             return await _dbContext.FacultyMembers

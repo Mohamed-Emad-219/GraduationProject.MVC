@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Student Grades Report";
+}
+<div class="container py-4">
+    <div class="search w-75 mx-auto mb-4">
+        <form id="searchForm" role="search">
+
+            <label for="AcademicYear" class="fs-5">Academic Year:</label>
+            <select id="AcademicYear" class="form-control mb-2">
+                <option value="">-- Select Academic Year --</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+
+            <label for="Semester" class="fs-5">Semester:</label>
+            <select id="Semester" class="form-control mb-2">
+                <option value="">-- Select Semester --</option>
+                <option value="1">Fall</option>
+                <option value="2">Spring</option>
+            </select>
+
+            <label for="CourseCode" class="fs-5">Course Code</label>
+            <input type="text" class="form-control mb-2" name="CourseCode" id="CourseCode" placeholder="Course Code" />
+            <button class="btn btn-outline-success mt-3" id="search-id" type="button">Generate Report</button>
+        </form>
+    </div>
+
+    <div class="printContainer" id="searchResults"></div>
+
+    <div class="m-auto my-4 text-center ">
+        <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/print.js"></script>
+    <script>
+
+            $(document).ready(function () {
+            $("#search-id").click(function (event) {
+                event.preventDefault(); // Prevents form reload
+
+            var Semester = $("#Semester").val();
+            var AcademicYear = $("#AcademicYear").val();
+            var CourseCode = $("#CourseCode").val();
+
+                $.ajax({
+                url: "/Advisor/StudentGradesSearch",
+                    type: "get", // Or "POST" depending on your API
+        data: { courseCode: CourseCode, semester: Semester , year: AcademicYear},
+                success: function (response) {
+                        $("#searchResults").html(response); // Load partial view here
+                    },
+                    error: function () {
+                        $("#searchResults").html("<p class='text-center fs-4 fw-bold text-danger'>Error.</p>");
+                    }
+                });
+            });
+        });
+    </script>
+}

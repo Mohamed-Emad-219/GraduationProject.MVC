@@ -135,5 +135,13 @@ namespace GraduationProject.Controllers.Admin
         {
             return View();
         }
+        public IActionResult CoursesReport()
+        {
+            return View();
+        }
+        public IActionResult DepartmentsReport()
+        {
+            return View();
+        }
     }
 }

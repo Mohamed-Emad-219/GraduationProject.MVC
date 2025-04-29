@@ -16,5 +16,6 @@ namespace GP.BLL.Interfaces
         int UpdateDepartment(Department department);
         int DeleteDepartmentAsync(int Id);
         Task<List<Department>> GetDepartmentsByCollegeIdAsync(int Id);
+        string GetDepartmentNameByCourseCode(string courseCode);
     }
 }

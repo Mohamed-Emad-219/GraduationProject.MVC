@@ -45,6 +45,19 @@
                             <li class="nav-item"> 
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ShowRequests">Requests</a> 
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Reports
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Admin" asp-action="CoursesReport">Courses Report</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Admin" asp-action="DepartmentsReport">Departments Report</a>
+                                    </li>
+                                </ul>
+                            </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Advisor"))
                         {
@@ -73,6 +86,9 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item text-dark" asp-area="" asp-controller="Advisor" asp-action="StudentDistributionReport">Student Distribution Report</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-dark" asp-area="" asp-controller="Advisor" asp-action="StudentGrades">Student Grades Report</a>
                                     </li>
                                 </ul>
                             </li>

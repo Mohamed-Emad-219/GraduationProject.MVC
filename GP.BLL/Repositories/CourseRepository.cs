@@ -36,6 +36,10 @@ namespace GP.BLL.Repositories
         .Select(c => new CourseDTO { Value = c.Code,Text = c.CourseName }) // Avoid circular references
         .ToList();
         }
+        public string GetCourseNameByCode(string courseCode)
+        {
+            return _dbContext.Courses.Where(c => c.Code == courseCode).Select(c => c.CourseName).FirstOrDefault();
+        }
         public async Task<Course> GetCourseById(string id)
         {
             var course = await _dbContext.Courses.FindAsync(id);//// find op search in cache if found return it else search in database

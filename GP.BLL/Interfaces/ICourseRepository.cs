@@ -19,5 +19,6 @@ namespace GP.BLL.Interfaces
         int UpdateCourse(Course course);
         Task<int> DeleteCourseAsync(string Code);
         List<string> GetAllCourses();
+        string GetCourseNameByCode(string courseCode);
     }
 }

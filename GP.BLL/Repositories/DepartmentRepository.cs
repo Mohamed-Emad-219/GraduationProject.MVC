@@ -38,7 +38,10 @@ namespace GP.BLL.Repositories
             
             return dep;
         }
-
+        public string GetDepartmentNameByCourseCode(string courseCode)
+        {
+            return _dbContext.Departments.Where(d => d.Courses.FirstOrDefault().Code == courseCode).Select(d => d.Name).FirstOrDefault();
+        }
         public IEnumerable<Department> GetDepartments()
         {
            var result=_dbContext.Departments.Include(d => d.College).AsNoTracking().ToList();

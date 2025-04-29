@@ -50,18 +50,14 @@
                         <td>@course?.Course?.Code</td>
                         <td>@course?.Course?.CourseName</td>
                         <td>@course?.Course?.CreditHour</td>
-                        <td>@course?.Term?.Semester</td>
+                        <td>@course?.Term?.Semester @course?.Term?.AcademicYear</td>
                         <td>@course?.Grade</td>
                     </tr>
                 }
         </tbody>
     </table>
 
-
-    <h4>Remarks and Recommendations</h4>
-    <p class="fs-6 m-1" id="remarks">Student is progressing well and on track for graduation. Recommended to take additional elective courses to fulfill graduation requirements. Meeting with an academic advisor is advised to ensure proper course selection.</p>
-
-    <p class="mt-2"><strong>Academic Advisor Signature:</strong> @advisor?.FirstName @advisor?.MiddleName @advisor?.LastName</p>
+    <p><strong>Academic Advisor Signature:</strong> @advisor?.FirstName @advisor?.MiddleName @advisor?.LastName</p>
     <p><strong>Date:</strong> @date</p>
 </div>
 @* }else { *@

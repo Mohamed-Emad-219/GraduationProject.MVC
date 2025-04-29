@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using GP.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using GP.BLL.Repositories;
+using GraduationProject.ViewModels;
 
 namespace GraduationProject.Controllers.Advisor
 {
@@ -216,6 +217,32 @@ namespace GraduationProject.Controllers.Advisor
             ViewData["departmentStats"] = departmentStats;
             await Task.Delay(1000);
             return PartialView("_StudentDistribution");
+        }
+        public IActionResult StudentGrades()
+        {
+            return View();
+        }
+        public async Task<IActionResult> StudentGradesSearch(string courseCode, int year, SemesterType semester)
+        {
+            ViewData["Semester"] = semester;
+            ViewData["AcademicYear"] = year;
+            ViewData["ReportNumber"] = GenerateReportNumber();
+            var user = await userManager.GetUserAsync(User);
+            var advisor = advisorRepository.GetAdvisorByUserId(user.Id);
+            ViewData["user"] = advisor;
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            var studentGrades = enrollmentRepository.GetStudentGrades(year, semester, courseCode);
+            var summary = enrollmentRepository.GetSemesterEvaluationSummary(year, semester, courseCode);
+
+            var viewModel = new GradesReportViewModel
+            {
+                Department = _departmentRepository.GetDepartmentNameByCourseCode(courseCode), // you can replace
+                Course = _courseRepository.GetCourseNameByCode(courseCode),     // you can replace
+                Instructor = _facultyMemberRepsitory.GetInstructorNameByCourseCode(courseCode), // you can replace
+                StudentGrades = studentGrades,
+                Summary = summary
+            };
+            return PartialView("_GradesReport", viewModel);
         }
     }
 }
