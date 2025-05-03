@@ -3,6 +3,7 @@ using GP.BLL.ViewModels;
 using GP.DAL.Context;
 using GP.DAL.Dto;
 using GP.DAL.Models;
+using GraduationProject.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -277,6 +278,71 @@ namespace GP.BLL.Repositories
                 _ => 0.0 // In case grade is invalid or missing
             };
 
+        }
+        public List<CourseReportVM> GetCoursesReport(int year, SemesterType semester)
+        {
+            var enrollments = _context.Enrollments
+                .Include(e => e.Course)
+                .Include(e => e.Student)
+                .Include(e => e.Course.CourseInstructors) 
+                .ThenInclude(c => c.FacultyMember)
+                .Where(e => e.Term.Semester == semester && e.Term.AcademicYear == year)
+                .ToList();
+
+            var grouped = enrollments
+                .GroupBy(e => e.CourseCode)
+                .Select(g =>
+                {
+                    var list = g.ToList();
+                    var total = list.Count;
+                    var gpas = list.Select(e => CalculateGPA(e.Grade)).ToList();
+                    var passCount = gpas.Count(gpa => gpa >= 2.0);
+                    var failCount = gpas.Count(gpa => gpa < 2.0);
+
+                    return new CourseReportVM
+                    {
+                        CourseCode = g.First().CourseCode,
+                        CourseTitle = g.First().Course.CourseName,
+                        Instructor = string.Join(", ", g.First().Course.CourseInstructors.Select(ci => ci.FacultyMember.FullName)),
+                        TotalEnrolled = total,
+                        AverageGPA = gpas.Average(),
+                        PassRate = Math.Round(passCount * 100.0 / total, 2),
+                        FailRate = Math.Round(failCount * 100.0 / total, 2)
+                    };
+                }).ToList();
+
+            return grouped;
+        }
+        public List<DepartmentReportVM> GetDepartmentsReport(int year, SemesterType semester)
+        {
+            var enrollments = _context.Enrollments
+                .Include(e => e.Course)
+                .ThenInclude(c => c.Department) // Assuming Course -> Department navigation
+                .Include(e => e.Term)
+                .Where(e => e.Term.Semester == semester && e.Term.AcademicYear == year)
+                .ToList();
+
+            var grouped = enrollments
+                .GroupBy(e => e.Course.Department.Name)
+                .Select(g =>
+                {
+                    var list = g.ToList();
+                    var total = list.Count;
+                    var gpas = list.Select(e => CalculateGPA(e.Grade)).ToList();
+                    var passCount = gpas.Count(gpa => gpa >= 2.0);
+                    var failCount = gpas.Count(gpa => gpa < 2.0);
+
+                    return new DepartmentReportVM
+                    {
+                        DepartmentName = g.Key,
+                        TotalStudents = total,
+                        AverageGPA = gpas.Any() ? gpas.Average() : 0,
+                        PassRate = total > 0 ? Math.Round(passCount * 100.0 / total, 2) : 0,
+                        FailRate = total > 0 ? Math.Round(failCount * 100.0 / total, 2) : 0
+                    };
+                }).ToList();
+
+            return grouped;
         }
     }
 }

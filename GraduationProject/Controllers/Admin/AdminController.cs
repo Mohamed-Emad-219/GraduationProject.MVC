@@ -1,7 +1,9 @@
 ﻿using GP.BLL.Interfaces;
+using GP.BLL.Repositories;
 using GP.DAL.Models;
 using GraduationProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,8 +18,10 @@ namespace GraduationProject.Controllers.Admin
         private readonly IFacultyMemberRepsitory _facultyMemberRepsitory;
         private readonly ITermRepository termRepository;
         private readonly ITermCourseRepository termCourseRepository;
-
-        public AdminController(ITermCourseRepository _termCourseRepository, ITermRepository _termRepository, IFacultyMemberRepsitory facultyMemberRepsitory, IDepartmentRepository departmentRepository, ICourseRepository courseRepository, ICollegeRepository collegeRepository)
+        private readonly IEnrollmentRepository enrollmentRepository;
+        private readonly UserManager<GPUser> _userManager;
+        private readonly IAdminRepository adminRepository;
+        public AdminController(IAdminRepository _adminRepository, UserManager<GPUser> userManager, IEnrollmentRepository _enrollmentRepository, ITermCourseRepository _termCourseRepository, ITermRepository _termRepository, IFacultyMemberRepsitory facultyMemberRepsitory, IDepartmentRepository departmentRepository, ICourseRepository courseRepository, ICollegeRepository collegeRepository)
         {
             _departmentRepository = departmentRepository;
             _courseRepository = courseRepository;
@@ -25,6 +29,9 @@ namespace GraduationProject.Controllers.Admin
             _facultyMemberRepsitory = facultyMemberRepsitory;
             termRepository = _termRepository;
             termCourseRepository = _termCourseRepository;
+            enrollmentRepository = _enrollmentRepository;
+            _userManager = userManager;
+            adminRepository = _adminRepository;
         }
         [HttpGet]
         public IActionResult AddTerm()
@@ -135,13 +142,49 @@ namespace GraduationProject.Controllers.Admin
         {
             return View();
         }
+        public static string GenerateReportNumber()
+        {
+            // Get the current date in YYYYMMDD format
+            string formattedDate = DateTime.Now.ToString("yyyyMMdd");
+
+            // Generate a random 6-digit number
+            Random random = new Random();
+            int randomNumber = random.Next(100000, 999999); // Ensures a 6-digit number
+
+            // Combine "R", date, and random number to form the report number
+            return $"R{formattedDate}{randomNumber}";
+        }
         public IActionResult CoursesReport()
         {
             return View();
         }
+        public async Task<IActionResult> CoursesReportPartial(int year, SemesterType semester)
+        {
+            ViewData["Semester"] = semester;
+            ViewData["AcademicYear"] = year;
+            ViewData["ReportNumber"] = GenerateReportNumber();
+            var user = await _userManager.GetUserAsync(User);
+            var advisor = adminRepository.GetAdminByUserId(user.Id);
+            ViewData["user"] = advisor;
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            var courses = enrollmentRepository.GetCoursesReport(year, semester);
+            return PartialView("_CoursesReport", courses);
+        }
         public IActionResult DepartmentsReport()
         {
             return View();
+        }
+        public async Task<IActionResult> DepartmentsReportPartial(int year, SemesterType semester)
+        {
+            ViewData["Semester"] = semester;
+            ViewData["AcademicYear"] = year;
+            ViewData["ReportNumber"] = GenerateReportNumber();
+            var user = await _userManager.GetUserAsync(User);
+            var advisor = adminRepository.GetAdminByUserId(user.Id);
+            ViewData["user"] = advisor;
+            ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
+            var deps = enrollmentRepository.GetDepartmentsReport(year, semester);
+            return PartialView("_DepartmentsReport", deps);
         }
     }
 }

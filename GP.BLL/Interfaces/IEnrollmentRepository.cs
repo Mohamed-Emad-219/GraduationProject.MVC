@@ -1,6 +1,7 @@
 ﻿using GP.BLL.ViewModels;
 using GP.DAL.Dto;
 using GP.DAL.Models;
+using GraduationProject.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,7 @@ namespace GP.BLL.Interfaces
         public void EnrollStudentToNextTerm(int studentId);
         List<StudentGradeDto> GetStudentGrades(int year, SemesterType semester, string courseCode);
         SemesterEvaluationSummaryDto GetSemesterEvaluationSummary(int year, SemesterType semester, string courseCode);
+        List<CourseReportVM> GetCoursesReport(int year, SemesterType semester);
+        List<DepartmentReportVM> GetDepartmentsReport(int year, SemesterType semester);
     }
 }

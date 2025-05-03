@@ -1,0 +1,45 @@
+﻿@{
+    var semester = ViewData["Semester"];
+    var academicyear = ViewData["AcademicYear"];
+    var reportNumber = ViewData["ReportNumber"];
+    var user = ViewData["user"] as Admin;
+    var date = ViewData["Date"];
+}
+@model List<DepartmentReportVM>
+<div class="container mt-5 py-5 shadow" id="report">
+    <div class="d-flex justify-content-between">
+        <img src="~/images/Mti(Gray).png" alt="" style="width:100px;">
+        <img src="~/images/advisorylogo no stroke .png" alt="" style="width:60px;">
+        <img src="~/images/CS(Gray).png" alt="" style="width:60px;">
+    </div>
+    <div class="text-center">
+        <h3>Departments Report</h3>
+        <p><strong>Academic Year:</strong> @academicyear | <strong>Semester:</strong> @semester</p>
+        <p class="text-center"><strong>Report Number: </strong><span>@reportNumber</span></p>
+    </div>
+    <table class="table table-bordered text-center">
+    <thead class="table-light">
+        <tr>
+            <th>Department</th>
+            <th>Total Students</th>
+            <th>Average GPA</th>
+            <th>Pass Rate (%)</th>
+            <th>Fail Rate (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var department in Model)
+            {
+                <tr>
+                    <td>@department.DepartmentName</td>
+                    <td>@department.TotalStudents</td>
+                    <td>@department.AverageGPA.ToString("F2")</td>
+                    <td>@department.PassRate.ToString("F2")</td>
+                    <td>@department.FailRate.ToString("F2")</td>
+                </tr>
+            }
+    </tbody>
+</table>
+    <p><strong>Admin Signature: </strong>@user?.FirstName @user?.MiddleName @user?.LastName </p>
+    <p><strong>Date:</strong> @date</p>
+</div>
