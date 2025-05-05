@@ -75,7 +75,20 @@ namespace GP.BLL.Repositories
             {
                 // NEW STUDENT
                 int currentYear = DateTime.Now.Year;
-                var term = _termRepository.GetTermByDetails(1, SemesterType.Fall, currentYear);
+                var month = DateTime.Now.Month;
+                SemesterType nextSemester = SemesterType.Spring;
+
+                if (month >= 9 || month <= 1)
+                {
+                    // Fall starts in September and ends by January, but as a new student, Fall would be next.
+                    nextSemester = SemesterType.Fall;
+                }
+                else
+                {
+                    // If it's not Fall, it's Spring; the new student would go into Fall next
+                    nextSemester = SemesterType.Fall;
+                }
+                var term = _termRepository.GetTermByDetails(1, nextSemester, currentYear);
                 return term;
             }
             else

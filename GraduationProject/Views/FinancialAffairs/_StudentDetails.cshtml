@@ -3,12 +3,15 @@
     var courses = ViewData["Courses"] as List<Course>;
     var total = ViewData["TotalPrice"] ?? 0;
     var student = ViewData["Student"] as Student;
-
-}
-@if (term == null || courses == null || student == null)
+    }
+@if (TempData["ErrorMessage"] != null)
 {
-    <p class="text-danger">Error: Missing term or courses data.</p>
-}else {
+    <div class="mx-auto mt-2 alert alert-danger" style="width: fit-content;">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (term is not null || courses is not null || student is not null)
+{
 <div class="card w-75 m-auto" id="student-info">
     <div class="card-header text-white bg-primary p-4">
         <h3>Student's Fees</h3>
@@ -61,6 +64,7 @@
     </div>
 </div>
 }
+
 @section Scripts {
     <script>
         var info = document.getElementById("student-info");

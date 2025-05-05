@@ -219,11 +219,11 @@
                             </li>
 
                         }
-                        <li class="nav-item align-content-center">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="border border-dark-subtle rounded-circle p-2 d-flex justify-content-center align-items-center fa-regular fa-bell"></i>
-                            </a>
-                        </li>
+                        @* <li class="nav-item align-content-center"> *@
+                        @*     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"> *@
+                        @*         <i class="border border-dark-subtle rounded-circle p-2 d-flex justify-content-center align-items-center fa-regular fa-bell"></i> *@
+                        @*     </a> *@
+                        @* </li> *@
                         @if (SignInManager.IsSignedIn(User))
                         {
                             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

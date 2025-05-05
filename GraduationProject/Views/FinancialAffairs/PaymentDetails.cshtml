@@ -11,6 +11,7 @@
                     <button class="btn btn-outline-success" id="search-id" type="button">Search</button>
                 </form>
             </div>
+        
             <div id="searchResults"></div>
         </div>
 </section>
@@ -35,9 +36,9 @@
                     success: function (response) {
                         $("#searchResults").html(response); // Load partial view here
                     },
-                    error: function () {
-                        $("#searchResults").html("<p class='text-center fs-4 fw-bold text-danger'>Error.</p>");
-                    }
+                        error: function (response) {
+            $("#searchResults").html(`<p class='text-center fs-4 fw-bold text-danger'>Error</p>`);
+        }
                 });
             });
         });

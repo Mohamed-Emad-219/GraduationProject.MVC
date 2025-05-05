@@ -56,20 +56,30 @@ namespace GraduationProject.Controllers.FinancialAffairs
             var student = _studentRepository.GetStudentById(id);
             if (student == null)
             {
-                return NotFound("Student not found.");
+                TempData["ErrorMessage"] = "Student not found.";
+                return PartialView("_StudentDetails");
             }
 
             var nextTerm = enrollmentRepository.GetNextTermForStudent(student.Id);
             if (nextTerm == null)
             {
-                return NotFound("No suitable term found.");
+                TempData["ErrorMessage"] = "No suitable term found.";
+                return PartialView("_StudentDetails");
+            }
+
+            if (nextTerm.Semester == SemesterType.Fall)
+            {
+                TempData["ErrorMessage"] = "New Student and it must be in Fall semester.";
+                return PartialView("_StudentDetails");
             }
 
             var courses = termCourseRepository.GetCoursesPerTerm(nextTerm.Id, student.Level, student.DeptId);
             if (courses == null)
             {
-                return NotFound("No suitable courses found.");
+                TempData["ErrorMessage"] = "No suitable courses found.";
+                return PartialView("_StudentDetails");
             }
+
             int totalPrice = 0;
             foreach (var course in courses)
             {
@@ -83,6 +93,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
 
             return PartialView("_StudentDetails");
         }
+
         [Authorize(Roles = "FinancialAffairs")]
         public async Task<IActionResult> Receipt(int StudentId, string StudentName, 
             int Level, int RegisteredYear, string Semester, int AcademicYear, int Amount)
