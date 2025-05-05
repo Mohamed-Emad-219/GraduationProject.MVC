@@ -4,6 +4,12 @@
 @model BulkCoursesTermFormVM
 
 <div class="container mt-1">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="my-2 alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
     <a class="btn btn-lg btn-primary mb-2" asp-action="AddTerm">Add Term First!</a>
     <h3>Bulk Add Courses to Term</h3>
 

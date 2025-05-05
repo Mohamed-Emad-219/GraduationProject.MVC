@@ -6,11 +6,12 @@
     var semester = ViewData["semester"];
     var instructors = (ViewData["instdean"] ?? ViewData["insthead"]) as IEnumerable<FacultyMember>;
     // var instructorshead = ViewData["insthead"] as IEnumerable<FacultyMember>;
-    var courses = (ViewData["coursesdean"] ?? ViewData["courseshead"]) as List<CourseDisplayVM>;
+    // var courses = (ViewData["coursesdean"] ?? ViewData["courseshead"]) as List<CourseDisplayVM>;
     var totalfaculty =  ViewData["totalfaculty"]?? 0;
     var totalhours = ViewData["totalhours"] ?? 0;
     var overloadhours = ViewData["overloadhours"] ?? 0;
 }
+@model List<CourseDisplayVM>
 <div class="container mt-5 py-5 shadow" id="report">
     <div class="d-flex justify-content-between">
         <img src="~/images/Mti(Gray).png" alt="" style="width:100px;">
@@ -70,23 +71,15 @@
             </tr>
         </thead>
         <tbody>
-            @if(courses is not null) {
-                @foreach(var c in courses) {
+                @foreach(var c in Model) {
                     <tr>
-                    <td>@c.FacultyName</td>
-                    <td>@c.CourseCode</td>
-                    <td>@c.CourseName</td>
-                    <td>@c.Credits</td>
-                    <td>@c.WeeklyHours</td>
+                        <td>@c.FacultyName</td>
+                        <td>@c.CourseCode</td>
+                        <td>@c.CourseName</td>
+                        <td>@c.Credits</td>
+                        <td>@c.WeeklyHours</td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5">No Courses</td>
-                </tr>
-            }
         </tbody>
     </table>
 

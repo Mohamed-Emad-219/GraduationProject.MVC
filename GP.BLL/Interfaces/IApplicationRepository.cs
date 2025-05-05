@@ -12,6 +12,7 @@ namespace GP.BLL.Interfaces
     {
         int AddApplication(Application App);
         IEnumerable<Application> GetApplications();
+        IEnumerable<Application> GetApplicationsPending();
         Application GetApplicationById(int id);
         void UpdateApplication(Application app);
         int GetTotalApplications(int year);

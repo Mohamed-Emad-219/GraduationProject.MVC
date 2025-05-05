@@ -42,9 +42,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
                             </li> 
-                            <li class="nav-item"> 
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ShowRequests">Requests</a> 
-                            </li>
+                            @* <li class="nav-item">  *@
+                            @*     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ShowRequests">Requests</a>  *@
+                            @* </li> *@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Reports
@@ -144,7 +144,7 @@
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Assistant")) //done
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="AssistantSchedule">Assistant Schedule</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Instructor" asp-action="AssistantSchedule">Teaching Assistant Schedule</a>
                             </li>
                         }
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("ManagerOfFinancialAffairs")) //done

@@ -47,10 +47,6 @@
                 var Semester = $("#Semester").val();
                 var AcademicYear = $("#AcademicYear").val();
                 var CourseCode = $("#CourseCode").val();
-                if (!DeptId) {
-                    alert("Please select all required fields!");
-                    return;
-                }
 
                     $.ajax({
                     url: "/Instructor/SearchEnroll",

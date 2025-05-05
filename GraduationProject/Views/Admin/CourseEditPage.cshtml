@@ -3,13 +3,14 @@
     var course = ViewData["Course"] as Course;
     var deps = ViewData["Departments"] as IEnumerable<Department>;
 }
-
+@if(course is not null){
 <section class="container add-course" style="width: 800px;">
     <div class="back-button position-absolute">
         <a class="text-primary m-3 d-block" asp-action="Dashboard" asp-controller="Admin"><i class="fa-2x fa-solid fa-arrow-left"></i></a>
     </div>
     <h1 class="fs-4 m-3 py-3 px-5">Edit Course</h1>
     <form asp-controller="Admin" asp-action="CourseEdit" method="post" class="m-auto p-4">
+            <input type="hidden" name="Code" value="@course.Code" />
         <div class="mb-3">
             <label class="form-label" for="Code">Course Code</label>
             <input class="form-control" disabled name="Code" id="Code" type="text" value="@course.Code">
@@ -30,23 +31,41 @@
             <label class="form-label" for="NoOfLec">Number of Lectures</label>
             <input class="form-control" value="@course.NoOfLec" name="NoOfLec" id="NoOfLec" type="number">
         </div>
+            <div class="mb-3">
+                <label class="form-label" for="NeedsLab">Needs Lab</label>
+                <input class="form-control" value="@course.NeedsLab" name="NeedsLab" id="NeedsLab" type="number">
+            </div>
         <div class="mb-3">
             <label class="form-label" for="Level">Level</label>
             <input class="form-control" value="@course.Level" name="Level" id="Level" type="text">
         </div>
+            <div class="mb-3">
+                <label class="form-label" for="Semester">Semester</label>
+                <select class="form-control" name="Semester" id="Semester">
+                    <option value="0" selected>Choose..</option>
+                    <option value="1" >Fall</option>
+                    <option value="2" >Spring</option>
+                </select>
+            </div>
         <div class="mb-3">
-            <label class="form-label" for="DepId">Department</label>
-            <select class="form-control" name="DepId" id="DepId">
+                <label class="form-label" for="DeptId">Department</label>
+            @if(deps is not null){
+                    <select class="form-control" name="DeptId" id="DeptId">
                 <option value="0" selected>Choose..</option>
                 @foreach(var dep in deps) {
                     <option value="@dep.Id">@dep.Name | College: @dep.College.Name</option>
                 }
             </select>
+            }else {
+            <p class="text-danger">No Departments!</p>
+            }
         </div>
         <button class="btn btn-primary" type="submit">Update</button>
     </form>
 </section>
-
+}else {
+    <p class="text-danger text-center">Course Not Found!</p>
+}
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

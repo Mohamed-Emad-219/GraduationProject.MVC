@@ -16,7 +16,8 @@ namespace GraduationProject.Controllers.Course
             _courseRepository = courseRepository;
             _departmentRepository = departmentRepository;
         }
-
+        [HttpPost]
+        [Route("Course/Add")]
         public IActionResult Add(GP.DAL.Models.Course course)
         {
             if (!ModelState.IsValid)
@@ -26,7 +27,7 @@ namespace GraduationProject.Controllers.Course
                 return RedirectToAction("CourseAddPage", "Admin", course.Code);
             }
             _courseRepository.AddCourse(course);
-
+            TempData["SuccessMessage"] = "Course Added Successfully!";
             return RedirectToAction("Dashboard", "Admin");
         }
         public IActionResult Delete(string code)

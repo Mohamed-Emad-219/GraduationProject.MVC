@@ -61,7 +61,7 @@ namespace GraduationProject.Controllers.StudentAffairs
         [Authorize(Roles = "StudentAffairs")]
         public IActionResult ApplicationTable()
         {
-            ViewData["Applications"] = applicationRepository.GetApplications();
+            ViewData["Applications"] = applicationRepository.GetApplicationsPending();
             return View();
         }
         [Authorize(Roles = "StudentAffairs")]
@@ -120,7 +120,7 @@ namespace GraduationProject.Controllers.StudentAffairs
         [Authorize(Roles = "StudentAffairs")]
         public IActionResult ReceiptTable()
         {
-            ViewData["Receipts"] = receiptRepository.GetReceipts();
+            ViewData["Receipts"] = receiptRepository.GetReceiptsStudentAffairsNullOnly();
             return View();
         }
         [Authorize(Roles = "StudentAffairs")]

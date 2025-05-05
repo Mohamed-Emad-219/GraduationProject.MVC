@@ -55,8 +55,8 @@ namespace GraduationProject.Controllers.Admin
             };
 
             termRepository.AddTerm(term);
-
-            return RedirectToAction("AddCourseTerm"); // or wherever you want
+            TempData["SuccessMessage"] = "Term Added Successfully!";
+            return RedirectToAction("AddCoursesTerm"); // or wherever you want
         }
         [HttpGet]
         public IActionResult AddCoursesTerm()
@@ -111,9 +111,9 @@ namespace GraduationProject.Controllers.Admin
             ViewData["Heads"] = _facultyMemberRepsitory.GetHeads();
             return View();
         }
-        public IActionResult CourseEditPage(string code)
+        public async Task<IActionResult> CourseEditPage(string id)
         {
-            ViewData["Course"] = _courseRepository.GetCourseById(code);
+            ViewData["Course"] = await _courseRepository.GetCourseById(id);
             ViewData["Departments"] = _departmentRepository.GetDepartments();
             return View();
         }
@@ -129,6 +129,7 @@ namespace GraduationProject.Controllers.Admin
         public IActionResult CourseEdit(GP.DAL.Models.Course course)
         {
             _courseRepository.UpdateCourse(course);
+            TempData["SuccessMessage"] = "Course Updated Successfully!";
             return RedirectToAction("Dashboard");
         }
         
@@ -136,6 +137,7 @@ namespace GraduationProject.Controllers.Admin
         public IActionResult DepartmentEdit(GP.DAL.Models.Department dep)
         {
             _departmentRepository.UpdateDepartment(dep);
+            TempData["SuccessMessage"] = "Department Updated Successfully!";
             return RedirectToAction("Dashboard");
         }
         public IActionResult ShowRequests()

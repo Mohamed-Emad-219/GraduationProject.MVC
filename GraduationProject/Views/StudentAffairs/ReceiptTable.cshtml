@@ -4,7 +4,7 @@
 }
 
 <section class="receipts">
-    <div class="container py-5">
+    <div class="container py-2">
         <h1 class="fs-3 mb-4 text-center">Receipts</h1>
         <div class="w-60 m-auto">
             <table class="table table-hover table-striped" id="receipts">
@@ -27,7 +27,6 @@
                                 <td>@receipt.AmountDue</td>
                                 <td>
                                     <a asp-action="ReceiptInfo" asp-controller="StudentAffairs" asp-route-id="@receipt.Id" class="btn btn-small btn-primary">Open</a>
-                                    <button onclick="window.print()" class="btn btn-small btn-secondary">Print</button>
                                 </td>
                             </tr>
                         }

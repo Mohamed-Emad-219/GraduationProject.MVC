@@ -5,20 +5,22 @@
     var heads = ViewData["Heads"] as IEnumerable<FacultyMember>;
 
 }
-
+@if(dep is not null) {
 <section class="container add-department" style="width: 800px;">
     <div class="back-button position-absolute">
         <a class="text-primary m-3 d-block" asp-action="Dashboard" asp-controller="Admin">
             <i class="fa-2x fa-solid fa-arrow-left"></i></a>
     </div>
     <h1 class="fs-4 m-3 py-3 px-5">Edit Department</h1>
-    <form asp-controller="Admin" asp-action="DepartmentEditPage" method="post" class="m-auto p-4">
+    <form asp-controller="Admin" asp-action="DepartmentEdit" method="post" class="m-auto p-4">
+        <input type="hidden" name="Id" value="@dep.Id" />
         <div class="mb-3">
             <label class="form-label" for="Name">Department Name</label>
             <input class="form-control" value="@dep.Name" name="Name" id="Name" type="text">
         </div>
         <div class="mb-3">
             <label class="form-label" for="CollegeId">College</label>
+            @if(colleges is not null) {
             <select class="form-control" name="CollegeId" id="CollegeId">
                 <option value="0" selected>Choose..</option>
                 @foreach (var col in colleges)
@@ -26,9 +28,13 @@
                     <option value="@col.Id">@col.Name</option>
                 }
             </select>
+            }else {
+                <p>No Colleges!</p>
+            }
         </div>
         <div class="mb-3">
             <label class="form-label" for="HeadId">Head Department</label>
+            @if(heads is not null){
             <select class="form-control" name="HeadId" id="HeadId">
                 <option value="0" selected>Choose..</option>
                 @foreach (var head in heads)
@@ -36,11 +42,16 @@
                     <option value="@head.TeacherId">@head.FirstName @head.MiddleName @head.LastName</option>
                 }
             </select>
+            }else {
+                <p>No Faculty Members!</p>
+            }
         </div>
         <button class="btn btn-primary" type="submit">Update</button>
     </form>
 </section>
-
+}else {
+    <p class="text-danger text-center">No Department Found!!</p>
+}
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

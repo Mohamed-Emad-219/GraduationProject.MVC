@@ -36,9 +36,22 @@
             <span asp-validation-for="NoOfLec" class="text-danger"></span>
         </div>
         <div class="mb-3">
+            <label class="form-label" for="NeedsLab">Needs Lab</label>
+            <input class="form-control" name="NeedsLab" id="NeedsLab" type="number">
+            <span asp-validation-for="NeedsLab" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
             <label class="form-label" for="Level">Level</label>
             <input class="form-control" name="Level" id="Level" type="text">
             <span asp-validation-for="Level" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="Semester">Semester</label>
+            <select class="form-control" name="Semester" id="Semester">
+                <option value="0" selected>Choose..</option>
+                <option value="1">Fall</option>
+                <option value="2">Spring</option>
+            </select>
         </div>
         <div class="mb-3">
             <label class="form-label" for="DepId">Department</label>

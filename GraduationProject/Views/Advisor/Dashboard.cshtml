@@ -35,10 +35,10 @@
         </table>
         <br>
         <div>
-            <a class="btn btn-outline-danger w-25 d-block m-auto" asp-controller="Advisor" asp-action="RequestCourseModification">
-                Send
-                Request for modification
-            </a>
+            @* <a class="btn btn-outline-danger w-25 d-block m-auto" asp-controller="Advisor" asp-action="RequestCourseModification"> *@
+            @*     Send *@
+            @*     Request for modification *@
+            @* </a> *@
         </div>
         <h2 class=" mb-3">Departments</h2>
         <table class="table table-striped table-hover" id="departments-table">
@@ -52,18 +52,18 @@
                 @foreach (var dep in departments)
                 {
                     <tr>
-                        <td>@dep.Id</td>
-                        <td>@dep.Name</td>
+                        <td class="text-start">@dep.Id</td>
+                        <td class="text-start">@dep.Name</td>
                     </tr>
                 }
             </tbody>
         </table>
         <br>
         <div>
-            <a class="btn btn-outline-danger w-25 d-block m-auto" asp-controller="Advisor" asp-action="RequestDepartmentModification">
-                Send Request
-                for modification
-            </a>
+            @* <a class="btn btn-outline-danger w-25 d-block m-auto" asp-controller="Advisor" asp-action="RequestDepartmentModification"> *@
+            @*     Send Request *@
+            @*     for modification *@
+            @* </a> *@
         </div>
     </div>
 </section>

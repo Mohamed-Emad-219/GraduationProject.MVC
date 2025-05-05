@@ -20,6 +20,7 @@ namespace GraduationProject.Controllers.Department
             _collegeRepository = collegeRepository;
         }
         [HttpPost]
+        [Route("Department/Add")]
         public IActionResult Add(GP.DAL.Models.Department dep)
         {
             if (!ModelState.IsValid)
@@ -31,7 +32,7 @@ namespace GraduationProject.Controllers.Department
             }
 
             _departmentRepository.AddDepartment(dep);
-
+            TempData["SuccessMessage"] = "Department Added Successfully!";
             return RedirectToAction("Dashboard", "Admin");
         }
         public IActionResult Delete(int Id)

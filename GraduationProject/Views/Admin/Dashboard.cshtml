@@ -19,9 +19,11 @@
                     <th style="width: fit-content;">Code</th>
                     <th style="width: fit-content;">Name</th>
                     <th style="width: fit-content;">level</th>
+                    <th style="width: fit-content;">Semester</th>
                     <th style="width: fit-content;">No of Lectures</th>
                     <th style="width: fit-content;">No of Sections</th>
                     <th style="width: fit-content;" >No of Hours</th>
+                    <th style="width: fit-content;" >Needs Lab</th>
                     <th style="width: fit-content;">Department</th>
                     <th style="width: fit-content;" colspan="2">Actions</th>
                 </tr>
@@ -33,10 +35,12 @@
                         <td style="width: fit-content;">@course.Code</td>
                         <td style="width: fit-content;">@course.CourseName</td>
                         <td style="width: fit-content;">@course.Level</td>
+                        <td style="width: fit-content;">@course.Semester</td>
                         <td style="width: fit-content;">@course.NoOfLec</td>
                         <td style="width: fit-content;">@course.NoOfSec</td>
                         <td style="width: fit-content;">@course.CreditHour</td>
-                        <td style="width: fit-content;">@course.Department.Name</td>
+                        <td style="width: fit-content;">@course.NeedsLab</td>
+                        <td style="width: fit-content;">@course.Department?.Name</td>
                         <td style="width: fit-content;" class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a asp-action="CourseEditPage" asp-controller="Admin" 

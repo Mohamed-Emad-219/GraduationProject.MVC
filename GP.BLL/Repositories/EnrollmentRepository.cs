@@ -39,7 +39,7 @@ namespace GP.BLL.Repositories
             return _context.Enrollments
                       .Where(e => e.StudentId == studentId)
                       .OrderByDescending(e => e.Term.AcademicYear) // Latest year first
-                      .ThenBy(e => e.Term.Semester) // Latest semester first
+                      .ThenByDescending(e => e.Term.Semester) // Latest semester first
                       .Select(e => e.Term)
                       .FirstOrDefault();
         }
@@ -81,17 +81,21 @@ namespace GP.BLL.Repositories
             else
             {
                 // EXISTING STUDENT
-                SemesterType nextSemester = (lastTerm.Semester == SemesterType.Spring)
-                    ? SemesterType.Fall
-                    : SemesterType.Spring;
+                var month = DateTime.Now.Month;
+                SemesterType nextSemester = SemesterType.Spring;
 
-                int nextAcademicYear = (nextSemester == SemesterType.Spring)
-                    ? lastTerm.AcademicYear + 1
-                    : lastTerm.AcademicYear;
+                if (month >= 9 || month <= 1)
+                {
+                    nextSemester = SemesterType.Fall;
+                }
+
+                int currentYear = DateTime.Now.Year;
+                int nextAcademicYear = (nextSemester == SemesterType.Spring) ? currentYear + 1 : currentYear;
 
                 int level = (lastTerm.Semester == SemesterType.Spring) 
                     ? lastTerm.Level + 1 
                     : lastTerm.Level;
+
                 var term = _termRepository.GetTermByDetails(level, nextSemester, nextAcademicYear);
                 return term;
             }
@@ -199,9 +203,10 @@ namespace GP.BLL.Repositories
                 Enrollments = enrollments.Select(e => new EnrollmentViewModel
                 {
                     StudentId = e.StudentId,
-                    StudentName = $"{e.Student.FirstName} {e.Student.MiddleName} {e.Student.LastName}",
-                    Major = e.Student.Department.Name,
-                    Level = e.Student.Level
+                    StudentName = string.Join(" ", new[] { e.Student.FirstName, e.Student.MiddleName, e.Student.LastName }
+                              .Where(s => !string.IsNullOrWhiteSpace(s))) ?? "Name",
+                    Major = e.Student.Department?.Name ?? "General",
+                    Level = e.Student.Level ?? 1
                 }).ToList(),
                 TotalEnrolled = totalEnrolled,
                 TotalCapacity = totalCapacity,

@@ -28,6 +28,10 @@ namespace GP.BLL.Repositories
         {
             return _dbContext.Applications.Include(a => a.Student).ThenInclude(a => a.College).ToList();
         }
+        public IEnumerable<Application> GetApplicationsPending()
+        {
+            return _dbContext.Applications.Where(a=>a.Status == Status.Pending).Include(a => a.Student).ThenInclude(a => a.College).ToList();
+        }
         public Application GetApplicationById(int id)
         {
             return _dbContext.Applications.FirstOrDefault(a => a.Id == id);

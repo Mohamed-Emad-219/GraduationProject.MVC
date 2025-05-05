@@ -19,29 +19,12 @@
             </div>
         </form>
     </div>
-    <div class="main-table border p-3">
-        <div class="header-container d-flex justify-content-between">
-            <div class="header-left">
-                <h6>
-                    Ministry of Higher Education<br>
-                    Modern University for Technology and Information<br>
-                    Faculty of Computers and Artificial Intelligence
-                </h6>
-                <p class="fw-bold">Semester: <i>Spring 2025</i></p>
-            </div>
-            <div class="header-right">
-                <img src="~/images/Mti(Gray).png" style="width: 100px;" alt="MTI Logo">
-            </div>
-        </div>
-        <h4 class="text-center" id="dayTitle"></h4>
         <div id="searchResults">
-        <div id="tableContainer">
-        </div>
+        
         </div>
         <div class="m-auto my-4 text-center ">
             <button class="btn btn-large btn-primary" onclick="printContainer()">Print</button>
         </div>
-    </div>
 </div>
 
 @section Scripts {
@@ -54,13 +37,6 @@
             $('#day').on('change', function () {
                 const selectedDay = $(this).val();
 
-                // Update the day title dynamically
-                if (selectedDay) {
-                    $('#dayTitle').text(`${selectedDay} Follow Up`);
-                } else {
-                    $('#dayTitle').text(`Follow Up`);
-                }
-
                 // Avoid making an AJAX call on the first load
                 if (!initialLoad) {
                     // Make an AJAX call to fetch the table for the selected day
@@ -69,10 +45,10 @@
                         type: 'GET',
                         data: { day: selectedDay },
                         success: function (response) {
-                            $('#tableContainer').html(response);
+                            $('#searchResults').html(response);
                         },
                         error: function () {
-                            $('#tableContainer').html('<p class="text-danger">Error loading data.</p>');
+                            $('#searchResults').html('<p class="text-danger">Error loading data.</p>');
                         }
                     });
                 }

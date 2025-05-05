@@ -66,7 +66,10 @@ namespace GraduationProject.Controllers.FinancialAffairs
             }
 
             var courses = termCourseRepository.GetCoursesPerTerm(nextTerm.Id, student.Level, student.DeptId);
-
+            if (courses == null)
+            {
+                return NotFound("No suitable courses found.");
+            }
             int totalPrice = 0;
             foreach (var course in courses)
             {
@@ -80,63 +83,6 @@ namespace GraduationProject.Controllers.FinancialAffairs
 
             return PartialView("_StudentDetails");
         }
-
-        //public IActionResult Search(int id)
-        //{
-        //    var Id = id;
-
-        //    var student = _studentRepository.GetStudentById(Id);
-        //    if (student == null)
-        //    {
-        //        return NotFound("Student not found.");
-        //    }
-        //    Term nextTerm;
-        //    // Retrieve the last term the student was enrolled in
-        //    var lastTerm = enrollmentRepository.GetLastTermForStudent(student.Id);
-        //    if (lastTerm == null)
-        //    {
-        //        // NEW STUDENT: Set default term as Level 1, Fall, Current Year
-        //        int currentYear = DateTime.Now.Year;
-        //        nextTerm = termRepository.GetTermByDetails(1, SemesterType.Fall, currentYear);
-
-        //        if (nextTerm == null)
-        //        {
-        //            return NotFound("No term found for Level 1 Fall Semester.");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // EXISTING STUDENT: Determine the next semester
-        //        SemesterType nextSemester = (lastTerm.Semester == SemesterType.Spring) ? SemesterType.Fall : SemesterType.Spring;
-        //        int nextAcademicYear = (nextSemester == SemesterType.Spring) ? lastTerm.AcademicYear + 1 : lastTerm.AcademicYear;
-
-        //        // Get next term details
-        //        nextTerm = termRepository.GetTermByDetails(lastTerm.Level, nextSemester, nextAcademicYear);
-        //        if (nextTerm == null)
-        //        {
-        //            return NotFound("No next term found.");
-        //        }
-        //    }
-
-        //    // Retrieve courses for the next term
-        //    var courses = termCourseRepository.GetCoursesPerTerm(nextTerm.Id);
-
-        //    // Calculate total price
-        //    int totalPrice = 0;
-        //    foreach(var course in courses)
-        //    {
-        //        totalPrice += termCourseRepository.GetCoursePrice(course.Code, nextTerm.Id);
-        //    }
-
-        //    // Pass data to the view
-        //    ViewData["Student"] = student;
-        //    ViewData["Term"] = nextTerm;
-        //    ViewData["Courses"] = courses;
-        //    ViewData["TotalPrice"] = totalPrice;
-
-        //    return PartialView("_StudentDetails");
-            
-        //}
         [Authorize(Roles = "FinancialAffairs")]
         public async Task<IActionResult> Receipt(int StudentId, string StudentName, 
             int Level, int RegisteredYear, string Semester, int AcademicYear, int Amount)

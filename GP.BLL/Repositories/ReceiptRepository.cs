@@ -28,6 +28,10 @@ namespace GP.BLL.Repositories
         {
             return context.Receipts.Include(r => r.Student).ToList();
         }
+        public IEnumerable<Receipt> GetReceiptsStudentAffairsNullOnly()
+        {
+            return context.Receipts.Where(r=>r.StudentAffairsId == null).Include(r => r.Student).ToList();
+        }
         public Receipt GetReceiptWithStudentById(int id)
         {
             return context.Receipts.Include(r=>r.Student).ThenInclude(r=>r.College).FirstOrDefault(r => r.Id == id);

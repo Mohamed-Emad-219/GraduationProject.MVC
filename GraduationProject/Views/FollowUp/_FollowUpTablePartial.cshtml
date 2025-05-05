@@ -2,20 +2,34 @@
     var user = ViewData["User"] as FollowUp;
 }
 @model IEnumerable<FollowUpEntry>
-
+<div id="report" class="main-table border p-3">
+    <div class="header-container d-flex justify-content-between">
+        <div class="header-left">
+            <h6>
+                Ministry of Higher Education<br>
+                Modern University for Technology and Information<br>
+                Faculty of Computers and Artificial Intelligence
+            </h6>
+            <p class="fw-bold">Semester: <i>@Model.FirstOrDefault().Schedule.Semester @Model.FirstOrDefault().Schedule.AcademicYear</i></p>
+        </div>
+        <div class="header-right">
+            <img src="~/images/Mti(Gray).png" style="width: 100px;" alt="MTI Logo">
+        </div>
+    </div>
+    <h4 class="text-center" id="dayTitle">@Model.FirstOrDefault().Schedule.Day Follow Up</h4>
 <div class="table-responsive">
     <form method="post" asp-action="SubmitFollowUp" asp-controller="FollowUp">
-        <table class="table table-bordered" style="min-width: 1100px;">
+        <table class="table table-bordered" style="min-width: 950px; font-size:14px;">
             <thead>
                 <tr>
                     <th>Code</th>
                     <th>Course Title</th>
                     <th>Instructor</th>
-                    <th>Place</th>
+                        <th style="width: fit-content;">Place</th>
                     <th>Time</th>
                     @for (int i = 1; i <= 14; i++)
                     {
-                        <th>@i</th>
+                            <th style="width: fit-content;">@i</th>
                     }
                 </tr>
             </thead>
@@ -31,14 +45,14 @@
                             <td>@schedule.CourseCode</td>
                             <td>@schedule.Course.CourseName</td>
                             <td>@schedule.FacultyMember?.FirstName @schedule.FacultyMember?.MiddleName @schedule.FacultyMember?.LastName</td>
-                            <td>@schedule.Place.PlaceName</td>
+                                <td style="width: fit-content;">@schedule.Place.PlaceName</td>
                             <td>@($"{schedule.TimeBegin:hh\\:mm} - {schedule.TimeEnd:hh\\:mm}")</td>
 
                             @for (int i = 1; i <= 14; i++)
                             {
                                 var entryForWeek = scheduleGroup.FirstOrDefault(f => f.WeekNumber == i);
-                                <td>
-                                    <input type="checkbox" name="attended[@schedule.Id][@i]" value="true" @(entryForWeek?.Attended == true ? "checked" : "") />
+                                <td style="width: fit-content;">
+                                        <input type="checkbox" name="attended[@entryForWeek.Id][@i]" value="true" @(entryForWeek?.Attended == true ? "checked" : "") />
                                 </td>
                             }
                         </tr>
@@ -54,4 +68,5 @@
         </table>
         <button type="submit" class="btn btn-primary btn-small">Submit</button>
     </form>
+</div>
 </div>

@@ -129,12 +129,12 @@ namespace GraduationProject.Controllers.Instructor
             ViewData["semester"] = Semester;
             ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
             ViewData["number"] = GenerateReportNumber();
-            ViewData["courseshead"] = teachingHoursReport.GetCoursesHead(head.DeptId ,Semester, AcademicYear);
+            var courseshead = teachingHoursReport.GetCoursesHead(head.DeptId ,Semester, AcademicYear);
             ViewData["totalfaculty"] = teachingHoursReport.TotalFacultyMembers();
             ViewData["totalhours"] = teachingHoursReport.TotalTeachingHoursAssigned();
             ViewData["overloadhours"] = teachingHoursReport.OverloadTeachingHours();
 
-            return PartialView("_TeachingHour");
+            return PartialView("_TeachingHour", courseshead);
         }
         public async Task<IActionResult> TeachingHourDean(SemesterType Semester, int AcademicYear)
         {
@@ -150,12 +150,12 @@ namespace GraduationProject.Controllers.Instructor
             ViewData["semester"] = Semester;
             ViewData["Date"] = DateTime.Now.ToString("dd-MM-yyyy");
             ViewData["number"] = GenerateReportNumber();
-            ViewData["coursesdean"] = teachingHoursReport.GetCoursesDean(Semester, AcademicYear);
+            var coursesdean = teachingHoursReport.GetCoursesDean(Semester, AcademicYear);
             ViewData["totalfaculty"] = teachingHoursReport.TotalFacultyMembers();
             ViewData["totalhours"] = teachingHoursReport.TotalTeachingHoursAssigned();
             ViewData["overloadhours"] = teachingHoursReport.OverloadTeachingHours();
 
-            return PartialView("_TeachingHour");
+            return PartialView("_TeachingHour", coursesdean);
         }
     }
 }
