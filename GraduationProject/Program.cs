@@ -87,7 +87,7 @@ using (var scope = app.Services.CreateScope())
         //DbInitializer.SeedCollege(dbContext, env);
         //DbInitializer.SeedDapertment(dbContext, env);
         //await DbInitializer.SeedFacultyWithDept(userManager, dbContext, env);
-        await DbInitializer.SeedFacultyUpdate(userManager, dbContext, env);
+        //await DbInitializer.SeedFacultyUpdate(userManager, dbContext, env);
         //DbInitializer.SeedCourses(dbContext, env);
         //DbInitializer.SeedCoursesPre(dbContext, env);
         //DbInitializer.SeedPlace(dbContext, env);

@@ -25,7 +25,7 @@
                     <th style="width: fit-content;" >No of Hours</th>
                     <th style="width: fit-content;" >Needs Lab</th>
                     <th style="width: fit-content;">Department</th>
-                    <th style="width: fit-content;" colspan="2">Actions</th>
+                    <th style="width: fit-content;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,8 +45,8 @@
                             <div class="d-flex justify-content-center gap-2">
                                 <a asp-action="CourseEditPage" asp-controller="Admin" 
                                 asp-route-id="@course.Code" class="btn btn-sm btn-success">Edit</a>
-                                <a asp-action="Delete" asp-controller="Course" 
-                                asp-route-id="@course.Code" class="btn btn-sm btn-danger">Delete</a>
+                                @* <a asp-action="Delete" asp-controller="Course"  *@
+                                @* asp-route-id="@course.Code" class="btn btn-sm btn-danger">Delete</a> *@
                             </div>
                         </td>
                     </tr>
@@ -64,7 +64,7 @@
                 <tr>
                     <th style="width: fit-content;">Code</th>
                     <th style="width: fit-content;">Name</th>
-                    <th style="width: fit-content;" colspan="2">Action</th>
+                    <th style="width: fit-content;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +76,7 @@
                         <td style="width: fit-content;" class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a asp-action="DepartmentEditPage" asp-controller="Admin" asp-route-id="@dep.Id" class="btn btn-sm btn-success">Edit</a>
-                                <a asp-action="Delete" asp-controller="Department" asp-route-id="@dep.Id" class="btn btn-sm btn-danger">Delete</a>
+                                @* <a asp-action="Delete" asp-controller="Department" asp-route-id="@dep.Id" class="btn btn-sm btn-danger">Delete</a> *@
                             </div>
                         </td>
                     </tr>
