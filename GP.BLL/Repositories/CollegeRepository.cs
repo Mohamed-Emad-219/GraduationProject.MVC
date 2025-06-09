@@ -28,14 +28,14 @@ namespace GP.BLL.Repositories
             var college = _dbContext.Colleges.Find(Id);//// find op search in cache if found return it else search in database
             return college;
         }
-        public string GetCollageNameByStudentId(int id)
+        public string GetCollageNameByStudentId(string id)
         {
             return _dbContext.Students
         .Where(s => s.Id == id)
         .Select(s => s.Department.College.Name)
         .FirstOrDefault();
         }
-        public int GetCollageIdByStudentId(int id)
+        public int GetCollageIdByStudentId(string id)
         {
             return _dbContext.Students
         .Where(s => s.Id == id)

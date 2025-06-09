@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GP.DAL.Migrations
 {
-    public partial class AddTable : Migration
+    public partial class AddTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -309,7 +309,7 @@ namespace GP.DAL.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     StudentAffairsId = table.Column<int>(type: "int", nullable: true),
-                    StudentId = table.Column<int>(type: "int", nullable: false)
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -462,15 +462,14 @@ namespace GP.DAL.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Group = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisterYear = table.Column<int>(type: "int", nullable: true),
-                    SSN = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    NationalId = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MobilePhone = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     HomePhone = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
@@ -480,8 +479,8 @@ namespace GP.DAL.Migrations
                     HighSchoolGrade = table.Column<double>(type: "float", nullable: false),
                     CollegeId = table.Column<int>(type: "int", nullable: true),
                     DeptId = table.Column<int>(type: "int", nullable: true),
-                    AdvisorId = table.Column<int>(type: "int", nullable: true),
-                    ApplicationId = table.Column<int>(type: "int", nullable: true)
+                    ApplicationId = table.Column<int>(type: "int", nullable: true),
+                    AdvisorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -490,8 +489,7 @@ namespace GP.DAL.Migrations
                         name: "FK_Students_Advisors_AdvisorId",
                         column: x => x.AdvisorId,
                         principalTable: "Advisors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Students_Colleges_CollegeId",
                         column: x => x.CollegeId,
@@ -598,7 +596,7 @@ namespace GP.DAL.Migrations
                 name: "Enrollments",
                 columns: table => new
                 {
-                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CourseCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Grade = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TermId = table.Column<int>(type: "int", nullable: false)
@@ -641,7 +639,7 @@ namespace GP.DAL.Migrations
                     DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CollegeId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FinancialAffairsId = table.Column<int>(type: "int", nullable: true),
                     StudentAffairsId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -686,12 +684,11 @@ namespace GP.DAL.Migrations
                     Semester = table.Column<int>(type: "int", nullable: false),
                     AcademicYear = table.Column<int>(type: "int", nullable: true),
                     PlaceId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    TeacherId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TeacherId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CourseCode = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FacultyMemberTeacherId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Group = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Level = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<int>(type: "int", nullable: true)
+                    StudentId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -703,8 +700,8 @@ namespace GP.DAL.Migrations
                         principalColumn: "Code",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_StudentSchedules_FacultyMembers_FacultyMemberTeacherId",
-                        column: x => x.FacultyMemberTeacherId,
+                        name: "FK_StudentSchedules_FacultyMembers_TeacherId",
+                        column: x => x.TeacherId,
                         principalTable: "FacultyMembers",
                         principalColumn: "TeacherId");
                     table.ForeignKey(
@@ -937,7 +934,8 @@ namespace GP.DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_FollowUps_UserId",
                 table: "FollowUps",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InstructorSchedules_CourseCode",
@@ -1047,9 +1045,9 @@ namespace GP.DAL.Migrations
                 column: "DeptId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_SSN",
+                name: "IX_Students_NationalId",
                 table: "Students",
-                column: "SSN",
+                column: "NationalId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -1065,11 +1063,6 @@ namespace GP.DAL.Migrations
                 column: "CourseCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentSchedules_FacultyMemberTeacherId",
-                table: "StudentSchedules",
-                column: "FacultyMemberTeacherId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StudentSchedules_PlaceId",
                 table: "StudentSchedules",
                 column: "PlaceId");
@@ -1078,6 +1071,11 @@ namespace GP.DAL.Migrations
                 name: "IX_StudentSchedules_StudentId",
                 table: "StudentSchedules",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentSchedules_TeacherId",
+                table: "StudentSchedules",
+                column: "TeacherId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Applications_Students_StudentId",

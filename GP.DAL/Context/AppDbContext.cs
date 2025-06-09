@@ -183,12 +183,6 @@ namespace GP.DAL.Context
                 .HasForeignKey(e => e.StudentAffairsId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // advisor and student 1-m
-            modelBuilder.Entity<Student>()
-                .HasOne(s => s.Advisor)
-                .WithMany(s => s.Students)
-                .HasForeignKey(s => s.AdvisorId)
-                .OnDelete(DeleteBehavior.Restrict);
 
             // application and student 1-m
             modelBuilder.Entity<Application>()
@@ -225,7 +219,7 @@ namespace GP.DAL.Context
                 .HasIndex(e => e.SSN)
                 .IsUnique();
             modelBuilder.Entity<Student>()
-                .HasIndex(e => e.SSN)
+                .HasIndex(e => e.NationalId)
                 .IsUnique();
             modelBuilder.Entity<FacultyMember>()
                 .HasIndex(e => e.SSN)

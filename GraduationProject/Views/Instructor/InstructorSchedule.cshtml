@@ -30,7 +30,7 @@
         <p><strong>Instructor:</strong> @schedule?.FirstOrDefault().FacultyMember.FirstName 
             @schedule?.FirstOrDefault().FacultyMember.MiddleName @schedule?.FirstOrDefault().FacultyMember.LastName
         </p>
-        <table class="table table-bordered text-center">  
+        <table class="table table-bordered">  
               <thead class="table-dark">  
                   <tr>  
                      <th>Day</th>
@@ -48,19 +48,19 @@
                     .OrderBy(g => dayOrder.ContainsKey(g.Key) ? dayOrder[g.Key] : 999))
                     {
                         bool firstRow = true;
-                        @foreach (var row in dayGroup)
+                        @foreach (var row in dayGroup.OrderBy(r => r.TimeBegin))
                         {
                             <tr>
                                 @if (firstRow)
                                 {
-                                    <td rowspan="@dayGroup.Count()">@row.Day</td>
+                                    <td class="align-content-center" rowspan="@dayGroup.Count()">@row.Day</td>
                                     firstRow = false;
                                 }
-                                <td>@row.CourseCode</td>
-                                <td>@row.Course?.CourseName</td>
-                                <td>@row.Place?.Type</td>
-                                <td>@row.Place?.PlaceName</td>
-                                <td>@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
+                                <td class="align-content-center">@row.CourseCode</td>
+                                <td class="align-content-center">@row.Course?.CourseName</td>
+                                <td class="align-content-center">@row.Place?.Type</td>
+                                <td class="align-content-center">@row.Place?.PlaceName</td>
+                                <td class="align-content-center">@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
                                 
                             </tr>
                         }

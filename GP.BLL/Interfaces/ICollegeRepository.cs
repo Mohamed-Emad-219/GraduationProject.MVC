@@ -14,8 +14,8 @@ namespace GP.BLL.Interfaces
         int AddCollege(College college);
         int UpdateCollege(College college);
         int DeleteCollegeAsync(int Id);
-        string GetCollageNameByStudentId(int id);
-        int GetCollageIdByStudentId(int id);
+        string GetCollageNameByStudentId(string id);
+        int GetCollageIdByStudentId(string id);
         College GetCollegeByDeanId(string Id);
         int GetCollegeIdByDeanId(string Id);
     }

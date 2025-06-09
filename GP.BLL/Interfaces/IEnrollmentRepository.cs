@@ -13,13 +13,13 @@ namespace GP.BLL.Interfaces
     public interface IEnrollmentRepository
     {
         void EnrollPassedStudentsToNextTerm(int level);
-        bool HasStudentPassedCourse(int studentId, string courseCode);
-        Term GetLastTermForStudent(int studentId);
-        int GetCompletedHoursForStudent(int studentId);
-        IEnumerable<Enrollment> GetCompletedCoursesForStudent(int studentId);
+        bool HasStudentPassedCourse(string studentId, string courseCode);
+        Term GetLastTermForStudent(string studentId);
+        int GetCompletedHoursForStudent(string studentId);
+        IEnumerable<Enrollment> GetCompletedCoursesForStudent(string studentId);
         EnrollmentReportVM GetEnrollmentReport(string courseCode, SemesterType semester, int year);
-        public Term GetNextTermForStudent(int studentId);
-        public void EnrollStudentToNextTerm(int studentId);
+        public Term GetNextTermForStudent(string studentId);
+        public void EnrollStudentToNextTerm(string studentId);
         List<StudentGradeDto> GetStudentGrades(int year, SemesterType semester, string courseCode);
         SemesterEvaluationSummaryDto GetSemesterEvaluationSummary(int year, SemesterType semester, string courseCode);
         List<CourseReportVM> GetCoursesReport(int year, SemesterType semester);

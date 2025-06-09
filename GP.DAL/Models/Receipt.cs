@@ -21,7 +21,7 @@ namespace GP.DAL.Models
         public DateTime DueDate { get; set; }
         public DateTime PaymentDate { get; set; }
         public int CollegeId { get; set; }
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public Student? Student { get; set; }
         public int? FinancialAffairsId { get; set; }
         public int? StudentAffairsId { get; set; }

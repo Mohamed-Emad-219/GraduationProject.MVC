@@ -24,9 +24,9 @@ namespace GP.BLL.Repositories
         {
             return context.Students.FirstOrDefault(f => f.UserId == UserId);
         }
-        public Student GetStudentById(int Id)
+        public Student GetStudentById(string Id)
         {
-            return context.Students.Include(s=>s.Department).Include(s=>s.Advisor).FirstOrDefault(f => f.Id == Id);
+            return context.Students.Include(s=>s.Department).FirstOrDefault(f => f.Id == Id);
         }
         public IEnumerable<Student> GetStudentsByLevel(int level)
         {
@@ -40,7 +40,7 @@ namespace GP.BLL.Repositories
             context.Add(student);
             return context.SaveChanges();
         }
-        public int AddApplicationIdToStudent(int stdId, int applId)
+        public int AddApplicationIdToStudent(string stdId, int applId)
         {
             var std = GetStudentById(stdId);
             std.ApplicationId = applId;
@@ -55,7 +55,7 @@ namespace GP.BLL.Repositories
             context.Students.Update(student);
             context.SaveChanges();
         }
-        public async Task<int> UpdateStudentAsync(int Id, string Email, string Address, string MobilePhone)
+        public async Task<int> UpdateStudentAsync(string Id, string Email, string Address, string MobilePhone)
         {
             var faculty = context.Students.FirstOrDefault(f => f.Id == Id);
             if (faculty == null)

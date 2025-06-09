@@ -17,7 +17,7 @@
         <p><strong>Academic Year:</strong> @academicyear | <strong>Semester:</strong> @semester</p>
         <p class="text-center"><strong>Report Number: </strong><span>@reportNumber</span></p>
     </div>
-    <table class="table table-bordered text-center">
+    <table class="table table-bordered">
         <thead class="table-light">
             <tr>
                 <th>Course Code</th>
@@ -33,13 +33,13 @@
             @foreach (var course in Model)
             {
                 <tr>
-                    <td>@course.CourseCode</td>
-                    <td>@course.CourseTitle</td>
-                    <td>@course.Instructor</td>
-                    <td>@course.TotalEnrolled</td>
-                    <td>@course.AverageGPA.ToString("F2")</td>
-                    <td>@course.PassRate.ToString("F2")</td>
-                    <td>@course.FailRate.ToString("F2")</td>
+                    <td class="align-content-center">@course.CourseCode</td>
+                    <td class="align-content-center">@course.CourseTitle</td>
+                    <td class="align-content-center">@Html.Raw(course.Instructor)</td>
+                    <td class="align-content-center">@course.TotalEnrolled</td>
+                    <td class="align-content-center">@course.AverageGPA.ToString("F2")</td>
+                    <td class="align-content-center">@course.PassRate.ToString("F2")</td>
+                    <td class="align-content-center">@course.FailRate.ToString("F2")</td>
                 </tr>
             }
         </tbody>

@@ -143,8 +143,9 @@ namespace GP.DAL.Migrations
                     b.Property<int?>("StudentAffairsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -296,8 +297,8 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Models.Enrollment", b =>
                 {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CourseCode")
                         .HasColumnType("nvarchar(450)");
@@ -772,8 +773,9 @@ namespace GP.DAL.Migrations
                     b.Property<int?>("StudentAffairsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -845,11 +847,9 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Models.Student", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -904,13 +904,13 @@ namespace GP.DAL.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<int?>("RegisterYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SSN")
+                    b.Property<string>("NationalId")
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
+
+                    b.Property<int?>("RegisterYear")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -923,7 +923,7 @@ namespace GP.DAL.Migrations
 
                     b.HasIndex("DeptId");
 
-                    b.HasIndex("SSN")
+                    b.HasIndex("NationalId")
                         .IsUnique();
 
                     b.HasIndex("UserId")
@@ -1024,8 +1024,8 @@ namespace GP.DAL.Migrations
                     b.Property<int>("Semester")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("TeacherId")
                         .HasColumnType("nvarchar(450)");
@@ -1247,7 +1247,7 @@ namespace GP.DAL.Migrations
             modelBuilder.Entity("GP.DAL.Models.CourseInstructor", b =>
                 {
                     b.HasOne("GP.DAL.Models.Course", "Course")
-                        .WithMany()
+                        .WithMany("CourseInstructors")
                         .HasForeignKey("CourseCode")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -1540,10 +1540,10 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Models.Student", b =>
                 {
-                    b.HasOne("GP.DAL.Models.Advisor", "Advisor")
+                    b.HasOne("GP.DAL.Models.Advisor", null)
                         .WithMany("Students")
                         .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("GP.DAL.Models.College", "College")
                         .WithMany("Students")
@@ -1559,8 +1559,6 @@ namespace GP.DAL.Migrations
                         .WithOne("Student")
                         .HasForeignKey("GP.DAL.Models.Student", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Advisor");
 
                     b.Navigation("College");
 
@@ -1641,6 +1639,8 @@ namespace GP.DAL.Migrations
 
             modelBuilder.Entity("GP.DAL.Models.Course", b =>
                 {
+                    b.Navigation("CourseInstructors");
+
                     b.Navigation("CoursesTerms");
 
                     b.Navigation("Enrollments");

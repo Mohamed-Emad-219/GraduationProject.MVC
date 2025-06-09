@@ -9,7 +9,7 @@ namespace GP.DAL.Models
 {
     public class Enrollment
     {
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public Student Student { get; set; }
         public string CourseCode { get; set; }
         public Course Course { get; set; }

@@ -2,17 +2,17 @@
   {
     "Name": "Computer Science",
     "CollegeId": 1,
-    "HeadId": "I11"
+    "HeadId": null
   },
   {
     "Name": "Artificial Intelligence",
     "CollegeId": 1,
-    "HeadId": "I15"
+    "HeadId": null
   },
   {
     "Name": "Information Systems",
     "CollegeId": 1,
-    "HeadId": "I1"
+    "HeadId": null
   },
   {
     "Name": "General",

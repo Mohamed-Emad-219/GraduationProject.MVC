@@ -14,7 +14,7 @@
 
     public class EnrollmentViewModel
     {
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public string? StudentName { get; set; }
         public string? Major { get; set; }
         public int? Level { get; set; }

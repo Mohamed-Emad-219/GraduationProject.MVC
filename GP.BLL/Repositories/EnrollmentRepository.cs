@@ -34,7 +34,7 @@ namespace GP.BLL.Repositories
             _context = context;
             _termCourseRepository = termCourseRepository;
         }
-        public Term GetLastTermForStudent(int studentId)
+        public Term GetLastTermForStudent(string studentId)
         {
             return _context.Enrollments
                       .Where(e => e.StudentId == studentId)
@@ -43,7 +43,7 @@ namespace GP.BLL.Repositories
                       .Select(e => e.Term)
                       .FirstOrDefault();
         }
-        public void EnrollStudentToNextTerm(int studentId)
+        public void EnrollStudentToNextTerm(string studentId)
         {
             var student = _studentRepository.GetStudentById(studentId);
             var lastTerm = GetLastTermForStudent(studentId);
@@ -67,7 +67,7 @@ namespace GP.BLL.Repositories
 
             _context.SaveChanges();
         }
-        public Term GetNextTermForStudent(int studentId)
+        public Term GetNextTermForStudent(string studentId)
         {
             var lastTerm = GetLastTermForStudent(studentId);
 
@@ -161,7 +161,7 @@ namespace GP.BLL.Repositories
 
             return _termRepository.GetTermByDetails(lastTerm.Level, nextSemester, nextAcademicYear);
         }
-        public bool HasStudentPassedCourse(int studentId, string courseCode)
+        public bool HasStudentPassedCourse(string studentId, string courseCode)
         {
             var enrollment = _context.Enrollments
                 .FirstOrDefault(e => e.StudentId == studentId && e.CourseCode == courseCode);
@@ -178,17 +178,18 @@ namespace GP.BLL.Repositories
             return passingGrades.Contains(grade.ToUpper());
         }
 
-        public int GetCompletedHoursForStudent(int studentId)
+        public int GetCompletedHoursForStudent(string studentId)
         {
             return _context.Enrollments
             .Where(e => e.StudentId == studentId)
             .Sum(e => e.Course.CreditHour ?? 0);
         }
-        public IEnumerable<Enrollment> GetCompletedCoursesForStudent(int studentId)
+        public IEnumerable<Enrollment> GetCompletedCoursesForStudent(string studentId)
         {
             return _context.Enrollments
            .Where(e => e.StudentId == studentId)
            .Include(e => e.Course)
+           .ThenInclude(e => e.Prerequisites)
            .Include(e => e.Term)
            .ToList();
         }
@@ -321,7 +322,7 @@ namespace GP.BLL.Repositories
                     {
                         CourseCode = g.First().CourseCode,
                         CourseTitle = g.First().Course.CourseName,
-                        Instructor = string.Join(", ", g.First().Course.CourseInstructors.Select(ci => ci.FacultyMember.FullName)),
+                        Instructor = string.Join("<br/>", g.First().Course.CourseInstructors.Select(ci => ci.FacultyMember.FullName)),
                         TotalEnrolled = total,
                         AverageGPA = gpas.Average(),
                         PassRate = Math.Round(passCount * 100.0 / total, 2),

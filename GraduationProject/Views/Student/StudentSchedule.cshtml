@@ -8,57 +8,174 @@
 <section class="student">
     <div id="searchResults">
         <div class="container py-3" id="report">
-        <div class="heading-schedule d-flex justify-content-between align-items-center">
-            <p class="p-0 fs-5 fw-bold semester">
-                Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
-                <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span>
-            </p>
-            <img src="../images/Mti(Gray).png" alt="" style="width: 100px;">
-        </div>
-        <h1 class="heading text-center m-1">Schedule of Classes</h1>
-        <div class="w-100 mt-1 d-flex justify-content-around">
-            <p class="fs-3 fw-bold mb-0">Level: <span id="level">@schedule?.FirstOrDefault().Level</span> 
-                <span id="dep"></span> | <span>@group</span>
-            </p>
-        </div>
-        <div class="schedule m-auto text-start" style="width: 1200px;">
-            @if (!groupedSchedule.Any())
-            {
-                <p class="text-center text-muted">No schedule available</p>
-            }
-            else
-            {
-                @foreach (var daySchedule in groupedSchedule)
+            <div class="heading-schedule d-flex justify-content-between align-items-center">
+                <p class="p-0 fs-5 fw-bold semester">
+                    Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
+                    <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span>
+                </p>
+                <img src="../images/Mti(Gray).png" alt="" style="width: 100px;">
+            </div>
+            <h1 class="heading text-center m-1">Schedule of Classes</h1>
+            <div class="w-100 mt-1 d-flex justify-content-around">
+                <p class="fs-3 fw-bold mb-0">Level: <span id="level">@schedule?.FirstOrDefault().Level</span> 
+                    <span id="dep"></span> | <span>@group</span>
+                </p>
+            </div>
+            <div class="schedule m-auto text-start" style="width: 1100px;">
+                @if (!groupedSchedule.Any())
                 {
-                    <p class="day fs-5 fw-bold">@daySchedule.Key</p>
-                    <table class="table scheduleTable" style="height: 50px;">
-                        <thead>
-                            <tr class="table-secondary">
-                                <th>Code</th>
-                                <th>Course Title</th>
-                                <th>Instructor</th>
-                                <th>Place</th>
-                                <th>Type</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var row in daySchedule)
-                            {
-                                <tr>
-                                    <td class="text-start">@row.CourseCode</td>
-                                    <td class="text-start" style="width: fit-content;">@row.Course?.CourseName </td>
-                                    <td class="text-start" style="width: fit-content;">
-                                            @row.FacultyMember?.FullName
-                                    </td>
-                                        <td class="text-start" style="width: fit-content;">@row.Place?.PlaceName</td>
-                                        <td class="text-start">@row.Place?.Type</td>
-                                        <td class="text-start">@row.TimeBegin.ToString(@"hh\:mm") - @row.TimeEnd.ToString(@"hh\:mm")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <p class="text-center text-muted">No schedule available</p>
                 }
+                else
+                {
+                    @foreach (var daySchedule in groupedSchedule)
+                    {
+                        <p class="day fs-5 fw-bold">@daySchedule.Key</p>
+                        <table class="table m-auto scheduleTable" style="height: 50px;">
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th>Code</th>
+                                    <th>Course Title</th>
+                                    <th>Instructor</th>
+                                    <th>Place</th>
+                                    <th>Type</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var groupp in daySchedule
+                              .OrderBy(r => r.TimeBegin)
+                              .GroupBy(r => new
+                              {
+                                  r.CourseCode,
+                                  CourseName = r.Course?.CourseName,
+                                  r.Place?.PlaceName,
+                                  r.Place?.Type,
+                                  r.TimeBegin,
+                                  r.TimeEnd
+                              }))
+                                {
+                                    var first = groupp.First();
+                                    <tr>
+                                        <td class="text-start align-content-center">@first.CourseCode</td>
+                                        <td class="text-start align-content-center">@first.Course?.CourseName</td>
+                                        <td class="text-start align-content-center">
+                                            @foreach (var instructor in groupp.Select(g => g.FacultyMember?.FullName).Distinct())
+                                            {
+                                                @instructor <br />
+                                            }
+                                        </td>
+                                        <td class="text-start align-content-center">@first.Place?.PlaceName</td>
+                                        <td class="text-start align-content-center">@first.Place?.Type</td>
+                                        <td class="text-start align-content-center">@first.TimeBegin.ToString(@"hh\:mm") - @first.TimeEnd.ToString(@"hh\:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    <br />
+                    @if (schedule.First().Semester == SemesterType.Spring)
+                    {
+                        <table class="table m-auto table-bordered week-table w-auto">
+                            <tr>
+                                <th>1</th>
+                                <td>08/02/2025</td>
+                                <th>5</th>
+                                <td>08/03/2025</td>
+                                <th>9</th>
+                                <td>05/04/2025</td>
+                                <th>13</th>
+                                <td>03/05/2025</td>
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <td>15/02/2025</td>
+                                <th>6</th>
+                                <td>15/03/2025</td>
+                                <th>10</th>
+                                <td>12/04/2025</td>
+                                <th>14</th>
+                                <td>10/05/2025</td>
+                            </tr>
+                            <tr>
+                                <th>3</th>
+                                <td>22/02/2025</td>
+                                <th>7</th>
+                                <td>22/03/2025</td>
+                                <th>11</th>
+                                <td>19/04/2025</td>
+                                <th>15</th>
+                                <td>17/05/2025</td>
+                            </tr>
+                            <tr>
+                                <th>4</th>
+                                <td>01/03/2025</td>
+                                <th>8</th>
+                                <td>29/03/2025</td>
+                                <th>12</th>
+                                <td>26/04/2025</td>
+                                <th>16</th>
+                                <td></td>
+                            </tr>
+                        </table>
+                    }else {
+                        <table class="table m-auto table-bordered week-table w-auto">
+                            <tr>
+                                <th>1</th>
+                                <td>28/09/2024</td>
+                                <th>5</th>
+                                <td>26/10/2024</td>
+                                <th>9</th>
+                                <td>23/11/2024</td>
+                                <th>13</th>
+                                <td>21/12/2024</td>
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <td>05/10/2024</td>
+                                <th>6</th>
+                                <td>02/11/2024</td>
+                                <th>10</th>
+                                <td>30/11/2024</td>
+                                <th>14</th>
+                                <td>28/12/2024</td>
+                            </tr>
+                            <tr>
+                                <th>3</th>
+                                <td>12/10/2024</td>
+                                <th>7</th>
+                                <td>09/11/2024</td>
+                                <th>11</th>
+                                <td>07/12/2024</td>
+                                <th>15</th>
+                                <td>04/01/2025</td>
+                            </tr>
+                            <tr>
+                                <th>4</th>
+                                <td>19/10/2024</td>
+                                <th>8</th>
+                                <td>16/11/2024</td>
+                                <th>12</th>
+                                <td>14/12/2024</td>
+                                <th>16</th>
+                                <td></td>
+                            </tr>
+                        </table>
+                    }
+                    <table class="table m-auto table-bordered week-table w-75 my-3">
+                        <tr>
+                            <th>1</th>
+                            <td>9:00-10:15</td>
+                            <th>2</th>
+                            <td>10:20-11:355</td>
+                            <th>3</th>
+                            <td>11:40-12:55</td>
+                            <th>4</th>
+                            <td>13:00-14:15</td>
+                            <th>5</th>
+                            <td>14:20-15:35</td>
+                        </tr>
+                    </table>
             }
         </div>
         <div class="m-auto my-4 text-center ">

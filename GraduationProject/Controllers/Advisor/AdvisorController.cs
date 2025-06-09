@@ -155,7 +155,7 @@ namespace GraduationProject.Controllers.Advisor
         {
             return View();
         }
-        public async Task<IActionResult> Search(int id)
+        public async Task<IActionResult> Search(string id)
         {
             var Id = id;
 

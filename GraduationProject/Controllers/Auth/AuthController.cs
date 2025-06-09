@@ -145,7 +145,8 @@ namespace GraduationProject.Controllers.Auth
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetPasswordUrl = Url.Action("NewPassword", "Auth", new { token = token, mobile = forgetPassword.MobilePhone }, Request.Scheme);
+            var resetPasswordUrl = Url.Action("NewPassword", "Auth", new { token = token, 
+                mobile = forgetPassword.MobilePhone }, Request.Scheme);
 
             var email = new Email()
             {

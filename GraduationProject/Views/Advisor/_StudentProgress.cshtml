@@ -6,56 +6,79 @@
     var courses = ViewData["completedCourses"] as IEnumerable<Enrollment>;
     var date = ViewData["Date"] ?? 0;
     var advisor = ViewData["Advisor"] as Advisor;
+    var groupedTerms = courses
+            ?.GroupBy(c => new { c.Course.Level, c.Term.Semester }) // assuming Term has Year & Semester properties
+            .OrderBy(g => g.Key.Level)
+            .ThenBy(g => g.Key.Semester); // Optional: order by semester
 }
 @* @if (student is not null && courses is not null && advisor is not null) *@
 @* { *@
-    <div class="container mt-5 py-5 shadow" id="report">
-        <div class="d-flex justify-content-between mb-4">
-            <img src="~/images/Mti(Gray).png" alt="" style="width: 100px;">
-            <img src="~/images/advisorylogo no stroke .png" alt="" style="width: 60px;">
-            <img src="~/images/CS(Gray).png" alt="" style="width: 60px;">
-        </div>
-        <h3 class="text-center mb-4">Individual Student Progress Report</h3>
-        <p class="text-center m-1">Report Number: @reportNumber</p>
+<div class="container mt-5 py-5 shadow" id="report">
+    <div class="d-flex justify-content-between mb-4">
+        <img src="~/images/Mti(Gray).png" alt="" style="width: 100px;">
+        <img src="~/images/advisorylogo no stroke .png" alt="" style="width: 60px;">
+        <img src="~/images/CS(Gray).png" alt="" style="width: 60px;">
+    </div>
+    <h3 class="text-center mb-4">Individual Student Progress Report</h3>
+    <p class="text-center m-1">Report Number: @reportNumber</p>
 
-        <h4>Student Information</h4>
-        <ul>
-            <li><strong>Student Name:</strong> <span id="studentName">@student?.FirstName @student?.MiddleName @student?.LastName</span></li>
-            <li><strong>Student ID:</strong> <span id="studentID">@student?.Id</span></li>
-            <li><strong>Major:</strong> <span id="studentMajor">@student?.Department?.Name</span></li>
-       </ul>
+    <h4>Student Information</h4>
+    <ul>
+        <li><strong>Student Name:</strong> <span id="studentName">@student?.FirstName @student?.MiddleName @student?.LastName</span></li>
+        <li><strong>Student ID:</strong> <span id="studentID">@student?.Id</span></li>
+        <li><strong>Major:</strong> <span id="studentMajor">@student?.Department?.Name</span></li>
+    </ul>
 
-        <h4>Enrollment Summary</h4>
-        <ul class="fs-6">
-            <li><strong>Total Required Credit Hours for Graduation:</strong> <span id="totalCredits">144</span></li>
-            <li><strong>Completed Credit Hours:</strong> <span id="completedCredits">@completedHours</span></li>
-            <li><strong>Remaining Credit Hours:</strong> <span id="remainingCredits">@remainingHours</span></li>
-        </ul>
+    <h4>Enrollment Summary</h4>
+    <ul class="fs-6">
+        <li><strong>Total Required Credit Hours for Graduation:</strong> <span id="totalCredits">144</span></li>
+        <li><strong>Completed Credit Hours:</strong> <span id="completedCredits">@completedHours</span></li>
+        <li><strong>Remaining Credit Hours:</strong> <span id="remainingCredits">@remainingHours</span></li>
+    </ul>
+        @foreach (var termGroup in groupedTerms)
+    {
+        var semesterName = termGroup.Key.Semester; // e.g., "Fall"
+        var year = termGroup.Key.Level;
+        var totalCredits = termGroup.Sum(c => c.Course?.CreditHour ?? 0);
 
-        <h4>Completed Courses</h4>
-        <table class="table table-bordered text-center">
+        <h5 class="text-start">Level @year</h5>
+        <p class="text-start"><strong>@semesterName Semester</strong></p>
+
+        <table class="table table-striped table-bordered">
             <thead class="table-light">
                 <tr>
-                    <th>Course Code</th>
-                    <th>Course Name</th>
-                    <th>Credit Hours</th>
-                    <th>Semester Taken</th>
-                    <th>Grade</th>
+                    <th>Code</th>
+                    <th>Course</th>
+                    <th>CR</th>
+                    <th>Pre - requisites</th>
                 </tr>
             </thead>
-            <tbody id="completedCourses">
-                @foreach(var course in courses)
+            <tbody>
+                @foreach (var course in termGroup)
                 {
                     <tr>
                         <td>@course?.Course?.Code</td>
                         <td>@course?.Course?.CourseName</td>
                         <td>@course?.Course?.CreditHour</td>
-                        <td>@course?.Term?.Semester @course?.Term?.AcademicYear</td>
-                        <td>@course?.Grade</td>
+                        <td>
+                            <ul>
+                                @foreach (var prereq in course?.Course?.Prerequisites)
+                                {
+                                    <li>@prereq?.Course?.CourseName</li>
+                                }
+                            </ul>
+                        </td>
                     </tr>
                 }
+
+                <tr class="table-secondary">
+                    <td colspan="2" class="text-end"><strong>Total</strong></td>
+                    <td><strong>@totalCredits</strong></td>
+                    <td></td>
+                </tr>
         </tbody>
     </table>
+    }
 
     <p><strong>Academic Advisor Signature:</strong> @advisor?.FirstName @advisor?.MiddleName @advisor?.LastName</p>
     <p><strong>Date:</strong> @date</p>

@@ -14,7 +14,7 @@ namespace GP.DAL.Models
         public Status Status { get; set; }
         public int? StudentAffairsId  { get; set; }
         public StudentAffairs? StudentAffairs { get; set; }
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
         public Student? Student { get; set; }
 
     }

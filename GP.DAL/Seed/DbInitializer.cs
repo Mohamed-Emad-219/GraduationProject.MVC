@@ -660,7 +660,8 @@ namespace GP.DAL.Seed
             string jsonData = await File.ReadAllTextAsync(filePath);
 
             // Deserialize to a list of objects
-            var facultyUpdates = System.Text.Json.JsonSerializer.Deserialize<List<FacultyUpdateDto>>(jsonData);
+            //var f = JsonConvert.DeserializeObject<List<FollowUp>>(jsonData);
+            var facultyUpdates = System.Text.Json.JsonSerializer.Deserialize<List<FacultyMember>>(jsonData);
 
             if (facultyUpdates == null)
             {
@@ -670,40 +671,29 @@ namespace GP.DAL.Seed
 
             foreach (var update in facultyUpdates)
             {
-                var faculty = await context.FacultyMembers.FirstOrDefaultAsync(f => f.TeacherId == update.TeacherId);
-                if (faculty != null)
+                string email = $"{update.FirstName.ToLower()}.{update.LastName.ToLower()}@g.com";
+                if (await userManager.FindByEmailAsync(email) == null)
                 {
-                    string email = $"{update.FirstName.ToLower()}.{update.LastName.ToLower()}@g.com";
-                    //Console.WriteLine(email);
-                    if (await userManager.FindByEmailAsync(email) == null)
+                    var user = new GPUser
                     {
-                        var user = new GPUser
-                        {
-                            UserName = email,
-                            Email = email,
-                            EmailConfirmed = true
-                        };
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
 
-                        var result = await userManager.CreateAsync(user, "qweQWE123!!");
-                        if (result.Succeeded)
-                        {
-                            if (update.WorkingHours == 6)
-                                await userManager.AddToRoleAsync(user, "Instructor");
-                            else if (update.WorkingHours == 28)
-                                await userManager.AddToRoleAsync(user, "Assistant");
-                            else if (update.WorkingHours == 3)
-                                await userManager.AddToRoleAsync(user, "Dean");
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                    if (result.Succeeded)
+                    {
+                        if (update.WorkingHours == 6)
+                            await userManager.AddToRoleAsync(user, "Instructor");
+                        else if (update.WorkingHours == 28)
+                            await userManager.AddToRoleAsync(user, "Assistant");
+                        else if (update.WorkingHours == 3)
+                            await userManager.AddToRoleAsync(user, "Dean");
 
-                            // Insert Advisor
-                            faculty.UserId = user.Id;
-                            faculty.SSN = update.SSN;
-                            faculty.FirstName = update.FirstName;
-                            faculty.MiddleName = update.MiddleName;
-                            faculty.LastName = update.LastName;
-                            faculty.MobilePhone = update.MobilePhone;
-                            faculty.Address = update.Address;
-                            faculty.WorkingHours = update.WorkingHours;
-                        }
+                        update.UserId = user.Id;
+                        context.FacultyMembers.Add(update);
+
                     }
                 }
             }
@@ -713,18 +703,18 @@ namespace GP.DAL.Seed
         }
 
         // Create a DTO for the JSON structure
-        public class FacultyUpdateDto
-        {
-            public string TeacherId { get; set; }
-            public string? SSN { get; set; }
-            public string? FirstName { get; set; }
-            public string? MiddleName { get; set; }
-            public string? LastName { get; set; }
-            public string FullName { get; set; } // You may not need to update this
-            public string? MobilePhone { get; set; }
-            public string? Address { get; set; }
-            public int? WorkingHours { get; set; }
-        }
+        //public class FacultyUpdateDto
+        //{
+        //    public string TeacherId { get; set; }
+        //    public string? SSN { get; set; }
+        //    public string? FirstName { get; set; }
+        //    public string? MiddleName { get; set; }
+        //    public string? LastName { get; set; }
+        //    public string? FullName { get; set; } // You may not need to update this
+        //    public string? MobilePhone { get; set; }
+        //    public string? Address { get; set; }
+        //    public int? WorkingHours { get; set; }
+        //}
 
         public static async Task SeedStudents(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
@@ -774,14 +764,13 @@ namespace GP.DAL.Seed
                             LastName = dto.LastName,
                             BirthDate = DateOnly.FromDateTime(dto.BirthDate),
                             Address = dto.Address,
-                            AdvisorId = dto.AdvisorId,
                             DeptId = dto.DeptId,
                             Level = dto.Level,
                             HighSchoolGrade = dto.HighSchoolGrade,
                             Gender = dto.Gender,
                             MobilePhone = dto.MobilePhone,
                             HomePhone = dto.HomePhone,
-                            SSN = dto.SSN,
+                            NationalId = dto.SSN,
                             RegisterYear = dto.RegisterYear,
                             UserId = user.Id // Associate student with user
                         };

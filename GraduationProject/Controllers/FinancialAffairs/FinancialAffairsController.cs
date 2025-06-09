@@ -51,7 +51,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
             return View();
         }
         [Authorize(Roles = "FinancialAffairs")]
-        public IActionResult Search(int id)
+        public IActionResult Search(string id)
         {
             var student = _studentRepository.GetStudentById(id);
             if (student == null)
@@ -95,7 +95,7 @@ namespace GraduationProject.Controllers.FinancialAffairs
         }
 
         [Authorize(Roles = "FinancialAffairs")]
-        public async Task<IActionResult> Receipt(int StudentId, string StudentName, 
+        public async Task<IActionResult> Receipt(string StudentId, string StudentName, 
             int Level, int RegisteredYear, string Semester, int AcademicYear, int Amount)
         {
             ViewData["CollegeName"] = collegeRepository.GetCollageNameByStudentId(StudentId);

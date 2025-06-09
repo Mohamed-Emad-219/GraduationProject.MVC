@@ -1,5 +1,22 @@
 ﻿@{
     ViewData["Title"] = "Semester Info";
+    var month = DateTime.Now.Month;
+    string semester;
+    ViewData["year"] = DateTime.Now.Year;
+
+    if (month >= 9 || month <= 1)
+    {
+        semester = "Fall";
+    }
+    else if (month >= 2 && month <= 6)
+    {
+        semester = "Spring";
+    }
+    else
+    {
+        semester = "Summer";
+    }
+    ViewData["semester"] = semester;
 }
 
 <div class="advisor main-section">
@@ -7,31 +24,66 @@
         <h1 class="heading text-center m-1">Welcome!</h1>
         <div class="d-flex">
             <div class="info w-100 align-content-center ">
-                
-                <div>
-                    <p class="fs-4">We are now in <span class="text-success fw-bold">@ViewData["semester"] @ViewData["year"]</span> !</p>
+                <form id="train-form" method="post" asp-action="TrainScheduler" asp-controller="Ai">
+
+                    <div class="" id="form-container">
+                        <div>
+                            <p class="fs-4 mb-1">We are now in <span class="text-success fw-bold">@ViewData["semester"] @ViewData["year"]</span> !</p>
+                        </div>
+                        <p class="fs-5 my-1">Enter number of students for each level</p>
+                        
+                        <div class="input-group input-group-sm mb-2 w-75">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Level 1</span>
+                            <input required type="number" id="level1" name="level1" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <div class="input-group input-group-sm mb-2 w-75">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Level 2</span>
+                            <input required type="number" id="level2" name="level2" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <div class="input-group input-group-sm mb-2 w-75">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Level 3</span>
+                            <span class="input-group-text dep" style="width: 2rem; justify-content: center;" id="inputGroup-sizing-sm">CS</span>
+                            <input required type="number" id="level3cs" name="level3cs" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            @* <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="removeRow(this)">Remove</button> *@
+                        </div>
+                        <div class="input-group input-group-sm mb-2 w-75" id="level3is-container">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Level 3</span>
+                            <span class="input-group-text dep" style="width: 2rem; justify-content: center;" id="inputGroup-sizing-sm">IS</span>
+                            <input required type="number" id="level3is" name="level3is" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            @* <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="removeRow(this)">Remove</button> *@
+                        </div>
+                        <div class="input-group input-group-sm mb-2 w-75">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Level 4</span>
+                            <span class="input-group-text dep" style="width: 2rem; justify-content: center;" id="inputGroup-sizing-sm">CS</span>
+                            <input required type="number" id="level4cs" name="level4cs" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            @* <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="removeRow(this)">Remove</button> *@
+                        </div>
+                        <div class="input-group input-group-sm mb-2 w-75" id="level4is-container">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Level 4</span>
+                            <span class="input-group-text dep" style="width: 2rem; justify-content: center;" id="inputGroup-sizing-sm">IS</span>
+                            <input required type="number" id="level4is" name="level4is" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            @* <button class="btn btn-outline-secondary" type="button" id="button-addon1" onclick="removeRow(this)">Remove</button> *@
+                        </div>
+                        <button type="button" class="btn-sm btn-primary mb-3" onclick="addRow()">Add Department</button>
+                        
+                        <p class="fs-5 my-1">Enter number of time slots in the day <span class="text-secondary fs-6">e.g. 5 slots</span></p>
+                        <div class="input-group input-group-sm mb-2 w-50">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Time slots</span>
+                            <input required min="5" max="7" type="number" id="timeslot" name="timeslot" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+
+                        </div>
                 </div>
-                <div class="mt-5">
-                    <p class="fs-4">Click to <span class="text-success fw-bold">Generate</span> the student schedules and the instructors/teaching assistants schedules</p>
+                    
+                <div class="my-1">
+                    <p class="fs-5">Click to <span class="text-success fw-bold">Generate</span> the student schedules and the instructors/teaching assistants schedules</p>
                 </div>
 
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="mt-5 alert alert-success">
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
-
-                @if (TempData["ErrorMessage"] != null)
-                {
-                    <div class="mt-5 alert alert-danger">
-                        @TempData["ErrorMessage"]
-                    </div>
-                }
+                    <div id="success-message" class="my-2 alert alert-success" style="display: none;"></div>
+                    <div id="error-message" class="my-2 alert alert-danger" style="display: none;"></div>
 
                 <!-- Button to trigger the AI Training -->
-                <form method="post" asp-action="TrainScheduler" asp-controller="Ai">
-                    <button type="submit" class="btn btn-success btn-lg mt-3">Generate Schedules</button>
+                    <button id="submitButton" class="btn btn-success btn mt-2">Generate Schedules</button>
+                    <img id="loadingSpinner" src="~/images/spinner.gif" style="display:none; width: 40px;" alt="Loading...">
                 </form>
 
             </div>
@@ -42,7 +94,116 @@
     </div>
 </div>
 
+
 @section Scripts {
     <script src="~/js/advisor.js"></script>
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#submitButton").click(function (event) {
+
+            event.preventDefault();
+            let form = $("#train-form");
+            // Show spinner
+            $("#loadingSpinner").show();
+
+            let level1 = $("#level1").val();
+            let level2 = $("#level2").val();
+            let level3is = $("#level3is").val();
+            let level4is = $("#level4is").val();
+            let level3cs = $("#level3cs").val();
+            let level4cs = $("#level4cs").val();
+            let level3ai = $("#level3ai").val() || 0;
+            let level4ai = $("#level4ai").val() || 0;
+            let timeslot = $("#timeslot").val();
+            $.ajax({
+                url: "/Ai/TrainScheduler",
+                type: "POST",
+                data: {
+                    level1,
+                    level2,
+                    level3is,
+                    level4is,
+                    level3cs,
+                    level4cs,
+                    level3ai,
+                    level4ai,
+                    timeslot
+                },
+                success: function (response) {
+                    // Hide previous messages
+                    $("#success-message").hide().empty();
+                    $("#error-message").hide().empty();
+
+                    if (response.success) {
+                        // Optionally show success message before redirecting
+                        $("#success-message").text(response.message || "Scheduler trained successfully!")
+                                     .fadeIn();
+                    } else {
+                        $("#error-message").text(response.message || "Error occurred.")
+                                   .fadeIn();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#success-message").hide();
+                    $("#error-message").text("Something went wrong. Please try again.")
+                               .fadeIn();
+                },
+                complete: function () {
+                    form.trigger("reset");
+                    // Hide spinner after request is complete
+                    $("#loadingSpinner").hide();
+                }
+            });
+        });
+        function addRow() {
+            let formContainer = document.getElementById("train-form");
+        if (!formContainer.querySelector('.new')) {
+            const level3Container = document.getElementById("level3is-container");
+            const level4Container = document.getElementById("level4is-container");
+
+            const newLevel3 = level3Container.cloneNode(true);
+            const newLevel4 = level4Container.cloneNode(true);
+
+            newLevel3.classList.add("new");
+            newLevel4.classList.add("new");
+
+            newLevel3.querySelector("input").name = "level3ai";
+            newLevel4.querySelector("input").name = "level4ai";
+
+            newLevel3.querySelector("input").id = "level3ai";
+            newLevel4.querySelector("input").id = "level4ai";
+
+            newLevel3.querySelector(".dep").textContent  = "AI";
+            newLevel4.querySelector(".dep").textContent  = "AI";
+
+            const removeBtn = document.createElement("button");
+            removeBtn.className = "btn btn-outline-danger";
+            removeBtn.type = "button";
+            removeBtn.onclick = function () { removeRow(this); };
+            removeBtn.innerHTML = '<i class="fa fa-trash"></i>';
+
+            newLevel3.appendChild(removeBtn);
+
+            const removeBtn4 = document.createElement("button");
+            removeBtn4.className = "btn btn-outline-danger";
+            removeBtn4.type = "button";
+            removeBtn4.onclick = function () { removeRow(this); };
+            removeBtn4.innerHTML = '<i class="fa fa-trash"></i>';
+
+            newLevel4.appendChild(removeBtn4);
+
+            // Clear the input value
+            newLevel3.querySelector("input").value = "";
+            newLevel4.querySelector("input").value = "";
+
+            // Insert after the respective containers
+            level3Container.insertAdjacentElement('afterend', newLevel3);
+            level4Container.insertAdjacentElement('afterend', newLevel4);
+            }
+        }
+
+        function removeRow(btn) {
+            btn.closest(".input-group").remove();
+        }
+    </script>
 }
