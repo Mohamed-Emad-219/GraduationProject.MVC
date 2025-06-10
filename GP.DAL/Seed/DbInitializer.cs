@@ -18,6 +18,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace GP.DAL.Seed
@@ -647,6 +648,48 @@ namespace GP.DAL.Seed
 
             }
         }
+        public static async Task SeedStudentAccounts(UserManager<GPUser> userManager, AppDbContext context)
+        {
+            // Fetch all students who do not have an associated UserId
+            var students = context.Students.Where(s => s.UserId == null).ToList();
+
+            foreach (var student in students)
+            {
+                // Build email like: ahmed.hassan@g.com
+                string email = $"{student.FirstName.ToLower()}.{student.LastName.ToLower()}@g.com";
+
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new GPUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(user, "qweQWE123!!");
+
+                    if (result.Succeeded)
+                    {
+                        // Add to "Student" role
+                        await userManager.AddToRoleAsync(user, "Student");
+
+                        // Link back the created user to the student
+                        student.UserId = user.Id;
+
+                        // Optional: You can log the created account
+                        Console.WriteLine($"Created account for: {email}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to create user for {email}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    }
+                }
+            }
+
+            // Save changes to update UserIds
+            await context.SaveChangesAsync();
+        }
         public static async Task SeedFacultyUpdate(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {
             var filePath = Path.Combine(env.ContentRootPath, "wwwroot", "json", "updatefaculty.json");
@@ -697,24 +740,97 @@ namespace GP.DAL.Seed
                     }
                 }
             }
-
+            if (context.FacultyMembers.FirstOrDefault(f => f.TeacherId == "TA36") == null)
+            {
+                
+                var TA43 = new FacultyMember
+                {
+                    TeacherId = "TA43",
+                    SSN = "8759192014206245",
+                    FirstName = "Zahraa",
+                    MiddleName = "",
+                    LastName = "Soliman",
+                    FullName = "Zahraa Soliman",
+                    MobilePhone = "01265594437",
+                    Address = "Aswan",
+                    WorkingHours = 28
+                };
+                string email = $"{TA43.FirstName.ToLower()}.{TA43.LastName.ToLower()}@g.com";
+                var user = new GPUser
+                {
+                    UserName = $"{email}TA",
+                    Email = email,
+                    EmailConfirmed = true
+                };
+                var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Assistant");
+                    TA43.UserId = user.Id;
+                    context.FacultyMembers.Add(TA43);
+                }
+            }
+            if (context.FacultyMembers.FirstOrDefault(f => f.TeacherId == "TA4") == null)
+            {
+                var TA4 = new FacultyMember
+                {
+                    TeacherId = "TA4",
+                    SSN = "8372629824849844",
+                    FirstName = "Walid",
+                    MiddleName = "",
+                    LastName = "Basiony",
+                    FullName = "Walid Basiony",
+                    MobilePhone = "01255092232",
+                    Address = "Asyut",
+                    WorkingHours = 28
+                };
+                string email = $"{TA4.FirstName.ToLower()}.{TA4.LastName.ToLower()}@g.com";
+                var user = new GPUser
+                {
+                    UserName = $"{email}TA",
+                    Email = email,
+                    EmailConfirmed = true
+                };
+                var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Assistant");
+                    TA4.UserId = user.Id;
+                    context.FacultyMembers.Add(TA4);
+                }
+            }
+            if (context.FacultyMembers.FirstOrDefault(f => f.TeacherId == "TA36") == null)
+            {
+                var TA36 = new FacultyMember
+                {
+                    TeacherId = "TA36",
+                    SSN = "9821184632804990",
+                    FirstName = "El-Sayed",
+                    MiddleName = "",
+                    LastName = "Orabi",
+                    FullName = "El-Sayed Orabi",
+                    MobilePhone = "01149293418",
+                    Address = "Giza",
+                    WorkingHours = 28
+                };
+                string email = $"{TA36.FirstName.ToLower()}.{TA36.LastName.ToLower()}@g.com";
+                var user = new GPUser
+                {
+                    UserName = $"{email}TA",
+                    Email = email,
+                    EmailConfirmed = true
+                };
+                var result = await userManager.CreateAsync(user, "qweQWE123!!");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Assistant");
+                    TA36.UserId = user.Id;
+                    context.FacultyMembers.Add(TA36);
+                }
+            }
             await context.SaveChangesAsync();
             Console.WriteLine("Faculty members updated successfully.");
         }
-
-        // Create a DTO for the JSON structure
-        //public class FacultyUpdateDto
-        //{
-        //    public string TeacherId { get; set; }
-        //    public string? SSN { get; set; }
-        //    public string? FirstName { get; set; }
-        //    public string? MiddleName { get; set; }
-        //    public string? LastName { get; set; }
-        //    public string? FullName { get; set; } // You may not need to update this
-        //    public string? MobilePhone { get; set; }
-        //    public string? Address { get; set; }
-        //    public int? WorkingHours { get; set; }
-        //}
 
         public static async Task SeedStudents(UserManager<GPUser> userManager, AppDbContext context, IHostEnvironment env)
         {

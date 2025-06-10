@@ -17,7 +17,7 @@ namespace GP.BLL.Repositories
         {
             context = _context ?? throw new ArgumentNullException(nameof(_context));
         }
-        public IEnumerable<StudentSchedule> GetStudentScheduleByGroup(string? group, int? level)
+        public IEnumerable<StudentSchedule> GetStudentScheduleByGroup(string? group, int? level, int? depId)
         {
             var month = DateTime.Now.Month;
             SemesterType semester;
@@ -40,51 +40,84 @@ namespace GP.BLL.Repositories
                 .Include(s => s.Course)
                 .Include(s => s.Place)
                 .ToList(); // load from DB
-
+            //var studentMajor = context.Students.Select(s=>s.Department.Name).FirstOrDefault(s => s.DeptId == depId && s.Level == level);
             //Console.WriteLine(schedules.Where(s => IsGroupMatch(s.Group, group)).ToList());
-            return schedules.Where(s => IsGroupMatch(s.Group, group)).ToList(); // apply C# filter
+            //return schedules.Where(s => IsGroupMatch(s.Group, group, studentMajor)).ToList(); // apply C# filter
         }
 
-        private bool IsGroupMatch(string dbGroup, string searchGroup)
-        {
-            if (string.IsNullOrEmpty(dbGroup) || string.IsNullOrEmpty(searchGroup))
-                return false;
+        //private bool IsGroupMatch(string dbGroup, string searchGroup, string studentMajor)
+        //{
+        //    if (string.IsNullOrEmpty(dbGroup) || string.IsNullOrEmpty(searchGroup) || string.IsNullOrEmpty(studentMajor))
+        //        return false;
 
-            searchGroup = searchGroup.Trim();
+        //    searchGroup = NormalizeGroup(searchGroup);
 
-            // Direct exact match (e.g., "G1" matches "G1")
-            if (dbGroup.Trim().Equals(searchGroup, StringComparison.OrdinalIgnoreCase))
-                return true;
+        //    // Direct match with major
+        //    if (NormalizeGroup(dbGroup).Equals(searchGroup, StringComparison.OrdinalIgnoreCase) &&
+        //        ExtractMajor(dbGroup).Equals(studentMajor, StringComparison.OrdinalIgnoreCase))
+        //        return true;
 
-            // Check if dbGroup is a range like "G1 to G4" (e.g., "G1 to G4" matches "G2")
-            if (dbGroup.Contains("to", StringComparison.OrdinalIgnoreCase))
-            {
-                var parts = dbGroup.Split("to", StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length == 2)
-                {
-                    var start = parts[0].Trim();
-                    var end = parts[1].Trim();
+        //    // Range match
+        //    if (dbGroup.Contains("to", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        var parts = dbGroup.Split("to", StringSplitOptions.RemoveEmptyEntries);
+        //        if (parts.Length == 2)
+        //        {
+        //            var start = NormalizeGroup(parts[0]);
+        //            var end = NormalizeGroup(parts[1]);
+        //            var rangeMajor = ExtractMajor(parts[0]); // Assume both start and end have same major
 
-                    if (start.StartsWith('G') && end.StartsWith('G'))
-                    {
-                        // Remove the "G" and parse the numbers
-                        if (int.TryParse(start.Substring(1), out int startNum) &&
-                            int.TryParse(end.Substring(1), out int endNum) &&
-                            int.TryParse(searchGroup.Substring(1), out int searchNum))
-                        {
-                            // Check if the search group is within the range
-                            return searchNum >= startNum && searchNum <= endNum;
-                        }
-                    }
-                }
-            }
+        //            if (start.StartsWith('G') && end.StartsWith('G') && searchGroup.StartsWith('G'))
+        //            {
+        //                if (int.TryParse(start.Substring(1), out int startNum) &&
+        //                    int.TryParse(end.Substring(1), out int endNum) &&
+        //                    int.TryParse(searchGroup.Substring(1), out int searchNum))
+        //                {
+        //                    return searchNum >= startNum &&
+        //                           searchNum <= endNum &&
+        //                           rangeMajor.Equals(studentMajor, StringComparison.OrdinalIgnoreCase);
+        //                }
+        //            }
+        //        }
+        //    }
 
-            // Check if dbGroup is a list of groups like "G1, G2, G3"
-            var groupList = dbGroup.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(g => g.Trim());
-            //Console.WriteLine($"Group list: {string.Join(", ", groupList)}");
-            // Match if the searchGroup is in the list (e.g., "G1" matches "G1, G2, G3")
-            return groupList.Any(g => g.Equals(searchGroup, StringComparison.OrdinalIgnoreCase));
-        }
+        //    // List match with major
+        //    var groupList = dbGroup.Split(',', StringSplitOptions.RemoveEmptyEntries)
+        //                           .Select(g => g.Trim());
+
+        //    foreach (var g in groupList)
+        //    {
+        //        if (NormalizeGroup(g).Equals(searchGroup, StringComparison.OrdinalIgnoreCase) &&
+        //            ExtractMajor(g).Equals(studentMajor, StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            return true;
+        //        }
+        //    }
+
+        //    return false;
+        //}
+
+        //// Removes specialization suffix, e.g., "G2 (AI)" -> "G2"
+        //private string NormalizeGroup(string group)
+        //{
+        //    int index = group.IndexOf('(');
+        //    if (index > 0)
+        //    {
+        //        group = group.Substring(0, index).Trim();
+        //    }
+        //    return group.Trim();
+        //}
+
+        //// Extracts specialization suffix, e.g., "G2 (AI)" -> "AI"
+        //private string ExtractMajor(string group)
+        //{
+        //    int start = group.IndexOf('(');
+        //    int end = group.IndexOf(')');
+        //    if (start >= 0 && end > start)
+        //    {
+        //        return group.Substring(start + 1, end - start - 1).Trim();
+        //    }
+        //    return string.Empty;
+        //}
     }
 }

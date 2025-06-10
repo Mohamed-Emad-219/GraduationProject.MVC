@@ -2,7 +2,7 @@
     ViewData["Title"] = "Student Schedule";
     var schedule = ViewData["Schedule"] as IEnumerable<StudentSchedule>;
     var groupedSchedule = schedule?.GroupBy(s => s.Day) ?? new List<IGrouping<string, StudentSchedule>>();
-    var group = ViewData["group"];
+    var group = ViewData["group"] ?? 0;
 }
 
 <section class="student">
@@ -10,14 +10,14 @@
         <div class="container py-3" id="report">
             <div class="heading-schedule d-flex justify-content-between align-items-center">
                 <p class="p-0 fs-5 fw-bold semester">
-                    Semester of <span id="semester">@schedule?.FirstOrDefault().Semester</span>
-                    <span id="academicyear">@schedule?.FirstOrDefault().AcademicYear</span>
+                    Semester of <span id="semester">@schedule?.FirstOrDefault()?.Semester</span>
+                    <span id="academicyear">@schedule?.FirstOrDefault()?.AcademicYear</span>
                 </p>
                 <img src="../images/Mti(Gray).png" alt="" style="width: 100px;">
             </div>
             <h1 class="heading text-center m-1">Schedule of Classes</h1>
             <div class="w-100 mt-1 d-flex justify-content-around">
-                <p class="fs-3 fw-bold mb-0">Level: <span id="level">@schedule?.FirstOrDefault().Level</span> 
+                <p class="fs-3 fw-bold mb-0">Level: <span id="level">@schedule?.FirstOrDefault()?.Level</span> 
                     <span id="dep"></span> | <span>@group</span>
                 </p>
             </div>
@@ -74,7 +74,7 @@
                         </table>
                     }
                     <br />
-                    @if (schedule.First().Semester == SemesterType.Spring)
+                    @if (schedule?.First().Semester == SemesterType.Spring)
                     {
                         <table class="table m-auto table-bordered week-table w-auto">
                             <tr>
