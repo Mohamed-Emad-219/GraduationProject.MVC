@@ -42,8 +42,9 @@ namespace GP.BLL.Repositories
                 .ToList(); // load from DB
             Department major = context.Departments.FirstOrDefault(d => d.Id == depId);
             var studentMajor = GetMajorAbbreviation(major.Name);
-            //Console.WriteLine(schedules.Where(s => IsGroupMatch(s.Group, group, studentMajor)).ToList());
-            var scheduless = schedules.Where(s => IsGroupMatch(s.Group, group, studentMajor)).ToList(); // apply C# filter
+            Console.WriteLine(studentMajor);
+            foreach (var g in schedules.Where(s => IsGroupMatch(s.Group, group, studentMajor, level)).ToList()) Console.WriteLine(g.Course.CourseName);
+            var scheduless = schedules.Where(s => IsGroupMatch(s.Group, group, studentMajor, level)).ToList(); // apply C# filter
             return scheduless;
         }
         private string GetMajorAbbreviation(string fullMajorName)
@@ -56,7 +57,7 @@ namespace GP.BLL.Repositories
                 _ => fullMajorName // fallback to original if not matched
             };
         }
-        private bool IsGroupMatch(string dbGroup, string searchGroup, string studentMajor)
+        private bool IsGroupMatch(string dbGroup, string searchGroup, string studentMajor,int? level)
         {
             if (string.IsNullOrEmpty(dbGroup) || string.IsNullOrEmpty(searchGroup) || string.IsNullOrEmpty(studentMajor))
                 return false;
@@ -65,11 +66,11 @@ namespace GP.BLL.Repositories
 
             // Direct match with major
             if (NormalizeGroup(dbGroup).Equals(searchGroup, StringComparison.OrdinalIgnoreCase) &&
-                ExtractMajor(dbGroup).Equals(studentMajor, StringComparison.OrdinalIgnoreCase))
+                (ExtractMajor(dbGroup).Equals(studentMajor, StringComparison.OrdinalIgnoreCase) || studentMajor == "General"))
                 return true;
-
+            
             // Range match
-            if (dbGroup.Contains("to", StringComparison.OrdinalIgnoreCase))
+            if (dbGroup.Contains("to", StringComparison.OrdinalIgnoreCase) || dbGroup.Length == 2 || dbGroup.Length == 3)
             {
                 var parts = dbGroup.Split("to", StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 2)
@@ -84,9 +85,11 @@ namespace GP.BLL.Repositories
                             int.TryParse(end.Substring(1), out int endNum) &&
                             int.TryParse(searchGroup.Substring(1), out int searchNum))
                         {
-                            return searchNum >= startNum &&
+                            return (searchNum >= startNum &&
                                    searchNum <= endNum &&
-                                   rangeMajor.Equals(studentMajor, StringComparison.OrdinalIgnoreCase);
+                                   rangeMajor.Equals(studentMajor, StringComparison.OrdinalIgnoreCase)) || 
+                                   (searchNum >= startNum &&
+                                   searchNum <= endNum && (level == 1 || level == 2));
                         }
                     }
                 }
@@ -95,6 +98,7 @@ namespace GP.BLL.Repositories
             // List match with major
             var groupList = dbGroup.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                    .Select(g => g.Trim());
+            //Console.WriteLine(groupList);
 
             foreach (var g in groupList)
             {

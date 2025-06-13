@@ -37,11 +37,27 @@ namespace GraduationProject.Controllers.StudentAffairs
             return View("NewApplication");
         }
         [HttpPost]
-        [Route("StudentAffairs/NewApplicationAdd")]
+        //[Route("StudentAffairs/NewApplicationAdd")]
         public IActionResult NewApplicationAdd(GP.DAL.Models.Student student)
         {
             if (ModelState.IsValid)
             {
+                var lastStudent = studentRepository.GetLastStudent();
+                Console.WriteLine(lastStudent.Id);
+                int nextIdNum = 1;
+
+                if (lastStudent != null)
+                {
+                    // 2. Extract numeric part and increment
+                    string lastId = lastStudent.Id.Replace("CMP-", "");
+                    if (int.TryParse(lastId, out int lastNum))
+                    {
+                        nextIdNum = lastNum + 1;
+                    }
+                }
+                Console.WriteLine(nextIdNum);
+                // 3. Format new ID
+                student.Id = $"CMP-{nextIdNum.ToString("D6")}";
                 studentRepository.AddStudent(student);
 
                 var application = new Application
@@ -54,9 +70,11 @@ namespace GraduationProject.Controllers.StudentAffairs
                 applicationRepository.AddApplication(application);
                 studentRepository.AddApplicationIdToStudent(student.Id, application.Id);
                 return RedirectToAction("Index", "Home");
+            }else
+            {
+                ViewData["Colleges"] = _collegeRepository.GetColleges();
+                return View("NewApplication", student); // Return the form with validation errors if any
             }
-            ViewData["Colleges"] = _collegeRepository.GetColleges();
-            return View("NewApplication", student); // Return the form with validation errors if any
         }
         [Authorize(Roles = "StudentAffairs")]
         public IActionResult ApplicationTable()
@@ -97,6 +115,7 @@ namespace GraduationProject.Controllers.StudentAffairs
                     student.UserId = user.Id;
                     await userManager.AddToRoleAsync(user, "Student");
                 }
+
                 student.Level = 1;
                 student.Group = "G1";
                 var general = departmentRepository.GetDepartmentByName("General");

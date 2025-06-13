@@ -3,6 +3,15 @@
     var schedule = ViewData["Schedule"] as IEnumerable<StudentSchedule>;
     var groupedSchedule = schedule?.GroupBy(s => s.Day) ?? new List<IGrouping<string, StudentSchedule>>();
     var group = ViewData["group"] ?? 0;
+    var dayOrder = new Dictionary<string, int>
+            {
+                ["Saturday"] = 0,
+                ["Sunday"] = 1,
+                ["Monday"] = 2,
+                ["Tuesday"] = 3,
+                ["Wednesday"] = 4,
+                ["Thursday"] = 5
+            };
 }
 
 <section class="student">
@@ -28,7 +37,7 @@
                 }
                 else
                 {
-                    @foreach (var daySchedule in groupedSchedule)
+                    @foreach (var daySchedule in groupedSchedule.OrderBy( s => dayOrder[s.Key]))
                     {
                         <p class="day fs-5 fw-bold">@daySchedule.Key</p>
                         <table class="table m-auto scheduleTable" style="height: 50px;">

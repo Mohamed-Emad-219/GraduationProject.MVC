@@ -83,24 +83,13 @@ using (var scope = app.Services.CreateScope())
     //await DbInitializer.SeedRoles(services);
     //await DbInitializer.CreateAdvisors(userManager, services, env);
     //await DbInitializer.CreateAdmins(userManager, services, env);
-    //await DbInitializer.SeedFacultyWithoutDept(userManager, dbContext, env);
     //DbInitializer.SeedCollege(dbContext, env);
     //DbInitializer.SeedDapertment(dbContext, env);
-    //await DbInitializer.SeedFacultyWithDept(userManager, dbContext, env);
     //await DbInitializer.SeedFacultyUpdate(userManager, dbContext, env);
     //await DbInitializer.SeedStudentAccounts(userManager, dbContext);
-    //DbInitializer.SeedCourses(dbContext, env);
-    //DbInitializer.SeedCoursesPre(dbContext, env);
-    //DbInitializer.SeedPlace(dbContext, env);
     //await DbInitializer.SeedFollowUp(userManager, dbContext, env);
     //await DbInitializer.SeedStudentAffairs(userManager, dbContext, env);
     //await DbInitializer.SeedFinancialAffairs(userManager, dbContext, env);
-    //await DbInitializer.SeedStudents(userManager, dbContext, env);
-    //DbInitializer.SeedReceipts(dbContext, env);
-    //DbInitializer.SeedTerms(dbContext, env);
-    //DbInitializer.SeedCoursesTerms(dbContext, env);
-    //DbInitializer.SeedApplications(dbContext, env);
-    //DbInitializer.SeedEnrollments(dbContext, env);
 }
 #endregion
 app.UseHttpsRedirection();

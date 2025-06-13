@@ -17,5 +17,6 @@ namespace GP.BLL.Interfaces
         int AddApplicationIdToStudent(string stdId, int applId);
         void UpdateStudent(Student student);
         Task<int> UpdateStudentAsync(string Id, string Email, string Address, string MobilePhone);
+        Student GetLastStudent();
     }
 }

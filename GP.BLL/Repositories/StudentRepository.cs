@@ -38,6 +38,7 @@ namespace GP.BLL.Repositories
         {
             student.RegisterYear = DateTime.Now.Year;
             context.Add(student);
+            Console.WriteLine("added successfully");
             return context.SaveChanges();
         }
         public int AddApplicationIdToStudent(string stdId, int applId)
@@ -69,6 +70,12 @@ namespace GP.BLL.Repositories
 
             context.Students.Update(faculty);
             return context.SaveChanges(); // returns number of affected rows
+        }
+        public Student GetLastStudent()
+        {
+            return context.Students.Where(s => s.Id.StartsWith("CMP-"))
+                .OrderByDescending(s => s.Id)
+                .FirstOrDefault();
         }
     }
 }
