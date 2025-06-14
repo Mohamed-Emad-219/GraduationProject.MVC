@@ -14,7 +14,7 @@ namespace GraduationProject.Controllers.AI
                 // Step 1: Prepare model input by making a POST request to prepare CSVs
                 using (var client = new HttpClient())
                 {
-                    var response = await client.PostAsync("http://localhost:5000/prepare-model-input", null);
+                    var response = await client.PostAsync("http://localhost:6000/prepare-model-input", null);
                     if (!response.IsSuccessStatusCode)
                     {
                         return Json(new { success = false, message = "Failed to prepare model input." });
@@ -41,7 +41,7 @@ namespace GraduationProject.Controllers.AI
                         Encoding.UTF8,
                         "application/json"
                     );
-                    var response = await client.PostAsync("http://localhost:5000/train", json);
+                    var response = await client.PostAsync("http://localhost:6000/train", json);
                     if (!response.IsSuccessStatusCode)
                     {
                         return Json(new { success = false, message = "Failed to train scheduler." });

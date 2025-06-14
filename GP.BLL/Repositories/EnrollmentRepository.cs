@@ -104,6 +104,7 @@ namespace GP.BLL.Repositories
 
                 int currentYear = DateTime.Now.Year;
                 int nextAcademicYear = (nextSemester == SemesterType.Spring) ? currentYear + 1 : currentYear;
+                //int nextAcademicYear = currentYear;
 
                 int level = (lastTerm.Semester == SemesterType.Spring) 
                     ? lastTerm.Level + 1 
@@ -157,7 +158,7 @@ namespace GP.BLL.Repositories
         private Term GetNextTerm(Term lastTerm)
         {
             SemesterType nextSemester = lastTerm.Semester == SemesterType.Spring ? SemesterType.Fall : lastTerm.Semester = SemesterType.Spring;
-            int nextAcademicYear = lastTerm.Semester == SemesterType.Spring ? lastTerm.AcademicYear + 1 : lastTerm.AcademicYear;
+            int nextAcademicYear = lastTerm.Semester == SemesterType.Spring ? lastTerm.AcademicYear : lastTerm.AcademicYear;
 
             return _termRepository.GetTermByDetails(lastTerm.Level, nextSemester, nextAcademicYear);
         }
